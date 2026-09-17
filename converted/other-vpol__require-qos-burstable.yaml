@@ -1,0 +1,112 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-require-qos-burstable-981880
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: object.spec.containers.exists(container,  has(container.resources)
+      && (has(container.resources.requests) || has(container.resources.limits)))
+    message: At least one container in the Pod must define either requests or limits
+      for either CPU or memory.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-require-qos-burstable-981880-b
+spec:
+  policyName: other-vpol-require-qos-burstable-981880
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-require-qos-burstable-981880-ag1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: object.spec.template.spec.containers.exists(container,  has(container.resources)
+      && (has(container.resources.requests) || has(container.resources.limits)))
+    message: At least one container in the Pod must define either requests or limits
+      for either CPU or memory.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-require-qos-burstable-981880-ag1-b
+spec:
+  policyName: other-vpol-require-qos-burstable-981880-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-require-qos-burstable-981880-ag2
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: object.spec.jobTemplate.spec.template.spec.containers.exists(container,  has(container.resources)
+      && (has(container.resources.requests) || has(container.resources.limits)))
+    message: At least one container in the Pod must define either requests or limits
+      for either CPU or memory.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-require-qos-burstable-981880-ag2-b
+spec:
+  policyName: other-vpol-require-qos-burstable-981880-ag2
+  validationActions:
+  - Deny

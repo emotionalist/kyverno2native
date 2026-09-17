@@ -1,0 +1,51 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: psa-mpol-add-psa-labels-e72ffb
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - namespaces
+  matchConditions:
+  - name: needs-psa-labels
+    expression: '!has(object.metadata.labels) ||
+
+      !object.metadata.labels.exists(k, k == ''pod-security.kubernetes.io/enforce'')
+      ||
+
+      !object.metadata.labels.exists(k, k == ''pod-security.kubernetes.io/warn'')
+
+      '
+  variables:
+  - name: enforceValue
+    expression: "has(object.metadata.labels) && \nobject.metadata.labels.exists(k,\
+      \ k == 'pod-security.kubernetes.io/enforce') ?\nobject.metadata.labels['pod-security.kubernetes.io/enforce']\
+      \ : 'baseline'\n"
+  - name: warnValue
+    expression: "has(object.metadata.labels) && \nobject.metadata.labels.exists(k,\
+      \ k == 'pod-security.kubernetes.io/warn') ?\nobject.metadata.labels['pod-security.kubernetes.io/warn']\
+      \ : 'restricted'\n"
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: "Object{\n  metadata: Object.metadata{\n    labels: {\n      \"\
+        pod-security.kubernetes.io/enforce\": string(variables.enforceValue),\n  \
+        \    \"pod-security.kubernetes.io/warn\": string(variables.warnValue)\n  \
+        \  }\n  }\n}"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: psa-mpol-add-psa-labels-e72ffb-b
+spec:
+  policyName: psa-mpol-add-psa-labels-e72ffb

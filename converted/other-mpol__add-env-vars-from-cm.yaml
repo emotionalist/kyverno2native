@@ -1,0 +1,95 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-add-env-vars-from-cm-6e80e8
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - daemonsets
+      - statefulsets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - jobs
+      - cronjobs
+  mutations:
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "object.kind == \"Pod\" ?\n(\n  (has(object.spec.initContainers)\
+        \ ?\n    object.spec.initContainers.map(container, \n      object.spec.initContainers.indexOf(container)\n\
+        \    ).map(idx,\n      JSONPatch{\n        op: \"add\",\n        path: \"\
+        /spec/initContainers/\" + string(idx) + \"/envFrom\",\n        value: [{\"\
+        configMapRef\": {\"name\": \"nsenvvars\"}}]\n      }\n    ) : []\n  ) +\n\
+        \  object.spec.containers.map(container,\n    object.spec.containers.indexOf(container)\n\
+        \  ).map(idx,\n    JSONPatch{\n      op: \"add\",\n      path: \"/spec/containers/\"\
+        \ + string(idx) + \"/envFrom\",\n      value: [{\"configMapRef\": {\"name\"\
+        : \"nsenvvars\"}}]\n    }\n  )\n) : []\n"
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "object.kind in [\"Deployment\", \"DaemonSet\", \"StatefulSet\"\
+        ] ?\n(\n  (has(object.spec.template.spec.initContainers) ?\n    object.spec.template.spec.initContainers.map(container,\
+        \ \n      object.spec.template.spec.initContainers.indexOf(container)\n  \
+        \  ).map(idx,\n      JSONPatch{\n        op: \"add\",\n        path: \"/spec/template/spec/initContainers/\"\
+        \ + string(idx) + \"/envFrom\",\n        value: [{\"configMapRef\": {\"name\"\
+        : \"nsenvvars\"}}]\n      }\n    ) : []\n  ) +\n  object.spec.template.spec.containers.map(container,\n\
+        \    object.spec.template.spec.containers.indexOf(container)\n  ).map(idx,\n\
+        \    JSONPatch{\n      op: \"add\",\n      path: \"/spec/template/spec/containers/\"\
+        \ + string(idx) + \"/envFrom\",\n      value: [{\"configMapRef\": {\"name\"\
+        : \"nsenvvars\"}}]\n    }\n  )\n) : []\n"
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "object.kind == \"Job\" ?\n(\n  (has(object.spec.template.spec.initContainers)\
+        \ ?\n    object.spec.template.spec.initContainers.map(container, \n      object.spec.template.spec.initContainers.indexOf(container)\n\
+        \    ).map(idx,\n      JSONPatch{\n        op: \"add\",\n        path: \"\
+        /spec/template/spec/initContainers/\" + string(idx) + \"/envFrom\",\n    \
+        \    value: [{\"configMapRef\": {\"name\": \"nsenvvars\"}}]\n      }\n   \
+        \ ) : []\n  ) +\n  object.spec.template.spec.containers.map(container,\n \
+        \   object.spec.template.spec.containers.indexOf(container)\n  ).map(idx,\n\
+        \    JSONPatch{\n      op: \"add\",\n      path: \"/spec/template/spec/containers/\"\
+        \ + string(idx) + \"/envFrom\",\n      value: [{\"configMapRef\": {\"name\"\
+        : \"nsenvvars\"}}]\n    }\n  )\n) : []\n"
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "object.kind == \"CronJob\" ?\n(\n  (has(object.spec.jobTemplate.spec.template.spec.initContainers)\
+        \ ?\n    object.spec.jobTemplate.spec.template.spec.initContainers.map(container,\
+        \ \n      object.spec.jobTemplate.spec.template.spec.initContainers.indexOf(container)\n\
+        \    ).map(idx,\n      JSONPatch{\n        op: \"add\",\n        path: \"\
+        /spec/jobTemplate/spec/template/spec/initContainers/\" + string(idx) + \"\
+        /envFrom\",\n        value: [{\"configMapRef\": {\"name\": \"nsenvvars\"}}]\n\
+        \      }\n    ) : []\n  ) +\n  object.spec.jobTemplate.spec.template.spec.containers.map(container,\n\
+        \    object.spec.jobTemplate.spec.template.spec.containers.indexOf(container)\n\
+        \  ).map(idx,\n    JSONPatch{\n      op: \"add\",\n      path: \"/spec/jobTemplate/spec/template/spec/containers/\"\
+        \ + string(idx) + \"/envFrom\",\n      value: [{\"configMapRef\": {\"name\"\
+        : \"nsenvvars\"}}]\n    }\n  )\n) : []\n"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-add-env-vars-from-cm-6e80e8-b
+spec:
+  policyName: other-mpol-add-env-vars-from-cm-6e80e8

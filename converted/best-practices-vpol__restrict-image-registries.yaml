@@ -1,0 +1,122 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-vpol-restrict-image-registrie-af59df
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+      - pods/ephemeralcontainers
+  variables:
+  - name: allContainers
+    expression: object.spec.containers + object.spec.?initContainers.orValue([]) +
+      object.spec.?ephemeralContainers.orValue([])
+  validations:
+  - expression: variables.allContainers.all(container, container.image.startsWith('eu.foo.io/')
+      || container.image.startsWith('bar.io/'))
+    message: Unknown image registry.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-vpol-restrict-image-registrie-af59df-b
+spec:
+  policyName: best-practices-vpol-restrict-image-registrie-af59df
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-vpol-restrict-image-registrie-af59df-ag1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  variables:
+  - name: allContainers
+    expression: object.spec.template.spec.containers + object.spec.template.spec.?initContainers.orValue([])
+      + object.spec.template.spec.?ephemeralContainers.orValue([])
+  validations:
+  - expression: variables.allContainers.all(container, container.image.startsWith('eu.foo.io/')
+      || container.image.startsWith('bar.io/'))
+    message: Unknown image registry.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-vpol-restrict-image-registrie-af59df-ag1-b
+spec:
+  policyName: best-practices-vpol-restrict-image-registrie-af59df-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-vpol-restrict-image-registrie-af59df-ag2
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  variables:
+  - name: allContainers
+    expression: object.spec.jobTemplate.spec.template.spec.containers + object.spec.jobTemplate.spec.template.spec.?initContainers.orValue([])
+      + object.spec.jobTemplate.spec.template.spec.?ephemeralContainers.orValue([])
+  validations:
+  - expression: variables.allContainers.all(container, container.image.startsWith('eu.foo.io/')
+      || container.image.startsWith('bar.io/'))
+    message: Unknown image registry.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-vpol-restrict-image-registrie-af59df-ag2-b
+spec:
+  policyName: best-practices-vpol-restrict-image-registrie-af59df-ag2
+  validationActions:
+  - Deny

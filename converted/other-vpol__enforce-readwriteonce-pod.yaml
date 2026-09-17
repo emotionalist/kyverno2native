@@ -1,0 +1,29 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-enforce-readwriteonce-pod-4cdaca
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      resources:
+      - persistentvolumeclaims
+      operations:
+      - CREATE
+      - UPDATE
+  validations:
+  - expression: '''ReadWriteOncePod'' in object.spec.accessModes'
+    message: The accessMode must be set to ReadWriteOncePod.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-enforce-readwriteonce-pod-4cdaca-b
+spec:
+  policyName: other-vpol-enforce-readwriteonce-pod-4cdaca
+  validationActions:
+  - Deny

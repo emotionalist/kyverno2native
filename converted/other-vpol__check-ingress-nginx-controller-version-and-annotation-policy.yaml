@@ -1,0 +1,222 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-check-ingress-nginx-controller-ve-6db6c1
+spec:
+  variables:
+  - name: isIngress
+    expression: object.kind == 'Ingress'
+  - name: isPod
+    expression: object.kind == 'Pod'
+  - name: allContainers
+    expression: 'variables.isPod ? object.spec.containers + object.spec.?initContainers.orValue([])
+      + object.spec.?ephemeralContainers.orValue([]) : []'
+  - name: controllerContainers
+    expression: variables.allContainers.filter(c, c.name == 'controller')
+  - name: authTlsAnnotation
+    expression: object.metadata.?annotations[?'nginx.ingress.kubernetes.io/auth-tls-verify-client'].orValue('')
+  - name: validAuthTlsValues
+    expression: '[''on'', ''off'', ''optional'', ''optional_no_ca'']'
+  matchConstraints:
+    resourceRules:
+    - resources:
+      - ingresses
+      operations:
+      - CREATE
+      - UPDATE
+      apiGroups:
+      - networking.k8s.io
+      apiVersions:
+      - v1
+    - resources:
+      - pods
+      operations:
+      - CREATE
+      - UPDATE
+      apiGroups:
+      - ''
+      apiVersions:
+      - v1
+  validations:
+  - reason: Invalid
+    messageExpression: '''server-snippet annotation is not allowed in Ingress resources'''
+    expression: '!variables.isIngress || !has(object.metadata.annotations) || !object.metadata.annotations.exists(a,
+      a == ''nginx.ingress.kubernetes.io/server-snippet'')'
+  - reason: Invalid
+    messageExpression: '''auth-tls-verify-client annotation must be one of: '' + variables.validAuthTlsValues.join('',
+      '') + '', received: '' + variables.authTlsAnnotation'
+    expression: '!variables.isIngress || variables.authTlsAnnotation == '''' || variables.authTlsAnnotation
+      in variables.validAuthTlsValues'
+  - reason: Invalid
+    messageExpression: '''controller container must use ingress-nginx version 1.11.2
+      or higher, excluding v1.11.0 and v1.11.1'''
+    expression: '!variables.isPod || variables.controllerContainers.all(c, c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.11.'')
+      && !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.11.0'')
+      && !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.11.1'')
+      && !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.10.'')
+      && !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.9.'') &&
+      !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.8.'') && !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.7.'')
+      && !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.6.'') &&
+      !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.5.'') && !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.4.'')
+      && !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.3.'') &&
+      !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.2.'') && !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.1.'')
+      && !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.0.''))'
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-check-ingress-nginx-controller-ve-6db6c1-b
+spec:
+  policyName: other-vpol-check-ingress-nginx-controller-ve-6db6c1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-check-ingress-nginx-controller-ve-6db6c1-ag1
+spec:
+  variables:
+  - name: isIngress
+    expression: object.kind == 'Ingress'
+  - name: isPod
+    expression: object.kind == 'Pod'
+  - name: allContainers
+    expression: 'variables.isPod ? object.spec.template.spec.containers + object.spec.template.spec.?initContainers.orValue([])
+      + object.spec.template.spec.?ephemeralContainers.orValue([]) : []'
+  - name: controllerContainers
+    expression: variables.allContainers.filter(c, c.name == 'controller')
+  - name: authTlsAnnotation
+    expression: object.spec.template.metadata.?annotations[?'nginx.ingress.kubernetes.io/auth-tls-verify-client'].orValue('')
+  - name: validAuthTlsValues
+    expression: '[''on'', ''off'', ''optional'', ''optional_no_ca'']'
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - reason: Invalid
+    messageExpression: '''server-snippet annotation is not allowed in Ingress resources'''
+    expression: '!variables.isIngress || !has(object.spec.template.metadata.annotations)
+      || !object.spec.template.metadata.annotations.exists(a, a == ''nginx.ingress.kubernetes.io/server-snippet'')'
+  - reason: Invalid
+    messageExpression: '''auth-tls-verify-client annotation must be one of: '' + variables.validAuthTlsValues.join('',
+      '') + '', received: '' + variables.authTlsAnnotation'
+    expression: '!variables.isIngress || variables.authTlsAnnotation == '''' || variables.authTlsAnnotation
+      in variables.validAuthTlsValues'
+  - reason: Invalid
+    messageExpression: '''controller container must use ingress-nginx version 1.11.2
+      or higher, excluding v1.11.0 and v1.11.1'''
+    expression: '!variables.isPod || variables.controllerContainers.all(c, c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.11.'')
+      && !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.11.0'')
+      && !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.11.1'')
+      && !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.10.'')
+      && !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.9.'') &&
+      !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.8.'') && !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.7.'')
+      && !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.6.'') &&
+      !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.5.'') && !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.4.'')
+      && !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.3.'') &&
+      !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.2.'') && !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.1.'')
+      && !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.0.''))'
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-check-ingress-nginx-controller-ve-6db6c1-ag1-b
+spec:
+  policyName: other-vpol-check-ingress-nginx-controller-ve-6db6c1-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-check-ingress-nginx-controller-ve-6db6c1-ag2
+spec:
+  variables:
+  - name: isIngress
+    expression: object.kind == 'Ingress'
+  - name: isPod
+    expression: object.kind == 'Pod'
+  - name: allContainers
+    expression: 'variables.isPod ? object.spec.jobTemplate.spec.template.spec.containers
+      + object.spec.jobTemplate.spec.template.spec.?initContainers.orValue([]) + object.spec.jobTemplate.spec.template.spec.?ephemeralContainers.orValue([])
+      : []'
+  - name: controllerContainers
+    expression: variables.allContainers.filter(c, c.name == 'controller')
+  - name: authTlsAnnotation
+    expression: object.spec.jobTemplate.spec.template.metadata.?annotations[?'nginx.ingress.kubernetes.io/auth-tls-verify-client'].orValue('')
+  - name: validAuthTlsValues
+    expression: '[''on'', ''off'', ''optional'', ''optional_no_ca'']'
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - reason: Invalid
+    messageExpression: '''server-snippet annotation is not allowed in Ingress resources'''
+    expression: '!variables.isIngress || !has(object.spec.jobTemplate.spec.template.metadata.annotations)
+      || !object.spec.jobTemplate.spec.template.metadata.annotations.exists(a, a ==
+      ''nginx.ingress.kubernetes.io/server-snippet'')'
+  - reason: Invalid
+    messageExpression: '''auth-tls-verify-client annotation must be one of: '' + variables.validAuthTlsValues.join('',
+      '') + '', received: '' + variables.authTlsAnnotation'
+    expression: '!variables.isIngress || variables.authTlsAnnotation == '''' || variables.authTlsAnnotation
+      in variables.validAuthTlsValues'
+  - reason: Invalid
+    messageExpression: '''controller container must use ingress-nginx version 1.11.2
+      or higher, excluding v1.11.0 and v1.11.1'''
+    expression: '!variables.isPod || variables.controllerContainers.all(c, c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.11.'')
+      && !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.11.0'')
+      && !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.11.1'')
+      && !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.10.'')
+      && !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.9.'') &&
+      !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.8.'') && !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.7.'')
+      && !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.6.'') &&
+      !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.5.'') && !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.4.'')
+      && !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.3.'') &&
+      !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.2.'') && !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.1.'')
+      && !c.image.startsWith(''registry.k8s.io/ingress-nginx/controller:v1.0.''))'
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-check-ingress-nginx-controller-ve-6db6c1-ag2-b
+spec:
+  policyName: other-vpol-check-ingress-nginx-controller-ve-6db6c1-ag2
+  validationActions:
+  - Deny

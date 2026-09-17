@@ -1,0 +1,38 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: kasten-kasten-data-protection-by-label-bc40ac
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+    objectSelector:
+      matchLabels:
+        purpose: production
+  validations:
+  - expression: (has(object.metadata) && ((has(object.metadata.labels) && ((has(object.metadata.labels.dataprotection)
+      && ((object.metadata.labels.dataprotection == "kasten-example" || object.metadata.labels.dataprotection
+      == "none")))))))
+    message: '"Deployments and StatefulSets with ''purpose=production'' label must
+      specify a valid ''dataprotection'' label:
+
+      "dataprotection=kasten-example" - <Insert human readable settings for eac'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: kasten-kasten-data-protection-by-label-bc40ac-b
+spec:
+  policyName: kasten-kasten-data-protection-by-label-bc40ac
+  validationActions:
+  - Deny

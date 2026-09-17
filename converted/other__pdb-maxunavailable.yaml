@@ -1,0 +1,30 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-pdb-maxunavailable-a73c59
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - policy
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - poddisruptionbudgets
+  validations:
+  - expression: (has(object.spec) && ((!(has(object.spec.maxUnavailable)) || (has(object.spec.maxUnavailable)
+      && (object.spec.maxUnavailable > 0)))))
+    message: The value of maxUnavailable must be greater than zero.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-pdb-maxunavailable-a73c59-b
+spec:
+  policyName: other-pdb-maxunavailable-a73c59
+  validationActions:
+  - Deny

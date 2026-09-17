@@ -1,0 +1,36 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-label-nodes-cri-b892a9
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - nodes
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: "has(object.status.nodeInfo.containerRuntimeVersion) && \nobject.status.nodeInfo.containerRuntimeVersion.startsWith(\"\
+        containerd\") ?\nObject{\n  metadata: Object.metadata{\n    labels: {\n  \
+        \    \"runtime\": \"containerd\"\n    }\n  }\n} : Object{}\n"
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: "has(object.status.nodeInfo.containerRuntimeVersion) && \nobject.status.nodeInfo.containerRuntimeVersion.startsWith(\"\
+        docker\") ?\nObject{\n  metadata: Object.metadata{\n    labels: {\n      \"\
+        runtime\": \"docker\"\n    }\n  }\n} : Object{}"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-label-nodes-cri-b892a9-b
+spec:
+  policyName: other-mpol-label-nodes-cri-b892a9

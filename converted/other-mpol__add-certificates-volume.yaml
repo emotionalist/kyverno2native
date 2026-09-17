@@ -1,0 +1,156 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-add-certificates-volume-5d1e8f
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  matchConditions:
+  - name: check-inject-certs-annotation
+    expression: has(object.metadata.annotations) && "inject-certs" in object.metadata.annotations
+      && object.metadata.annotations["inject-certs"] == "enabled"
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: "Object{\n  spec: Object.spec{\n    containers: object.spec.containers.map(container,\
+        \ Object.spec.containers{\n      name: container.name,\n      volumeMounts:\
+        \ (has(container.volumeMounts) && container.volumeMounts.exists(vm, vm.name\
+        \ == \"etc-ssl-certs\")) \n        ? container.volumeMounts \n        : ((has(container.volumeMounts)\
+        \ ? container.volumeMounts : []) + [\n            Object.spec.containers.volumeMounts{\n\
+        \              name: \"etc-ssl-certs\",\n              mountPath: \"/etc/ssl/certs\"\
+        \n            }\n          ])\n    }),\n    volumes: (has(object.spec.volumes)\
+        \ && object.spec.volumes.exists(v, v.name == \"etc-ssl-certs\"))\n      ?\
+        \ object.spec.volumes\n      : ((has(object.spec.volumes) ? object.spec.volumes\
+        \ : []) + [\n          Object.spec.volumes{\n            name: \"etc-ssl-certs\"\
+        ,\n            configMap: Object.spec.volumes.configMap{\n              name:\
+        \ \"ca-pemstore\"\n            }\n          }\n        ])\n  }\n}\n"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-add-certificates-volume-5d1e8f-b
+spec:
+  policyName: other-mpol-add-certificates-volume-5d1e8f
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-add-certificates-volume-5d1e8f-ag1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  matchConditions:
+  - name: check-inject-certs-annotation
+    expression: has(object.spec.template.metadata.annotations) && "inject-certs" in
+      object.spec.template.metadata.annotations && object.spec.template.metadata.annotations["inject-certs"]
+      == "enabled"
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: "Object{\n  spec: Object.spec{\n    containers: object.spec.template.spec.containers.map(container,\
+        \ Object.spec.containers{\n      name: container.name,\n      volumeMounts:\
+        \ (has(container.volumeMounts) && container.volumeMounts.exists(vm, vm.name\
+        \ == \"etc-ssl-certs\")) \n        ? container.volumeMounts \n        : ((has(container.volumeMounts)\
+        \ ? container.volumeMounts : []) + [\n            Object.spec.containers.volumeMounts{\n\
+        \              name: \"etc-ssl-certs\",\n              mountPath: \"/etc/ssl/certs\"\
+        \n            }\n          ])\n    }),\n    volumes: (has(object.spec.template.spec.volumes)\
+        \ && object.spec.template.spec.volumes.exists(v, v.name == \"etc-ssl-certs\"\
+        ))\n      ? object.spec.template.spec.volumes\n      : ((has(object.spec.template.spec.volumes)\
+        \ ? object.spec.template.spec.volumes : []) + [\n          Object.spec.volumes{\n\
+        \            name: \"etc-ssl-certs\",\n            configMap: Object.spec.volumes.configMap{\n\
+        \              name: \"ca-pemstore\"\n            }\n          }\n       \
+        \ ])\n  }\n}\n"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-add-certificates-volume-5d1e8f-ag1-b
+spec:
+  policyName: other-mpol-add-certificates-volume-5d1e8f-ag1
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-add-certificates-volume-5d1e8f-ag2
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  matchConditions:
+  - name: check-inject-certs-annotation
+    expression: has(object.spec.jobTemplate.spec.template.metadata.annotations) &&
+      "inject-certs" in object.spec.jobTemplate.spec.template.metadata.annotations
+      && object.spec.jobTemplate.spec.template.metadata.annotations["inject-certs"]
+      == "enabled"
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: "Object{\n  spec: Object.spec{\n    containers: object.spec.jobTemplate.spec.template.spec.containers.map(container,\
+        \ Object.spec.containers{\n      name: container.name,\n      volumeMounts:\
+        \ (has(container.volumeMounts) && container.volumeMounts.exists(vm, vm.name\
+        \ == \"etc-ssl-certs\")) \n        ? container.volumeMounts \n        : ((has(container.volumeMounts)\
+        \ ? container.volumeMounts : []) + [\n            Object.spec.containers.volumeMounts{\n\
+        \              name: \"etc-ssl-certs\",\n              mountPath: \"/etc/ssl/certs\"\
+        \n            }\n          ])\n    }),\n    volumes: (has(object.spec.jobTemplate.spec.template.spec.volumes)\
+        \ && object.spec.jobTemplate.spec.template.spec.volumes.exists(v, v.name ==\
+        \ \"etc-ssl-certs\"))\n      ? object.spec.jobTemplate.spec.template.spec.volumes\n\
+        \      : ((has(object.spec.jobTemplate.spec.template.spec.volumes) ? object.spec.jobTemplate.spec.template.spec.volumes\
+        \ : []) + [\n          Object.spec.volumes{\n            name: \"etc-ssl-certs\"\
+        ,\n            configMap: Object.spec.volumes.configMap{\n              name:\
+        \ \"ca-pemstore\"\n            }\n          }\n        ])\n  }\n}\n"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-add-certificates-volume-5d1e8f-ag2-b
+spec:
+  policyName: other-mpol-add-certificates-volume-5d1e8f-ag2

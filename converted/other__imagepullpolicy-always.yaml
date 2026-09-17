@@ -1,0 +1,117 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-imagepullpolicy-always-c325bd
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: (has(object.spec) && ((has(object.spec.containers) && (object.spec.containers.all(__x,
+      !((has(__x.image) && ((__x.image.matches("^.*:latest$") || !__x.image.matches("^.*:.*$")))))
+      || ((has(__x.imagePullPolicy) && (__x.imagePullPolicy == "Always"))))))))
+    message: The imagePullPolicy must be set to `Always` when the tag `latest` is
+      used.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-imagepullpolicy-always-c325bd-b
+spec:
+  policyName: other-imagepullpolicy-always-c325bd
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-imagepullpolicy-always-c325bd-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: (has(object.spec.template.spec) && ((has(object.spec.template.spec.containers)
+      && (object.spec.template.spec.containers.all(__x, !((has(__x.image) && ((__x.image.matches("^.*:latest$")
+      || !__x.image.matches("^.*:.*$"))))) || ((has(__x.imagePullPolicy) && (__x.imagePullPolicy
+      == "Always"))))))))
+    message: The imagePullPolicy must be set to `Always` when the tag `latest` is
+      used.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-imagepullpolicy-always-c325bd-ag1-b
+spec:
+  policyName: other-imagepullpolicy-always-c325bd-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-imagepullpolicy-always-c325bd-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: (has(object.spec.jobTemplate.spec.template.spec) && ((has(object.spec.jobTemplate.spec.template.spec.containers)
+      && (object.spec.jobTemplate.spec.template.spec.containers.all(__x, !((has(__x.image)
+      && ((__x.image.matches("^.*:latest$") || !__x.image.matches("^.*:.*$"))))) ||
+      ((has(__x.imagePullPolicy) && (__x.imagePullPolicy == "Always"))))))))
+    message: The imagePullPolicy must be set to `Always` when the tag `latest` is
+      used.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-imagepullpolicy-always-c325bd-ag2-b
+spec:
+  policyName: other-imagepullpolicy-always-c325bd-ag2
+  validationActions:
+  - Deny

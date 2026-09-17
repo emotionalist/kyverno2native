@@ -1,0 +1,64 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-add-pod-priorityclassname-419eb3
+spec:
+  matchConstraints:
+    namespaceSelector:
+      matchExpressions:
+      - key: env
+        operator: NotIn
+        values:
+        - production
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - daemonsets
+      - statefulsets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - jobs
+      - cronjobs
+  variables:
+  - name: kind
+    expression: object.kind
+  - name: base_path
+    expression: 'variables.kind == "CronJob" ? "/spec/jobTemplate/spec/template/spec"
+      : "/spec/template/spec"'
+  - name: priority_path
+    expression: variables.base_path + "/priorityClassName"
+  - name: old_priority_path
+    expression: variables.base_path + "/priority"
+  - name: pod_spec
+    expression: 'variables.kind == "CronJob" ? object.spec.?jobTemplate.?spec.?template.?spec.orValue({})
+      : object.spec.?template.?spec.orValue({})'
+  - name: has_priority
+    expression: has(variables.pod_spec.priority)
+  mutations:
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: 'variables.has_priority ?  [JSONPatch{op: "remove", path: variables.old_priority_path},
+        JSONPatch{op: "add", path: variables.priority_path, value: "non-production"}]
+        :  [JSONPatch{op: "add", path: variables.priority_path, value: "non-production"}]'
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-add-pod-priorityclassname-419eb3-b
+spec:
+  policyName: other-mpol-add-pod-priorityclassname-419eb3

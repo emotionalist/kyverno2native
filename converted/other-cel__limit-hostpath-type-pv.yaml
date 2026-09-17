@@ -1,0 +1,29 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-cel-limit-hostpath-type-pv-0bfef0
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - persistentvolumes
+  validations:
+  - expression: '!has(object.spec.hostPath) || object.spec.hostPath.path.startsWith(''/data'')'
+    message: hostPath type persistent volumes are confined to /data.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-cel-limit-hostpath-type-pv-0bfef0-b
+spec:
+  policyName: other-cel-limit-hostpath-type-pv-0bfef0
+  validationActions:
+  - Deny

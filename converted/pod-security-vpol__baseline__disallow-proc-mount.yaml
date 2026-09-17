@@ -1,0 +1,121 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-vpol-baseline-disallow-proc-mou-19dd3d
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  variables:
+  - name: allContainers
+    expression: "object.spec.containers + \n  object.spec.?initContainers.orValue([])\
+      \ + \n  object.spec.?ephemeralContainers.orValue([])"
+  validations:
+  - expression: variables.allContainers.all(container, container.?securityContext.?procMount.orValue('Default')
+      == 'Default')
+    message: Changing the proc mount from the default is not allowed.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-vpol-baseline-disallow-proc-mou-19dd3d-b
+spec:
+  policyName: pod-security-vpol-baseline-disallow-proc-mou-19dd3d
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-vpol-baseline-disallow-proc-mou-19dd3d-ag1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  variables:
+  - name: allContainers
+    expression: "object.spec.template.spec.containers + \n  object.spec.template.spec.?initContainers.orValue([])\
+      \ + \n  object.spec.template.spec.?ephemeralContainers.orValue([])"
+  validations:
+  - expression: variables.allContainers.all(container, container.?securityContext.?procMount.orValue('Default')
+      == 'Default')
+    message: Changing the proc mount from the default is not allowed.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-vpol-baseline-disallow-proc-mou-19dd3d-ag1-b
+spec:
+  policyName: pod-security-vpol-baseline-disallow-proc-mou-19dd3d-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-vpol-baseline-disallow-proc-mou-19dd3d-ag2
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  variables:
+  - name: allContainers
+    expression: "object.spec.jobTemplate.spec.template.spec.containers + \n  object.spec.jobTemplate.spec.template.spec.?initContainers.orValue([])\
+      \ + \n  object.spec.jobTemplate.spec.template.spec.?ephemeralContainers.orValue([])"
+  validations:
+  - expression: variables.allContainers.all(container, container.?securityContext.?procMount.orValue('Default')
+      == 'Default')
+    message: Changing the proc mount from the default is not allowed.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-vpol-baseline-disallow-proc-mou-19dd3d-ag2-b
+spec:
+  policyName: pod-security-vpol-baseline-disallow-proc-mou-19dd3d-ag2
+  validationActions:
+  - Deny

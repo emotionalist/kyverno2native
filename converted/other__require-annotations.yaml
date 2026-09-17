@@ -1,0 +1,113 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-require-annotations-f89e2f
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: (has(object.metadata) && ((has(object.metadata.annotations) && (("corp.org/department"
+      in object.metadata.annotations && (object.metadata.annotations["corp.org/department"]
+      != ""))))))
+    message: The annotation `corp.org/department` is required.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-require-annotations-f89e2f-b
+spec:
+  policyName: other-require-annotations-f89e2f
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-require-annotations-f89e2f-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: (has(object.spec.template.metadata) && ((has(object.spec.template.metadata.annotations)
+      && (("corp.org/department" in object.spec.template.metadata.annotations && (object.spec.template.metadata.annotations["corp.org/department"]
+      != ""))))))
+    message: The annotation `corp.org/department` is required.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-require-annotations-f89e2f-ag1-b
+spec:
+  policyName: other-require-annotations-f89e2f-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-require-annotations-f89e2f-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: (has(object.spec.jobTemplate.spec.template.metadata) && ((has(object.spec.jobTemplate.spec.template.metadata.annotations)
+      && (("corp.org/department" in object.spec.jobTemplate.spec.template.metadata.annotations
+      && (object.spec.jobTemplate.spec.template.metadata.annotations["corp.org/department"]
+      != ""))))))
+    message: The annotation `corp.org/department` is required.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-require-annotations-f89e2f-ag2-b
+spec:
+  policyName: other-require-annotations-f89e2f-ag2
+  validationActions:
+  - Deny

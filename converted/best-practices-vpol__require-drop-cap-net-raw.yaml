@@ -1,0 +1,127 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-vpol-require-drop-cap-net-raw-14099f
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  variables:
+  - name: mustDropCapabilities
+    expression: '[''CAP_NET_RAW'',''NET_RAW'']'
+  - name: allContainers
+    expression: object.spec.containers + object.spec.?initContainers.orValue([]) +
+      object.spec.?ephemeralContainers.orValue([])
+  validations:
+  - expression: variables.allContainers.all(container,  container.?securityContext.?capabilities.?drop.orValue([]).exists(capability,
+      capability.upperAscii() in variables.mustDropCapabilities))
+    message: Containers must drop the `CAP_NET_RAW` capability.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-vpol-require-drop-cap-net-raw-14099f-b
+spec:
+  policyName: best-practices-vpol-require-drop-cap-net-raw-14099f
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-vpol-require-drop-cap-net-raw-14099f-ag1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  variables:
+  - name: mustDropCapabilities
+    expression: '[''CAP_NET_RAW'',''NET_RAW'']'
+  - name: allContainers
+    expression: object.spec.template.spec.containers + object.spec.template.spec.?initContainers.orValue([])
+      + object.spec.template.spec.?ephemeralContainers.orValue([])
+  validations:
+  - expression: variables.allContainers.all(container,  container.?securityContext.?capabilities.?drop.orValue([]).exists(capability,
+      capability.upperAscii() in variables.mustDropCapabilities))
+    message: Containers must drop the `CAP_NET_RAW` capability.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-vpol-require-drop-cap-net-raw-14099f-ag1-b
+spec:
+  policyName: best-practices-vpol-require-drop-cap-net-raw-14099f-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-vpol-require-drop-cap-net-raw-14099f-ag2
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  variables:
+  - name: mustDropCapabilities
+    expression: '[''CAP_NET_RAW'',''NET_RAW'']'
+  - name: allContainers
+    expression: object.spec.jobTemplate.spec.template.spec.containers + object.spec.jobTemplate.spec.template.spec.?initContainers.orValue([])
+      + object.spec.jobTemplate.spec.template.spec.?ephemeralContainers.orValue([])
+  validations:
+  - expression: variables.allContainers.all(container,  container.?securityContext.?capabilities.?drop.orValue([]).exists(capability,
+      capability.upperAscii() in variables.mustDropCapabilities))
+    message: Containers must drop the `CAP_NET_RAW` capability.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-vpol-require-drop-cap-net-raw-14099f-ag2-b
+spec:
+  policyName: best-practices-vpol-require-drop-cap-net-raw-14099f-ag2
+  validationActions:
+  - Deny

@@ -1,0 +1,114 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: velero-mpol-backup-all-volumes-013218
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - daemonsets
+      - statefulsets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - jobs
+      - cronjobs
+    namespaceSelector:
+      matchLabels:
+        velero-backup-pvc: 'true'
+  variables:
+  - name: podPvcVolumes
+    expression: 'object.kind == "Pod" && has(object.spec.volumes) ?  object.spec.volumes.filter(v,
+      has(v.persistentVolumeClaim)).map(v, v.name) :  []'
+  - name: podVolumesList
+    expression: 'variables.podPvcVolumes.size() > 0 ? variables.podPvcVolumes.join('','')
+      : '''''
+  - name: deploymentPvcVolumes
+    expression: '(object.kind == "Deployment" || object.kind == "DaemonSet" || object.kind
+      == "StatefulSet") &&  has(object.spec.template.spec.volumes) ?  object.spec.template.spec.volumes.filter(v,
+      has(v.persistentVolumeClaim)).map(v, v.name) :  []'
+  - name: deploymentVolumesList
+    expression: 'variables.deploymentPvcVolumes.size() > 0 ? variables.deploymentPvcVolumes.join('','')
+      : '''''
+  - name: jobPvcVolumes
+    expression: 'object.kind == "Job" && has(object.spec.template.spec.volumes) ?  object.spec.template.spec.volumes.filter(v,
+      has(v.persistentVolumeClaim)).map(v, v.name) :  []'
+  - name: jobVolumesList
+    expression: 'variables.jobPvcVolumes.size() > 0 ? variables.jobPvcVolumes.join('','')
+      : '''''
+  - name: cronjobPvcVolumes
+    expression: 'object.kind == "CronJob" && has(object.spec.jobTemplate.spec.template.spec.volumes)
+      ?  object.spec.jobTemplate.spec.template.spec.volumes.filter(v, has(v.persistentVolumeClaim)).map(v,
+      v.name) :  []'
+  - name: cronjobVolumesList
+    expression: 'variables.cronjobPvcVolumes.size() > 0 ? variables.cronjobPvcVolumes.join('','')
+      : '''''
+  mutations:
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "object.kind == \"Pod\" && variables.podVolumesList != '' ?\n(\n\
+        \  !has(object.metadata.annotations) ?\n  [\n    JSONPatch{\n      op: \"\
+        add\",\n      path: \"/metadata/annotations\",\n      value: {\"backup.velero.io/backup-volumes\"\
+        : variables.podVolumesList}\n    }\n  ] :\n  [\n    JSONPatch{\n      op:\
+        \ \"add\",\n      path: \"/metadata/annotations/\" + jsonpatch.escapeKey(\"\
+        backup.velero.io/backup-volumes\"),\n      value: variables.podVolumesList\n\
+        \    }\n  ]\n) : []\n"
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "(object.kind == \"Deployment\" || object.kind == \"DaemonSet\"\
+        \ || object.kind == \"StatefulSet\") && \nvariables.deploymentVolumesList\
+        \ != '' ?\n(\n  !has(object.spec.template.metadata.annotations) ?\n  [\n \
+        \   JSONPatch{\n      op: \"add\",\n      path: \"/spec/template/metadata/annotations\"\
+        ,\n      value: {\"backup.velero.io/backup-volumes\": variables.deploymentVolumesList}\n\
+        \    }\n  ] :\n  [\n    JSONPatch{\n      op: \"add\",\n      path: \"/spec/template/metadata/annotations/\"\
+        \ + jsonpatch.escapeKey(\"backup.velero.io/backup-volumes\"),\n      value:\
+        \ variables.deploymentVolumesList\n    }\n  ]\n) : []\n"
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "object.kind == \"Job\" && variables.jobVolumesList != '' ?\n(\n\
+        \  !has(object.spec.template.metadata.annotations) ?\n  [\n    JSONPatch{\n\
+        \      op: \"add\",\n      path: \"/spec/template/metadata/annotations\",\n\
+        \      value: {\"backup.velero.io/backup-volumes\": variables.jobVolumesList}\n\
+        \    }\n  ] :\n  [\n    JSONPatch{\n      op: \"add\",\n      path: \"/spec/template/metadata/annotations/\"\
+        \ + jsonpatch.escapeKey(\"backup.velero.io/backup-volumes\"),\n      value:\
+        \ variables.jobVolumesList\n    }\n  ]\n) : []\n"
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "object.kind == \"CronJob\" && variables.cronjobVolumesList != ''\
+        \ ?\n(\n  !has(object.spec.jobTemplate.spec.template.metadata.annotations)\
+        \ ?\n  [\n    JSONPatch{\n      op: \"add\",\n      path: \"/spec/jobTemplate/spec/template/metadata/annotations\"\
+        ,\n      value: {\"backup.velero.io/backup-volumes\": variables.cronjobVolumesList}\n\
+        \    }\n  ] :\n  [\n    JSONPatch{\n      op: \"add\",\n      path: \"/spec/jobTemplate/spec/template/metadata/annotations/\"\
+        \ + jsonpatch.escapeKey(\"backup.velero.io/backup-volumes\"),\n      value:\
+        \ variables.cronjobVolumesList\n    }\n  ]\n) : []"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: velero-mpol-backup-all-volumes-013218-b
+spec:
+  policyName: velero-mpol-backup-all-volumes-013218

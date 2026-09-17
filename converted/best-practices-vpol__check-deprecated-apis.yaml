@@ -1,0 +1,113 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-vpol-check-deprecated-apis-c010fa
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      - v1beta1
+      resources:
+      - cronjobs
+      operations:
+      - CREATE
+      - UPDATE
+    - apiGroups:
+      - discovery.k8s.io
+      apiVersions:
+      - v1
+      - v1beta1
+      resources:
+      - endpointslices
+      operations:
+      - CREATE
+      - UPDATE
+    - apiGroups:
+      - events.k8s.io
+      apiVersions:
+      - v1
+      - v1beta1
+      resources:
+      - events
+      operations:
+      - CREATE
+      - UPDATE
+    - apiGroups:
+      - policy
+      apiVersions:
+      - v1
+      - v1beta1
+      resources:
+      - poddisruptionbudgets
+      - podsecuritypolicies
+      operations:
+      - CREATE
+      - UPDATE
+    - apiGroups:
+      - node.k8s.io
+      apiVersions:
+      - v1
+      - v1beta1
+      resources:
+      - runtimeclasses
+      operations:
+      - CREATE
+      - UPDATE
+    - apiGroups:
+      - flowcontrol.apiserver.k8s.io
+      apiVersions:
+      - v1
+      - v1beta1
+      - v1beta2
+      - v1beta3
+      resources:
+      - flowschemas
+      - prioritylevelconfigurations
+      operations:
+      - CREATE
+      - UPDATE
+    - apiGroups:
+      - autoscaling
+      apiVersions:
+      - v1
+      - v2
+      - v2beta2
+      resources:
+      - horizontalpodautoscalers
+      operations:
+      - CREATE
+      - UPDATE
+    - apiGroups:
+      - storage.k8s.io
+      apiVersions:
+      - v1
+      - v1beta1
+      resources:
+      - csistoragecapacities
+      operations:
+      - CREATE
+      - UPDATE
+  matchConditions:
+  - name: deprecatedAPIVersion
+    expression: "object.apiVersion in [\n   'batch/v1beta1',\n   'discovery.k8s.io/v1beta1',\n\
+      \   'events.k8s.io/v1beta1',\n   'policy/v1beta1',\n   'node.k8s.io/v1beta1',\n\
+      \   'flowcontrol.apiserver.k8s.io/v1beta1',\n   'flowcontrol.apiserver.k8s.io/v1beta2',\n\
+      \   'flowcontrol.apiserver.k8s.io/v1beta3',\n   'autoscaling/v2beta2',\n   'storage.k8s.io/v1beta1'\n\
+      \ ]"
+  validations:
+  - expression: 'false'
+    messageExpression: 'string(object.apiVersion) + ''/'' + string(object.kind) +
+      '' is deprecated and will be removed in a future Kubernetes version. See: https://kubernetes.io/docs/reference/using-api/deprecation-guide/'''
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-vpol-check-deprecated-apis-c010fa-b
+spec:
+  policyName: best-practices-vpol-check-deprecated-apis-c010fa
+  validationActions:
+  - Deny

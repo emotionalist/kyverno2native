@@ -1,0 +1,44 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-block-cluster-admin-from-ns-f006cd
+spec:
+  variables:
+  - name: isTestUser
+    expression: request.userInfo.username == "testuser"
+  - name: isTestNamespace
+    expression: request.namespace == "testnamespace"
+  - name: hasClusterAdminRole
+    expression: request.userInfo.groups.exists(group, group == "system:masters") ||
+      request.userInfo.groups.exists(group, group.contains("cluster-admin"))
+  - name: isBlockedOperation
+    expression: request.operation in ["CREATE", "UPDATE", "DELETE"]
+  matchConstraints:
+    namespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: testnamespace
+    resourceRules:
+    - resources:
+      - '*'
+      operations:
+      - CREATE
+      - UPDATE
+      - DELETE
+      apiGroups:
+      - '*'
+      apiVersions:
+      - '*'
+  validations:
+  - messageExpression: '"The cluster-admin ''testuser'' user cannot touch testnamespace
+      Namespace."'
+    expression: '!(variables.isTestUser && variables.isTestNamespace && variables.isBlockedOperation)'
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-block-cluster-admin-from-ns-f006cd-b
+spec:
+  policyName: other-vpol-block-cluster-admin-from-ns-f006cd
+  validationActions:
+  - Deny

@@ -1,0 +1,29 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: argo-cel-applicationset-name-matches-project-85e886
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - argoproj.io
+      apiVersions:
+      - v1alpha1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - applicationsets
+  validations:
+  - expression: object.spec.template.spec.project == object.metadata.name
+    message: The name must match the project.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: argo-cel-applicationset-name-matches-project-85e886-b
+spec:
+  policyName: argo-cel-applicationset-name-matches-project-85e886
+  validationActions:
+  - Deny

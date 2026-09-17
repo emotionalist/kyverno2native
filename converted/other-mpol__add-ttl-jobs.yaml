@@ -1,0 +1,40 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-add-ttl-jobs-99eb84
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - jobs
+  matchConditions:
+  - name: ttl-missing-and-no-ownerreferences
+    expression: '!has(object.metadata.ownerReferences) && !has(object.spec.ttlSecondsAfterFinished)'
+  mutations:
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: |
+        !has(object.spec.ttlSecondsAfterFinished) ?
+          [
+            JSONPatch{
+              op: "add",
+              path: "/spec/ttlSecondsAfterFinished",
+              value: 900
+            }
+          ] : []
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-add-ttl-jobs-99eb84-b
+spec:
+  policyName: other-mpol-add-ttl-jobs-99eb84

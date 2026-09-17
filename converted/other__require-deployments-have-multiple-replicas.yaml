@@ -1,0 +1,30 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-require-deployments-have-multiple-repl-cd4165
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+  validations:
+  - expression: (has(object.spec) && ((has(object.spec.replicas) && (object.spec.replicas
+      > 1))))
+    message: Deployments should have more than one replica to ensure availability.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-require-deployments-have-multiple-repl-cd4165-b
+spec:
+  policyName: other-require-deployments-have-multiple-repl-cd4165
+  validationActions:
+  - Deny

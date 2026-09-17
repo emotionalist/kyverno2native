@@ -1,0 +1,35 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: linkerd-add-linkerd-mesh-injection-05c851
+spec:
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - namespaces
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: 'Object{metadata: Object.metadata{annotations: {"linkerd.io/inject":
+        "enabled", "config.linkerd.io/proxy-await": "enabled"}}}'
+  matchConditions:
+  - name: addifabsent0
+    expression: '!("linkerd.io/inject" in object.metadata.annotations)'
+  - name: addifabsent1
+    expression: '!("config.linkerd.io/proxy-await" in object.metadata.annotations)'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: linkerd-add-linkerd-mesh-injection-05c851-b
+spec:
+  policyName: linkerd-add-linkerd-mesh-injection-05c851

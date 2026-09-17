@@ -1,0 +1,118 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-add-ndots-1a55c1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - daemonsets
+      - statefulsets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - jobs
+      - cronjobs
+  mutations:
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "object.kind == \"Pod\" && \nhas(object.spec.dnsConfig) && \nhas(object.spec.dnsConfig.options)\
+        \ && \nobject.spec.dnsConfig.options.exists(opt, opt.name == \"ndots\") ?\n\
+        [JSONPatch{\n  op: \"remove\",\n  path: \"/spec/dnsConfig/options/\" + string(object.spec.dnsConfig.options.map(opt,\
+        \ opt.name).indexOf(\"ndots\"))\n}] : []\n"
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "object.kind == \"Pod\" ?\n(has(object.spec.dnsConfig) && has(object.spec.dnsConfig.options)\
+        \ ?\n  [JSONPatch{\n    op: \"add\",\n    path: \"/spec/dnsConfig/options/-\"\
+        ,\n    value: {\"name\": \"ndots\", \"value\": \"1\"}\n  }] :\n  (has(object.spec.dnsConfig)\
+        \ ?\n    [JSONPatch{\n      op: \"add\",\n      path: \"/spec/dnsConfig/options\"\
+        ,\n      value: [{\"name\": \"ndots\", \"value\": \"1\"}]\n    }] :\n    [JSONPatch{\n\
+        \      op: \"add\",\n      path: \"/spec/dnsConfig\",\n      value: {\"options\"\
+        : [{\"name\": \"ndots\", \"value\": \"1\"}]}\n    }]\n  )\n) : []\n"
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "object.kind in [\"Deployment\", \"DaemonSet\", \"StatefulSet\"\
+        ] && \nhas(object.spec.template.spec.dnsConfig) && \nhas(object.spec.template.spec.dnsConfig.options)\
+        \ && \nobject.spec.template.spec.dnsConfig.options.exists(opt, opt.name ==\
+        \ \"ndots\") ?\n[JSONPatch{\n  op: \"remove\",\n  path: \"/spec/template/spec/dnsConfig/options/\"\
+        \ + string(object.spec.template.spec.dnsConfig.options.map(opt, opt.name).indexOf(\"\
+        ndots\"))\n}] : []\n"
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "object.kind in [\"Deployment\", \"DaemonSet\", \"StatefulSet\"\
+        ] ?\n(has(object.spec.template.spec.dnsConfig) && has(object.spec.template.spec.dnsConfig.options)\
+        \ ?\n  [JSONPatch{\n    op: \"add\",\n    path: \"/spec/template/spec/dnsConfig/options/-\"\
+        ,\n    value: {\"name\": \"ndots\", \"value\": \"1\"}\n  }] :\n  (has(object.spec.template.spec.dnsConfig)\
+        \ ?\n    [JSONPatch{\n      op: \"add\",\n      path: \"/spec/template/spec/dnsConfig/options\"\
+        ,\n      value: [{\"name\": \"ndots\", \"value\": \"1\"}]\n    }] :\n    [JSONPatch{\n\
+        \      op: \"add\",\n      path: \"/spec/template/spec/dnsConfig\",\n    \
+        \  value: {\"options\": [{\"name\": \"ndots\", \"value\": \"1\"}]}\n    }]\n\
+        \  )\n) : []\n"
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "object.kind == \"Job\" && \nhas(object.spec.template.spec.dnsConfig)\
+        \ && \nhas(object.spec.template.spec.dnsConfig.options) && \nobject.spec.template.spec.dnsConfig.options.exists(opt,\
+        \ opt.name == \"ndots\") ?\n[JSONPatch{\n  op: \"remove\",\n  path: \"/spec/template/spec/dnsConfig/options/\"\
+        \ + string(object.spec.template.spec.dnsConfig.options.map(opt, opt.name).indexOf(\"\
+        ndots\"))\n}] : []\n"
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "object.kind == \"Job\" ?\n(has(object.spec.template.spec.dnsConfig)\
+        \ && has(object.spec.template.spec.dnsConfig.options) ?\n  [JSONPatch{\n \
+        \   op: \"add\",\n    path: \"/spec/template/spec/dnsConfig/options/-\",\n\
+        \    value: {\"name\": \"ndots\", \"value\": \"1\"}\n  }] :\n  (has(object.spec.template.spec.dnsConfig)\
+        \ ?\n    [JSONPatch{\n      op: \"add\",\n      path: \"/spec/template/spec/dnsConfig/options\"\
+        ,\n      value: [{\"name\": \"ndots\", \"value\": \"1\"}]\n    }] :\n    [JSONPatch{\n\
+        \      op: \"add\",\n      path: \"/spec/template/spec/dnsConfig\",\n    \
+        \  value: {\"options\": [{\"name\": \"ndots\", \"value\": \"1\"}]}\n    }]\n\
+        \  )\n) : []\n"
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "object.kind == \"CronJob\" && \nhas(object.spec.jobTemplate.spec.template.spec.dnsConfig)\
+        \ && \nhas(object.spec.jobTemplate.spec.template.spec.dnsConfig.options) &&\
+        \ \nobject.spec.jobTemplate.spec.template.spec.dnsConfig.options.exists(opt,\
+        \ opt.name == \"ndots\") ?\n[JSONPatch{\n  op: \"remove\",\n  path: \"/spec/jobTemplate/spec/template/spec/dnsConfig/options/\"\
+        \ + string(object.spec.jobTemplate.spec.template.spec.dnsConfig.options.map(opt,\
+        \ opt.name).indexOf(\"ndots\"))\n}] : []\n"
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "object.kind == \"CronJob\" ?\n(has(object.spec.jobTemplate.spec.template.spec.dnsConfig)\
+        \ && has(object.spec.jobTemplate.spec.template.spec.dnsConfig.options) ?\n\
+        \  [JSONPatch{\n    op: \"add\",\n    path: \"/spec/jobTemplate/spec/template/spec/dnsConfig/options/-\"\
+        ,\n    value: {\"name\": \"ndots\", \"value\": \"1\"}\n  }] :\n  (has(object.spec.jobTemplate.spec.template.spec.dnsConfig)\
+        \ ?\n    [JSONPatch{\n      op: \"add\",\n      path: \"/spec/jobTemplate/spec/template/spec/dnsConfig/options\"\
+        ,\n      value: [{\"name\": \"ndots\", \"value\": \"1\"}]\n    }] :\n    [JSONPatch{\n\
+        \      op: \"add\",\n      path: \"/spec/jobTemplate/spec/template/spec/dnsConfig\"\
+        ,\n      value: {\"options\": [{\"name\": \"ndots\", \"value\": \"1\"}]}\n\
+        \    }]\n  )\n) : []\n"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-add-ndots-1a55c1-b
+spec:
+  policyName: other-mpol-add-ndots-1a55c1

@@ -1,0 +1,28 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-cel-restrict-ingress-defaultbackend-32060e
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - networking.k8s.io
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - ingresses
+  validations:
+  - expression: '!has(object.spec.defaultBackend)'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-cel-restrict-ingress-defaultbackend-32060e-b
+spec:
+  policyName: other-cel-restrict-ingress-defaultbackend-32060e
+  validationActions:
+  - Deny

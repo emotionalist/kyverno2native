@@ -1,0 +1,43 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: karpenter-mpol-add-karpenter-donot-evict-1d70d1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - jobs
+      - cronjobs
+  mutations:
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "object.kind == \"Job\" ?\n  (has(object.spec.template.metadata)\
+        \ ?\n    (has(object.spec.template.metadata.annotations) ?\n      [JSONPatch{op:\
+        \ \"add\", path: \"/spec/template/metadata/annotations/\" + jsonpatch.escapeKey(\"\
+        karpenter.sh/do-not-evict\"), value: \"true\"}] : \n      [JSONPatch{op: \"\
+        add\", path: \"/spec/template/metadata/annotations\", value: {\"karpenter.sh/do-not-evict\"\
+        : \"true\"}}]\n    ) :\n    [JSONPatch{op: \"add\", path: \"/spec/template/metadata\"\
+        , value: {\"annotations\": {\"karpenter.sh/do-not-evict\": \"true\"}}}]\n\
+        \  ) :\n  (has(object.spec.jobTemplate.spec.template.metadata) ?\n    (has(object.spec.jobTemplate.spec.template.metadata.annotations)\
+        \ ?\n      [JSONPatch{op: \"add\", path: \"/spec/jobTemplate/spec/template/metadata/annotations/\"\
+        \ + jsonpatch.escapeKey(\"karpenter.sh/do-not-evict\"), value: \"true\"}]\
+        \ : \n      [JSONPatch{op: \"add\", path: \"/spec/jobTemplate/spec/template/metadata/annotations\"\
+        , value: {\"karpenter.sh/do-not-evict\": \"true\"}}]\n    ) :\n    [JSONPatch{op:\
+        \ \"add\", path: \"/spec/jobTemplate/spec/template/metadata\", value: {\"\
+        annotations\": {\"karpenter.sh/do-not-evict\": \"true\"}}}]\n  )"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: karpenter-mpol-add-karpenter-donot-evict-1d70d1-b
+spec:
+  policyName: karpenter-mpol-add-karpenter-donot-evict-1d70d1

@@ -1,0 +1,141 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: psp-migration-mpol-add-apparmor-0b72b9
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  variables:
+  - name: allContainers
+    expression: 'object.spec.containers +  (has(object.spec.initContainers) ? object.spec.initContainers
+      : []) +  (has(object.spec.ephemeralContainers) ? object.spec.ephemeralContainers
+      : [])'
+  mutations:
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "!has(object.metadata.annotations) ?\n[\n  JSONPatch{\n    op: \"\
+        add\",\n    path: \"/metadata/annotations\",\n    value: {}\n  }\n] : []\n"
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "variables.allContainers.map(c,\n  JSONPatch{\n    op: \"add\",\n\
+        \    path: \"/metadata/annotations/\" + jsonpatch.escapeKey(\"container.apparmor.security.beta.kubernetes.io/\"\
+        \ + c.name),\n    value: \"runtime/default\"\n  }\n)"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: psp-migration-mpol-add-apparmor-0b72b9-b
+spec:
+  policyName: psp-migration-mpol-add-apparmor-0b72b9
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: psp-migration-mpol-add-apparmor-0b72b9-ag1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  variables:
+  - name: allContainers
+    expression: 'object.spec.template.spec.containers +  (has(object.spec.template.spec.initContainers)
+      ? object.spec.template.spec.initContainers : []) +  (has(object.spec.template.spec.ephemeralContainers)
+      ? object.spec.template.spec.ephemeralContainers : [])'
+  mutations:
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "!has(object.spec.template.metadata.annotations) ?\n[\n  JSONPatch{\n\
+        \    op: \"add\",\n    path: \"/metadata/annotations\",\n    value: {}\n \
+        \ }\n] : []\n"
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "variables.allContainers.map(c,\n  JSONPatch{\n    op: \"add\",\n\
+        \    path: \"/metadata/annotations/\" + jsonpatch.escapeKey(\"container.apparmor.security.beta.kubernetes.io/\"\
+        \ + c.name),\n    value: \"runtime/default\"\n  }\n)"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: psp-migration-mpol-add-apparmor-0b72b9-ag1-b
+spec:
+  policyName: psp-migration-mpol-add-apparmor-0b72b9-ag1
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: psp-migration-mpol-add-apparmor-0b72b9-ag2
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  variables:
+  - name: allContainers
+    expression: 'object.spec.jobTemplate.spec.template.spec.containers +  (has(object.spec.jobTemplate.spec.template.spec.initContainers)
+      ? object.spec.jobTemplate.spec.template.spec.initContainers : []) +  (has(object.spec.jobTemplate.spec.template.spec.ephemeralContainers)
+      ? object.spec.jobTemplate.spec.template.spec.ephemeralContainers : [])'
+  mutations:
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "!has(object.spec.jobTemplate.spec.template.metadata.annotations)\
+        \ ?\n[\n  JSONPatch{\n    op: \"add\",\n    path: \"/metadata/annotations\"\
+        ,\n    value: {}\n  }\n] : []\n"
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "variables.allContainers.map(c,\n  JSONPatch{\n    op: \"add\",\n\
+        \    path: \"/metadata/annotations/\" + jsonpatch.escapeKey(\"container.apparmor.security.beta.kubernetes.io/\"\
+        \ + c.name),\n    value: \"runtime/default\"\n  }\n)"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: psp-migration-mpol-add-apparmor-0b72b9-ag2-b
+spec:
+  policyName: psp-migration-mpol-add-apparmor-0b72b9-ag2

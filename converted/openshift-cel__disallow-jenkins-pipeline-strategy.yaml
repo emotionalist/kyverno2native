@@ -1,0 +1,36 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: openshift-cel-disallow-jenkins-pipeline-stra-aa833a
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - buildconfigs
+    - apiGroups:
+      - build.openshift.io
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - buildconfigs
+  validations:
+  - expression: '!has(object.spec.strategy.jenkinsPipelineStrategy)'
+    message: Jenkins Pipeline Build Strategy has been deprecated and is not allowed
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: openshift-cel-disallow-jenkins-pipeline-stra-aa833a-b
+spec:
+  policyName: openshift-cel-disallow-jenkins-pipeline-stra-aa833a
+  validationActions:
+  - Deny

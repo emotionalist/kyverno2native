@@ -1,0 +1,35 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: velero-cel-block-velero-restore-a0e491
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - velero.io
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - restores
+  validations:
+  - expression: '!variables.namespaceMappingValues.exists(val, val in [''kube-system'',
+      ''kube-node-lease''])'
+    messageExpression: '''Warning! Restore to protected namespace: '' + variables.namespaceMappingValues.join('',
+      '') + '' is not allowed!'''
+  variables:
+  - name: namespaceMappingValues
+    expression: 'has(object.spec.namespaceMapping) ? object.spec.namespaceMapping.map(nsmap,
+      object.spec.namespaceMapping[nsmap]) : []'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: velero-cel-block-velero-restore-a0e491-b
+spec:
+  policyName: velero-cel-block-velero-restore-a0e491
+  validationActions:
+  - Deny

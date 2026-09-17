@@ -1,0 +1,157 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-cel-restricted-require-run-as-n-126c8d
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: variables.podLevelEnforced || variables.containerLevelEnforced
+    message: Running as root is not allowed. Either the field spec.securityContext.runAsNonRoot
+      or all of spec.containers[*].securityContext.runAsNonRoot, spec.initContainers[*].securityContext.runAsNonRoot
+      and spec.ephemeralContainers[*].securityContext.runAsNonRoot, must be set to
+      true.
+  variables:
+  - name: podSecurityContext
+    expression: object.spec.?securityContext.orValue({})
+  - name: allContainers
+    expression: object.spec.containers + object.spec.?initContainers.orValue([]) +
+      object.spec.?ephemeralContainers.orValue([])
+  - name: podRunAsNonRoot
+    expression: variables.podSecurityContext.?runAsNonRoot.orValue(false)
+  - name: podLevelEnforced
+    expression: "variables.podRunAsNonRoot && variables.allContainers.all(container,\n\
+      \  container.?securityContext.?runAsNonRoot.orValue(true) == true\n)"
+  - name: containerLevelEnforced
+    expression: "variables.allContainers.all(container,\n  container.?securityContext.?runAsNonRoot.orValue(false)\
+      \ == true\n)"
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-cel-restricted-require-run-as-n-126c8d-b
+spec:
+  policyName: pod-security-cel-restricted-require-run-as-n-126c8d
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-cel-restricted-require-run-as-n-126c8d-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: variables.podLevelEnforced || variables.containerLevelEnforced
+    message: Running as root is not allowed. Either the field spec.securityContext.runAsNonRoot
+      or all of spec.containers[*].securityContext.runAsNonRoot, spec.initContainers[*].securityContext.runAsNonRoot
+      and spec.ephemeralContainers[*].securityContext.runAsNonRoot, must be set to
+      true.
+  variables:
+  - name: podSecurityContext
+    expression: object.spec.template.spec.?securityContext.orValue({})
+  - name: allContainers
+    expression: object.spec.template.spec.containers + object.spec.template.spec.?initContainers.orValue([])
+      + object.spec.template.spec.?ephemeralContainers.orValue([])
+  - name: podRunAsNonRoot
+    expression: variables.podSecurityContext.?runAsNonRoot.orValue(false)
+  - name: podLevelEnforced
+    expression: "variables.podRunAsNonRoot && variables.allContainers.all(container,\n\
+      \  container.?securityContext.?runAsNonRoot.orValue(true) == true\n)"
+  - name: containerLevelEnforced
+    expression: "variables.allContainers.all(container,\n  container.?securityContext.?runAsNonRoot.orValue(false)\
+      \ == true\n)"
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-cel-restricted-require-run-as-n-126c8d-ag1-b
+spec:
+  policyName: pod-security-cel-restricted-require-run-as-n-126c8d-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-cel-restricted-require-run-as-n-126c8d-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: variables.podLevelEnforced || variables.containerLevelEnforced
+    message: Running as root is not allowed. Either the field spec.securityContext.runAsNonRoot
+      or all of spec.containers[*].securityContext.runAsNonRoot, spec.initContainers[*].securityContext.runAsNonRoot
+      and spec.ephemeralContainers[*].securityContext.runAsNonRoot, must be set to
+      true.
+  variables:
+  - name: podSecurityContext
+    expression: object.spec.jobTemplate.spec.template.spec.?securityContext.orValue({})
+  - name: allContainers
+    expression: object.spec.jobTemplate.spec.template.spec.containers + object.spec.jobTemplate.spec.template.spec.?initContainers.orValue([])
+      + object.spec.jobTemplate.spec.template.spec.?ephemeralContainers.orValue([])
+  - name: podRunAsNonRoot
+    expression: variables.podSecurityContext.?runAsNonRoot.orValue(false)
+  - name: podLevelEnforced
+    expression: "variables.podRunAsNonRoot && variables.allContainers.all(container,\n\
+      \  container.?securityContext.?runAsNonRoot.orValue(true) == true\n)"
+  - name: containerLevelEnforced
+    expression: "variables.allContainers.all(container,\n  container.?securityContext.?runAsNonRoot.orValue(false)\
+      \ == true\n)"
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-cel-restricted-require-run-as-n-126c8d-ag2-b
+spec:
+  policyName: pod-security-cel-restricted-require-run-as-n-126c8d-ag2
+  validationActions:
+  - Deny

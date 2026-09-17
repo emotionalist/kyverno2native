@@ -1,0 +1,109 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-restrict-node-affinity-14ce72
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: (has(object.spec) && ((!(has(object.spec.affinity)) || (has(object.spec.affinity)
+      && ((!(has(object.spec.affinity.nodeAffinity))))))))
+    message: Node affinity cannot be used.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-restrict-node-affinity-14ce72-b
+spec:
+  policyName: other-restrict-node-affinity-14ce72
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-restrict-node-affinity-14ce72-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: (has(object.spec.template.spec) && ((!(has(object.spec.template.spec.affinity))
+      || (has(object.spec.template.spec.affinity) && ((!(has(object.spec.template.spec.affinity.nodeAffinity))))))))
+    message: Node affinity cannot be used.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-restrict-node-affinity-14ce72-ag1-b
+spec:
+  policyName: other-restrict-node-affinity-14ce72-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-restrict-node-affinity-14ce72-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: (has(object.spec.jobTemplate.spec.template.spec) && ((!(has(object.spec.jobTemplate.spec.template.spec.affinity))
+      || (has(object.spec.jobTemplate.spec.template.spec.affinity) && ((!(has(object.spec.jobTemplate.spec.template.spec.affinity.nodeAffinity))))))))
+    message: Node affinity cannot be used.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-restrict-node-affinity-14ce72-ag2-b
+spec:
+  policyName: other-restrict-node-affinity-14ce72-ag2
+  validationActions:
+  - Deny

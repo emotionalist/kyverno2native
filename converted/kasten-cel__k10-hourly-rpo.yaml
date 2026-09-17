@@ -1,0 +1,32 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: kasten-cel-k10-hourly-rpo-d6f0bf
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - config.kio.kasten.io
+      apiVersions:
+      - v1alpha1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - policies
+    objectSelector:
+      matchLabels:
+        appPriority: Mission-Critical
+  validations:
+  - expression: has(object.spec.frequency) && object.spec.frequency == '@hourly'
+    message: Mission Critical RPO frequency should use no shorter than @hourly frequency
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: kasten-cel-k10-hourly-rpo-d6f0bf-b
+spec:
+  policyName: kasten-cel-k10-hourly-rpo-d6f0bf
+  validationActions:
+  - Deny

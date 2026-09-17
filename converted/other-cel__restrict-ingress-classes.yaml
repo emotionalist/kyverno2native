@@ -1,0 +1,30 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-cel-restrict-ingress-classes-4c418b
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - networking.k8s.io
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - ingresses
+  validations:
+  - expression: 'object.metadata.?annotations[?''kubernetes.io/ingress.class''].orValue('''')
+      in [''HAProxy'', ''nginx'']      '
+    message: Unknown ingress class.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-cel-restrict-ingress-classes-4c418b-b
+spec:
+  policyName: other-cel-restrict-ingress-classes-4c418b
+  validationActions:
+  - Deny

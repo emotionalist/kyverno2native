@@ -1,0 +1,140 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-add-default-securitycontext-3e90e4
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: "Object{\n  spec: Object.spec{\n    securityContext: Object.spec.securityContext{\n\
+        \      runAsNonRoot: has(object.spec.securityContext) && has(object.spec.securityContext.runAsNonRoot)\n\
+        \                   ? object.spec.securityContext.runAsNonRoot\n         \
+        \          : true,\n      runAsUser: has(object.spec.securityContext) && has(object.spec.securityContext.runAsUser)\n\
+        \                 ? object.spec.securityContext.runAsUser\n              \
+        \   : 1000,\n      runAsGroup: has(object.spec.securityContext) && has(object.spec.securityContext.runAsGroup)\n\
+        \                  ? object.spec.securityContext.runAsGroup\n            \
+        \      : 3000,\n      fsGroup: has(object.spec.securityContext) && has(object.spec.securityContext.fsGroup)\n\
+        \               ? object.spec.securityContext.fsGroup\n               : 2000\
+        \            \n    }\n  }\n}"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-add-default-securitycontext-3e90e4-b
+spec:
+  policyName: other-mpol-add-default-securitycontext-3e90e4
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-add-default-securitycontext-3e90e4-ag1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: "Object{\n  spec: Object.spec{\n    securityContext: Object.spec.securityContext{\n\
+        \      runAsNonRoot: has(object.spec.template.spec.securityContext) && has(object.spec.template.spec.securityContext.runAsNonRoot)\n\
+        \                   ? object.spec.template.spec.securityContext.runAsNonRoot\n\
+        \                   : true,\n      runAsUser: has(object.spec.template.spec.securityContext)\
+        \ && has(object.spec.template.spec.securityContext.runAsUser)\n          \
+        \       ? object.spec.template.spec.securityContext.runAsUser\n          \
+        \       : 1000,\n      runAsGroup: has(object.spec.template.spec.securityContext)\
+        \ && has(object.spec.template.spec.securityContext.runAsGroup)\n         \
+        \         ? object.spec.template.spec.securityContext.runAsGroup\n       \
+        \           : 3000,\n      fsGroup: has(object.spec.template.spec.securityContext)\
+        \ && has(object.spec.template.spec.securityContext.fsGroup)\n            \
+        \   ? object.spec.template.spec.securityContext.fsGroup\n               :\
+        \ 2000            \n    }\n  }\n}"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-add-default-securitycontext-3e90e4-ag1-b
+spec:
+  policyName: other-mpol-add-default-securitycontext-3e90e4-ag1
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-add-default-securitycontext-3e90e4-ag2
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: "Object{\n  spec: Object.spec{\n    securityContext: Object.spec.securityContext{\n\
+        \      runAsNonRoot: has(object.spec.jobTemplate.spec.template.spec.securityContext)\
+        \ && has(object.spec.jobTemplate.spec.template.spec.securityContext.runAsNonRoot)\n\
+        \                   ? object.spec.jobTemplate.spec.template.spec.securityContext.runAsNonRoot\n\
+        \                   : true,\n      runAsUser: has(object.spec.jobTemplate.spec.template.spec.securityContext)\
+        \ && has(object.spec.jobTemplate.spec.template.spec.securityContext.runAsUser)\n\
+        \                 ? object.spec.jobTemplate.spec.template.spec.securityContext.runAsUser\n\
+        \                 : 1000,\n      runAsGroup: has(object.spec.jobTemplate.spec.template.spec.securityContext)\
+        \ && has(object.spec.jobTemplate.spec.template.spec.securityContext.runAsGroup)\n\
+        \                  ? object.spec.jobTemplate.spec.template.spec.securityContext.runAsGroup\n\
+        \                  : 3000,\n      fsGroup: has(object.spec.jobTemplate.spec.template.spec.securityContext)\
+        \ && has(object.spec.jobTemplate.spec.template.spec.securityContext.fsGroup)\n\
+        \               ? object.spec.jobTemplate.spec.template.spec.securityContext.fsGroup\n\
+        \               : 2000            \n    }\n  }\n}"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-add-default-securitycontext-3e90e4-ag2-b
+spec:
+  policyName: other-mpol-add-default-securitycontext-3e90e4-ag2

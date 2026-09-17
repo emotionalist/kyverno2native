@@ -1,0 +1,33 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: tekton-require-tekton-namespace-pipelinerun-543d38
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - tekton.dev
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pipelineruns
+  validations:
+  - expression: (has(object.metadata) && ((has(object.metadata.namespace) && (object.metadata.namespace
+      != "default"))))
+    message: A namespace is required and may not be set to default.
+  matchConditions:
+  - name: preconditions
+    expression: (request.operation == "CREATE")
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: tekton-require-tekton-namespace-pipelinerun-543d38-b
+spec:
+  policyName: tekton-require-tekton-namespace-pipelinerun-543d38
+  validationActions:
+  - Deny

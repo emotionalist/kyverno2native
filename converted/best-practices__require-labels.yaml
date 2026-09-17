@@ -1,0 +1,113 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-require-labels-e15519
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: (has(object.metadata) && ((has(object.metadata.labels) && (("app.kubernetes.io/name"
+      in object.metadata.labels && (object.metadata.labels["app.kubernetes.io/name"]
+      != ""))))))
+    message: The label `app.kubernetes.io/name` is required.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-require-labels-e15519-b
+spec:
+  policyName: best-practices-require-labels-e15519
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-require-labels-e15519-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: (has(object.spec.template.metadata) && ((has(object.spec.template.metadata.labels)
+      && (("app.kubernetes.io/name" in object.spec.template.metadata.labels && (object.spec.template.metadata.labels["app.kubernetes.io/name"]
+      != ""))))))
+    message: The label `app.kubernetes.io/name` is required.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-require-labels-e15519-ag1-b
+spec:
+  policyName: best-practices-require-labels-e15519-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-require-labels-e15519-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: (has(object.spec.jobTemplate.spec.template.metadata) && ((has(object.spec.jobTemplate.spec.template.metadata.labels)
+      && (("app.kubernetes.io/name" in object.spec.jobTemplate.spec.template.metadata.labels
+      && (object.spec.jobTemplate.spec.template.metadata.labels["app.kubernetes.io/name"]
+      != ""))))))
+    message: The label `app.kubernetes.io/name` is required.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-require-labels-e15519-ag2-b
+spec:
+  policyName: best-practices-require-labels-e15519-ag2
+  validationActions:
+  - Deny

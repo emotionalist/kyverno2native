@@ -1,0 +1,30 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-restrict-binding-clusteradmin-d70381
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - rbac.authorization.k8s.io
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - rolebindings
+      - clusterrolebindings
+  validations:
+  - expression: object.roleRef.name != 'cluster-admin'
+    message: Binding to cluster-admin is not allowed.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-restrict-binding-clusteradmin-d70381-b
+spec:
+  policyName: other-vpol-restrict-binding-clusteradmin-d70381
+  validationActions:
+  - Deny

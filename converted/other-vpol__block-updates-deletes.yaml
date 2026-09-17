@@ -1,0 +1,36 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-block-updates-deletes-c5aeb5
+spec:
+  variables:
+  - name: isProtectedService
+    expression: oldObject.metadata.?labels.?protected.orValue('') == 'true'
+  - name: hasClusterAdminRole
+    expression: request.userInfo.groups.exists(group, group == 'system:masters') ||
+      request.userInfo.groups.exists(group, group.contains('cluster-admin'))
+  matchConstraints:
+    resourceRules:
+    - resources:
+      - services
+      operations:
+      - DELETE
+      - UPDATE
+      apiGroups:
+      - ''
+      apiVersions:
+      - v1
+  validations:
+  - message: This resource is protected and changes are not allowed. Please seek a
+      cluster-admin.
+    expression: '!(variables.isProtectedService && !variables.hasClusterAdminRole)'
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-block-updates-deletes-c5aeb5-b
+spec:
+  policyName: other-vpol-block-updates-deletes-c5aeb5
+  validationActions:
+  - Deny

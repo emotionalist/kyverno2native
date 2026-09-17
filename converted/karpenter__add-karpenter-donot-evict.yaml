@@ -1,0 +1,63 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: karpenter-add-karpenter-donot-evict-9785f2-r0
+spec:
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - jobs
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: 'Object{spec: Object.spec{template: Object.spec.template{metadata:
+        Object.spec.template.metadata{annotations: {"karpenter.sh/do-not-evict": "true"}}}}}'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: karpenter-add-karpenter-donot-evict-9785f2-r0-b
+spec:
+  policyName: karpenter-add-karpenter-donot-evict-9785f2-r0
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: karpenter-add-karpenter-donot-evict-9785f2-r1
+spec:
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: 'Object{spec: Object.spec{jobTemplate: Object.spec.jobTemplate{spec:
+        Object.spec.jobTemplate.spec{template: Object.spec.jobTemplate.spec.template{metadata:
+        Object.spec.jobTemplate.spec.template.metadata{annotations: {"karpenter.sh/do-not-evict":
+        "true"}}}}}}}'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: karpenter-add-karpenter-donot-evict-9785f2-r1-b
+spec:
+  policyName: karpenter-add-karpenter-donot-evict-9785f2-r1

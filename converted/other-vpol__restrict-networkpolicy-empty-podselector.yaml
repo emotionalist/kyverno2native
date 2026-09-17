@@ -1,0 +1,41 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-restrict-networkpolicy-empty-pods-6c2911
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - networking.k8s.io
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - networkpolicies
+    excludeResourceRules:
+    - apiGroups:
+      - networking.k8s.io
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - networkpolicies
+      resourceNames:
+      - default-deny
+  validations:
+  - expression: size(object.spec.podSelector) != 0
+    message: NetworkPolicies must not use an empty podSelector.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-restrict-networkpolicy-empty-pods-6c2911-b
+spec:
+  policyName: other-vpol-restrict-networkpolicy-empty-pods-6c2911
+  validationActions:
+  - Deny

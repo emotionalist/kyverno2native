@@ -1,0 +1,32 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-require-ingress-https-39e619
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - networking.k8s.io
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - ingresses
+  validations:
+  - expression: object.metadata.?annotations[?'kubernetes.io/ingress.allow-http'].orValue('default')
+      == 'false'
+    message: The kubernetes.io/ingress.allow-http annotation must be set to false.
+  - expression: has(object.spec.tls)
+    message: TLS must be defined.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-require-ingress-https-39e619-b
+spec:
+  policyName: other-vpol-require-ingress-https-39e619
+  validationActions:
+  - Deny

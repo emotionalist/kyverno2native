@@ -1,0 +1,29 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-cel-restrict-service-port-range-bdda4d
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - services
+  validations:
+  - expression: object.spec.ports.all(p, p.port >= 32000 && p.port <= 33000)
+    message: Ports must be between 32000-33000
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-cel-restrict-service-port-range-bdda4d-b
+spec:
+  policyName: other-cel-restrict-service-port-range-bdda4d
+  validationActions:
+  - Deny

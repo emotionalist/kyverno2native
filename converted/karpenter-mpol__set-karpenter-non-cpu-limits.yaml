@@ -1,0 +1,124 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: karpenter-mpol-set-karpenter-non-cpu-limits-289857
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - daemonsets
+      - statefulsets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - jobs
+      - cronjobs
+  matchConditions:
+  - name: has-memory-or-ephemeral-storage
+    expression: "(object.kind == \"Pod\" ? object.spec.containers :\n object.kind\
+      \ == \"CronJob\" ? object.spec.jobTemplate.spec.template.spec.containers :\n\
+      \ object.spec.template.spec.containers).exists(c,\n  has(c.resources) && (\n\
+      \    (has(c.resources.limits) && (\"memory\" in c.resources.limits || \"ephemeral-storage\"\
+      \ in c.resources.limits)) ||\n    (has(c.resources.requests) && (\"memory\"\
+      \ in c.resources.requests || \"ephemeral-storage\" in c.resources.requests))\n\
+      \  )\n)"
+  variables:
+  - name: containers
+    expression: 'object.kind == "Pod" ? object.spec.containers : object.kind == "CronJob"
+      ? object.spec.jobTemplate.spec.template.spec.containers : object.spec.template.spec.containers'
+  - name: basePath
+    expression: 'object.kind == "Pod" ? "/spec/containers/" : object.kind == "CronJob"
+      ? "/spec/jobTemplate/spec/template/spec/containers/" : "/spec/template/spec/containers/"'
+  mutations:
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "variables.containers.map(c, variables.containers.indexOf(c)).map(idx,\n\
+        \  has(variables.containers[idx].resources) && \n  !has(variables.containers[idx].resources.limits)\
+        \ &&\n  has(variables.containers[idx].resources.requests) &&\n  (\"ephemeral-storage\"\
+        \ in variables.containers[idx].resources.requests || \"memory\" in variables.containers[idx].resources.requests)\
+        \ ?\n  JSONPatch{\n    op: \"add\",\n    path: variables.basePath + string(idx)\
+        \ + \"/resources/limits\",\n    value: {}\n  } : null\n).filter(p, p != null)\n"
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "variables.containers.map(c, variables.containers.indexOf(c)).map(idx,\n\
+        \  has(variables.containers[idx].resources) && \n  !has(variables.containers[idx].resources.requests)\
+        \ &&\n  has(variables.containers[idx].resources.limits) &&\n  (\"ephemeral-storage\"\
+        \ in variables.containers[idx].resources.limits || \"memory\" in variables.containers[idx].resources.limits)\
+        \ ?\n  JSONPatch{\n    op: \"add\",\n    path: variables.basePath + string(idx)\
+        \ + \"/resources/requests\",\n    value: {}\n  } : null\n).filter(p, p !=\
+        \ null)\n"
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "variables.containers.map(c, variables.containers.indexOf(c)).map(idx,\n\
+        \  has(variables.containers[idx].resources) &&\n  (\n    (has(variables.containers[idx].resources.limits)\
+        \ && \"ephemeral-storage\" in variables.containers[idx].resources.limits)\
+        \ ||\n    (has(variables.containers[idx].resources.requests) && \"ephemeral-storage\"\
+        \ in variables.containers[idx].resources.requests)\n  ) ?\n    (\n      has(variables.containers[idx].resources.limits)\
+        \ && \"ephemeral-storage\" in variables.containers[idx].resources.limits ?\n\
+        \        (\n          !has(variables.containers[idx].resources.requests) ||\
+        \ !(\"ephemeral-storage\" in variables.containers[idx].resources.requests)\
+        \ ?\n            JSONPatch{\n              op: \"add\",\n              path:\
+        \ variables.basePath + string(idx) + \"/resources/requests/ephemeral-storage\"\
+        ,\n              value: variables.containers[idx].resources.limits[\"ephemeral-storage\"\
+        ]\n            } :\n          variables.containers[idx].resources.requests[\"\
+        ephemeral-storage\"] != variables.containers[idx].resources.limits[\"ephemeral-storage\"\
+        ] ?\n            JSONPatch{\n              op: \"replace\",\n            \
+        \  path: variables.basePath + string(idx) + \"/resources/requests/ephemeral-storage\"\
+        ,\n              value: variables.containers[idx].resources.limits[\"ephemeral-storage\"\
+        ]\n            } : null\n        )\n      :\n        (\n          has(variables.containers[idx].resources.requests)\
+        \ && \"ephemeral-storage\" in variables.containers[idx].resources.requests\
+        \ ?\n            JSONPatch{\n              op: \"add\",\n              path:\
+        \ variables.basePath + string(idx) + \"/resources/limits/ephemeral-storage\"\
+        ,\n              value: variables.containers[idx].resources.requests[\"ephemeral-storage\"\
+        ]\n            } : null\n        )\n    ) : null\n).filter(p, p != null)\n"
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "variables.containers.map(c, variables.containers.indexOf(c)).map(idx,\n\
+        \  has(variables.containers[idx].resources) &&\n  (\n    (has(variables.containers[idx].resources.limits)\
+        \ && \"memory\" in variables.containers[idx].resources.limits) ||\n    (has(variables.containers[idx].resources.requests)\
+        \ && \"memory\" in variables.containers[idx].resources.requests)\n  ) ?\n\
+        \    (\n      has(variables.containers[idx].resources.limits) && \"memory\"\
+        \ in variables.containers[idx].resources.limits ?\n        (\n          !has(variables.containers[idx].resources.requests)\
+        \ || !(\"memory\" in variables.containers[idx].resources.requests) ?\n   \
+        \         JSONPatch{\n              op: \"add\",\n              path: variables.basePath\
+        \ + string(idx) + \"/resources/requests/memory\",\n              value: variables.containers[idx].resources.limits.memory\n\
+        \            } :\n          variables.containers[idx].resources.requests.memory\
+        \ != variables.containers[idx].resources.limits.memory ?\n            JSONPatch{\n\
+        \              op: \"replace\",\n              path: variables.basePath +\
+        \ string(idx) + \"/resources/requests/memory\",\n              value: variables.containers[idx].resources.limits.memory\n\
+        \            } : null\n        )\n      :\n        (\n          has(variables.containers[idx].resources.requests)\
+        \ && \"memory\" in variables.containers[idx].resources.requests ?\n      \
+        \      JSONPatch{\n              op: \"add\",\n              path: variables.basePath\
+        \ + string(idx) + \"/resources/limits/memory\",\n              value: variables.containers[idx].resources.requests.memory\n\
+        \            } : null\n        )\n    ) : null\n).filter(p, p != null)"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: karpenter-mpol-set-karpenter-non-cpu-limits-289857-b
+spec:
+  policyName: karpenter-mpol-set-karpenter-non-cpu-limits-289857

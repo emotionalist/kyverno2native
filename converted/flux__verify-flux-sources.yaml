@@ -1,0 +1,144 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: flux-verify-flux-sources-4e75b4-r0
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - source.toolkit.fluxcd.io
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - gitrepositories
+    namespaceSelector:
+      matchExpressions:
+      - key: kubernetes.io/metadata.name
+        operator: NotIn
+        values:
+        - flux-system
+  validations:
+  - expression: (has(object.spec) && ((has(object.spec.url) && ((object.spec.url.matches("^https://github\\.com/myorg/..*$")
+      || object.spec.url.matches("^ssh://git@github\\.com:myorg/..*$"))))))
+    message: .spec.url must be from a repository within the myorg organization.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: flux-verify-flux-sources-4e75b4-r0-b
+spec:
+  policyName: flux-verify-flux-sources-4e75b4-r0
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: flux-verify-flux-sources-4e75b4-r1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - source.toolkit.fluxcd.io
+      apiVersions:
+      - v1beta2
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - buckets
+    namespaceSelector:
+      matchExpressions:
+      - key: kubernetes.io/metadata.name
+        operator: NotIn
+        values:
+        - flux-system
+  validations:
+  - expression: (has(object.spec) && ((has(object.spec.endpoint) && (object.spec.endpoint.matches("^.*\\.myorg\\.com$")))))
+    message: .spec.endpoint must reference an address within the myorg organization.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: flux-verify-flux-sources-4e75b4-r1-b
+spec:
+  policyName: flux-verify-flux-sources-4e75b4-r1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: flux-verify-flux-sources-4e75b4-r2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - source.toolkit.fluxcd.io
+      apiVersions:
+      - v1beta2
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - helmrepositories
+    namespaceSelector:
+      matchExpressions:
+      - key: kubernetes.io/metadata.name
+        operator: NotIn
+        values:
+        - flux-system
+  validations:
+  - expression: (has(object.spec) && ((has(object.spec.url) && (object.spec.url.matches("^https://..*\\.myorg\\.com/.*$")))))
+    message: .spec.url must be from a repository within the myorg organization.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: flux-verify-flux-sources-4e75b4-r2-b
+spec:
+  policyName: flux-verify-flux-sources-4e75b4-r2
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: flux-verify-flux-sources-4e75b4-r3
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - image.toolkit.fluxcd.io
+      apiVersions:
+      - v1beta2
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - imagerepositories
+    namespaceSelector:
+      matchExpressions:
+      - key: kubernetes.io/metadata.name
+        operator: NotIn
+        values:
+        - flux-system
+  validations:
+  - expression: (has(object.spec) && ((has(object.spec.image) && (object.spec.image.matches("^ghcr\\.io/myorg/.*$")))))
+    message: .spec.image must be from an image repository within the myorg organization.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: flux-verify-flux-sources-4e75b4-r3-b
+spec:
+  policyName: flux-verify-flux-sources-4e75b4-r3
+  validationActions:
+  - Deny

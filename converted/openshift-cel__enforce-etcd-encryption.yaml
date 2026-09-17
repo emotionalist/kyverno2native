@@ -1,0 +1,29 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: openshift-cel-enforce-etcd-encryption-f30e8d
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - config.openshift.io
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - apiservers
+  validations:
+  - expression: has(object.spec.encryption)
+    message: Encryption should be enabled for etcd
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: openshift-cel-enforce-etcd-encryption-f30e8d-b
+spec:
+  policyName: openshift-cel-enforce-etcd-encryption-f30e8d
+  validationActions:
+  - Deny

@@ -1,0 +1,124 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-cel-baseline-disallow-host-port-9373f6
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: 'variables.allContainers.all(container,  container.?ports.orValue([]).all(port,
+      size(port) == 0 || !has(port.hostPort) || (port.hostPort >= 5000 && port.hostPort
+      <= 6000) ))             '
+    message: The only permitted hostPorts are in the range 5000-6000.
+  variables:
+  - name: allContainers
+    expression: object.spec.containers +  object.spec.?initContainers.orValue([])
+      +  object.spec.?ephemeralContainers.orValue([])
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-cel-baseline-disallow-host-port-9373f6-b
+spec:
+  policyName: pod-security-cel-baseline-disallow-host-port-9373f6
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-cel-baseline-disallow-host-port-9373f6-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: 'variables.allContainers.all(container,  container.?ports.orValue([]).all(port,
+      size(port) == 0 || !has(port.hostPort) || (port.hostPort >= 5000 && port.hostPort
+      <= 6000) ))             '
+    message: The only permitted hostPorts are in the range 5000-6000.
+  variables:
+  - name: allContainers
+    expression: object.spec.template.spec.containers +  object.spec.template.spec.?initContainers.orValue([])
+      +  object.spec.template.spec.?ephemeralContainers.orValue([])
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-cel-baseline-disallow-host-port-9373f6-ag1-b
+spec:
+  policyName: pod-security-cel-baseline-disallow-host-port-9373f6-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-cel-baseline-disallow-host-port-9373f6-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: 'variables.allContainers.all(container,  container.?ports.orValue([]).all(port,
+      size(port) == 0 || !has(port.hostPort) || (port.hostPort >= 5000 && port.hostPort
+      <= 6000) ))             '
+    message: The only permitted hostPorts are in the range 5000-6000.
+  variables:
+  - name: allContainers
+    expression: object.spec.jobTemplate.spec.template.spec.containers +  object.spec.jobTemplate.spec.template.spec.?initContainers.orValue([])
+      +  object.spec.jobTemplate.spec.template.spec.?ephemeralContainers.orValue([])
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-cel-baseline-disallow-host-port-9373f6-ag2-b
+spec:
+  policyName: pod-security-cel-baseline-disallow-host-port-9373f6-ag2
+  validationActions:
+  - Deny

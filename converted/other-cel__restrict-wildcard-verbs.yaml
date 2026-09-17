@@ -1,0 +1,30 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-cel-restrict-wildcard-verbs-0fbd60
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - rbac.authorization.k8s.io
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - clusterroles
+      - roles
+  validations:
+  - expression: object.rules == null || !object.rules.exists(rule, '*' in rule.verbs)
+    message: Use of a wildcard ('*') in any verbs is forbidden.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-cel-restrict-wildcard-verbs-0fbd60-b
+spec:
+  policyName: other-cel-restrict-wildcard-verbs-0fbd60
+  validationActions:
+  - Deny

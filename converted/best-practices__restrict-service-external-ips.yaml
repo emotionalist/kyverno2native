@@ -1,0 +1,29 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-restrict-service-external-ips-a67943
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - services
+  validations:
+  - expression: (has(object.spec) && ((!(has(object.spec.externalIPs)))))
+    message: externalIPs are not allowed.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-restrict-service-external-ips-a67943-b
+spec:
+  policyName: best-practices-restrict-service-external-ips-a67943
+  validationActions:
+  - Deny

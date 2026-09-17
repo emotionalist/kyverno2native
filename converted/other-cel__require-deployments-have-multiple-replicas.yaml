@@ -1,0 +1,29 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-cel-require-deployments-have-multiple-06014b
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+  validations:
+  - expression: object.spec.replicas > 1
+    message: Deployments should have more than one replica to ensure availability.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-cel-require-deployments-have-multiple-06014b-b
+spec:
+  policyName: other-cel-require-deployments-have-multiple-06014b
+  validationActions:
+  - Deny

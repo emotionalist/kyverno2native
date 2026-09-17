@@ -1,0 +1,119 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: kubecost-cel-require-kubecost-labels-1c4fe8
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: object.metadata.?labels.?owner.orValue('') != '' &&  object.metadata.?labels.?team.orValue('')
+      != '' && object.metadata.?labels.?department.orValue('') != '' && object.metadata.?labels.?app.orValue('')
+      != '' && object.metadata.?labels.?env.orValue('') != ''
+    message: The Kubecost labels `owner`, `team`, `department`, `app`, and `env` are
+      all required for Pods.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: kubecost-cel-require-kubecost-labels-1c4fe8-b
+spec:
+  policyName: kubecost-cel-require-kubecost-labels-1c4fe8
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: kubecost-cel-require-kubecost-labels-1c4fe8-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: object.spec.template.metadata.?labels.?owner.orValue('') != '' &&  object.spec.template.metadata.?labels.?team.orValue('')
+      != '' && object.spec.template.metadata.?labels.?department.orValue('') != ''
+      && object.spec.template.metadata.?labels.?app.orValue('') != '' && object.spec.template.metadata.?labels.?env.orValue('')
+      != ''
+    message: The Kubecost labels `owner`, `team`, `department`, `app`, and `env` are
+      all required for Pods.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: kubecost-cel-require-kubecost-labels-1c4fe8-ag1-b
+spec:
+  policyName: kubecost-cel-require-kubecost-labels-1c4fe8-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: kubecost-cel-require-kubecost-labels-1c4fe8-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: object.spec.jobTemplate.spec.template.metadata.?labels.?owner.orValue('')
+      != '' &&  object.spec.jobTemplate.spec.template.metadata.?labels.?team.orValue('')
+      != '' && object.spec.jobTemplate.spec.template.metadata.?labels.?department.orValue('')
+      != '' && object.spec.jobTemplate.spec.template.metadata.?labels.?app.orValue('')
+      != '' && object.spec.jobTemplate.spec.template.metadata.?labels.?env.orValue('')
+      != ''
+    message: The Kubecost labels `owner`, `team`, `department`, `app`, and `env` are
+      all required for Pods.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: kubecost-cel-require-kubecost-labels-1c4fe8-ag2-b
+spec:
+  policyName: kubecost-cel-require-kubecost-labels-1c4fe8-ag2
+  validationActions:
+  - Deny

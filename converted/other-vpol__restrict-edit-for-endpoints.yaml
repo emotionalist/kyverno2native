@@ -1,0 +1,33 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-restrict-edit-for-endpoints-a342da
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - rbac.authorization.k8s.io
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - clusterroles
+      resourceNames:
+      - system:aggregate-to-edit
+  validations:
+  - expression: '!object.rules.exists(rule, ''endpoints'' in rule.resources && ''edit''
+      in rule.verbs)'
+    message: This cluster may still be vulnerable to CVE-2021-25740. The system:aggregate-to-edit
+      ClusterRole should not have edit permission over Endpoints.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-restrict-edit-for-endpoints-a342da-b
+spec:
+  policyName: other-vpol-restrict-edit-for-endpoints-a342da
+  validationActions:
+  - Deny

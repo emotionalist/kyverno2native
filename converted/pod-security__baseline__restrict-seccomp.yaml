@@ -1,0 +1,173 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-baseline-restrict-seccomp-7f3e53
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: (has(object.spec) && ((!(has(object.spec.securityContext)) || (has(object.spec.securityContext)
+      && ((!(has(object.spec.securityContext.seccompProfile)) || (has(object.spec.securityContext.seccompProfile)
+      && ((!(has(object.spec.securityContext.seccompProfile.type)) || (has(object.spec.securityContext.seccompProfile.type)
+      && ((object.spec.securityContext.seccompProfile.type == "RuntimeDefault" ||
+      object.spec.securityContext.seccompProfile.type == "Localhost")))))))))) &&
+      (!(has(object.spec.ephemeralContainers)) || (has(object.spec.ephemeralContainers)
+      && (object.spec.ephemeralContainers.all(__x, (!(has(__x.securityContext)) ||
+      (has(__x.securityContext) && ((!(has(__x.securityContext.seccompProfile)) ||
+      (has(__x.securityContext.seccompProfile) && ((!(has(__x.securityContext.seccompProfile.type))
+      || (has(__x.securityContext.seccompProfile.type) && ((__x.securityContext.seccompProfile.type
+      == "RuntimeDefault" || __x.securityContext.seccompProfile.type == "Localhost"))))))))))))))
+      && (!(has(object.spec.initContainers)) || (has(object.spec.initContainers) &&
+      (object.spec.initContainers.all(__x, (!(has(__x.securityContext)) || (has(__x.securityContext)
+      && ((!(has(__x.securityContext.seccompProfile)) || (has(__x.securityContext.seccompProfile)
+      && ((!(has(__x.securityContext.seccompProfile.type)) || (has(__x.securityContext.seccompProfile.type)
+      && ((__x.securityContext.seccompProfile.type == "RuntimeDefault" || __x.securityContext.seccompProfile.type
+      == "Localhost")))))))))))))) && (has(object.spec.containers) && (object.spec.containers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.seccompProfile))
+      || (has(__x.securityContext.seccompProfile) && ((!(has(__x.securityContext.seccompProfile.type))
+      || (has(__x.securityContext.seccompProfile.type) && ((__x.securityContext.seccompProfile.type
+      == "RuntimeDefault" || __x.securityContext.seccompProfile.type == "Localhost")))))))))))))))
+    message: Use of custom Seccomp profiles is disallowed. The fields spec.securityContext.seccompProfile.type,
+      spec.containers[*].securityContext.seccompProfile.type, spec.initContainers[*].se
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-baseline-restrict-seccomp-7f3e53-b
+spec:
+  policyName: pod-security-baseline-restrict-seccomp-7f3e53
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-baseline-restrict-seccomp-7f3e53-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: (has(object.spec.template.spec) && ((!(has(object.spec.template.spec.securityContext))
+      || (has(object.spec.template.spec.securityContext) && ((!(has(object.spec.template.spec.securityContext.seccompProfile))
+      || (has(object.spec.template.spec.securityContext.seccompProfile) && ((!(has(object.spec.template.spec.securityContext.seccompProfile.type))
+      || (has(object.spec.template.spec.securityContext.seccompProfile.type) && ((object.spec.template.spec.securityContext.seccompProfile.type
+      == "RuntimeDefault" || object.spec.template.spec.securityContext.seccompProfile.type
+      == "Localhost")))))))))) && (!(has(object.spec.template.spec.ephemeralContainers))
+      || (has(object.spec.template.spec.ephemeralContainers) && (object.spec.template.spec.ephemeralContainers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.seccompProfile))
+      || (has(__x.securityContext.seccompProfile) && ((!(has(__x.securityContext.seccompProfile.type))
+      || (has(__x.securityContext.seccompProfile.type) && ((__x.securityContext.seccompProfile.type
+      == "RuntimeDefault" || __x.securityContext.seccompProfile.type == "Localhost"))))))))))))))
+      && (!(has(object.spec.template.spec.initContainers)) || (has(object.spec.template.spec.initContainers)
+      && (object.spec.template.spec.initContainers.all(__x, (!(has(__x.securityContext))
+      || (has(__x.securityContext) && ((!(has(__x.securityContext.seccompProfile))
+      || (has(__x.securityContext.seccompProfile) && ((!(has(__x.securityContext.seccompProfile.type))
+      || (has(__x.securityContext.seccompProfile.type) && ((__x.securityContext.seccompProfile.type
+      == "RuntimeDefault" || __x.securityContext.seccompProfile.type == "Localhost"))))))))))))))
+      && (has(object.spec.template.spec.containers) && (object.spec.template.spec.containers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.seccompProfile))
+      || (has(__x.securityContext.seccompProfile) && ((!(has(__x.securityContext.seccompProfile.type))
+      || (has(__x.securityContext.seccompProfile.type) && ((__x.securityContext.seccompProfile.type
+      == "RuntimeDefault" || __x.securityContext.seccompProfile.type == "Localhost")))))))))))))))
+    message: Use of custom Seccomp profiles is disallowed. The fields spec.securityContext.seccompProfile.type,
+      spec.containers[*].securityContext.seccompProfile.type, spec.initContainers[*].se
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-baseline-restrict-seccomp-7f3e53-ag1-b
+spec:
+  policyName: pod-security-baseline-restrict-seccomp-7f3e53-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-baseline-restrict-seccomp-7f3e53-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: (has(object.spec.jobTemplate.spec.template.spec) && ((!(has(object.spec.jobTemplate.spec.template.spec.securityContext))
+      || (has(object.spec.jobTemplate.spec.template.spec.securityContext) && ((!(has(object.spec.jobTemplate.spec.template.spec.securityContext.seccompProfile))
+      || (has(object.spec.jobTemplate.spec.template.spec.securityContext.seccompProfile)
+      && ((!(has(object.spec.jobTemplate.spec.template.spec.securityContext.seccompProfile.type))
+      || (has(object.spec.jobTemplate.spec.template.spec.securityContext.seccompProfile.type)
+      && ((object.spec.jobTemplate.spec.template.spec.securityContext.seccompProfile.type
+      == "RuntimeDefault" || object.spec.jobTemplate.spec.template.spec.securityContext.seccompProfile.type
+      == "Localhost")))))))))) && (!(has(object.spec.jobTemplate.spec.template.spec.ephemeralContainers))
+      || (has(object.spec.jobTemplate.spec.template.spec.ephemeralContainers) && (object.spec.jobTemplate.spec.template.spec.ephemeralContainers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.seccompProfile))
+      || (has(__x.securityContext.seccompProfile) && ((!(has(__x.securityContext.seccompProfile.type))
+      || (has(__x.securityContext.seccompProfile.type) && ((__x.securityContext.seccompProfile.type
+      == "RuntimeDefault" || __x.securityContext.seccompProfile.type == "Localhost"))))))))))))))
+      && (!(has(object.spec.jobTemplate.spec.template.spec.initContainers)) || (has(object.spec.jobTemplate.spec.template.spec.initContainers)
+      && (object.spec.jobTemplate.spec.template.spec.initContainers.all(__x, (!(has(__x.securityContext))
+      || (has(__x.securityContext) && ((!(has(__x.securityContext.seccompProfile))
+      || (has(__x.securityContext.seccompProfile) && ((!(has(__x.securityContext.seccompProfile.type))
+      || (has(__x.securityContext.seccompProfile.type) && ((__x.securityContext.seccompProfile.type
+      == "RuntimeDefault" || __x.securityContext.seccompProfile.type == "Localhost"))))))))))))))
+      && (has(object.spec.jobTemplate.spec.template.spec.containers) && (object.spec.jobTemplate.spec.template.spec.containers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.seccompProfile))
+      || (has(__x.securityContext.seccompProfile) && ((!(has(__x.securityContext.seccompProfile.type))
+      || (has(__x.securityContext.seccompProfile.type) && ((__x.securityContext.seccompProfile.type
+      == "RuntimeDefault" || __x.securityContext.seccompProfile.type == "Localhost")))))))))))))))
+    message: Use of custom Seccomp profiles is disallowed. The fields spec.securityContext.seccompProfile.type,
+      spec.containers[*].securityContext.seccompProfile.type, spec.initContainers[*].se
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-baseline-restrict-seccomp-7f3e53-ag2-b
+spec:
+  policyName: pod-security-baseline-restrict-seccomp-7f3e53-ag2
+  validationActions:
+  - Deny

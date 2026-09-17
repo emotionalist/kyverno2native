@@ -1,0 +1,35 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: flux-cel-verify-git-repositories-2e86bb
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - source.toolkit.fluxcd.io
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - gitrepositories
+    namespaceSelector:
+      matchExpressions:
+      - key: kubernetes.io/metadata.name
+        operator: NotIn
+        values:
+        - flux-system
+  validations:
+  - expression: object.spec.url.startsWith('https://github.com/fluxcd/') || object.spec.url.startsWith('ssh://git@github.com:fluxcd/')
+    message: .spec.url must be from a repository within the organisation X
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: flux-cel-verify-git-repositories-2e86bb-b
+spec:
+  policyName: flux-cel-verify-git-repositories-2e86bb
+  validationActions:
+  - Deny

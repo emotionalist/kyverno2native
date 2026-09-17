@@ -1,0 +1,136 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-add-default-securitycontext-30cc7c
+spec:
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: 'Object{spec: Object.spec{securityContext: Object.spec.securityContext{runAsNonRoot:
+        true, runAsUser: 1000, runAsGroup: 3000, fsGroup: 2000}}}'
+  matchConditions:
+  - name: addifabsent0
+    expression: '!has(object.spec.securityContext.runAsNonRoot)'
+  - name: addifabsent1
+    expression: '!has(object.spec.securityContext.runAsUser)'
+  - name: addifabsent2
+    expression: '!has(object.spec.securityContext.runAsGroup)'
+  - name: addifabsent3
+    expression: '!has(object.spec.securityContext.fsGroup)'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-add-default-securitycontext-30cc7c-b
+spec:
+  policyName: other-add-default-securitycontext-30cc7c
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-add-default-securitycontext-30cc7c-ag1
+spec:
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: 'Object{spec: Object.spec{securityContext: Object.spec.securityContext{runAsNonRoot:
+        true, runAsUser: 1000, runAsGroup: 3000, fsGroup: 2000}}}'
+  matchConditions:
+  - name: addifabsent0
+    expression: '!has(object.spec.template.spec.securityContext.runAsNonRoot)'
+  - name: addifabsent1
+    expression: '!has(object.spec.template.spec.securityContext.runAsUser)'
+  - name: addifabsent2
+    expression: '!has(object.spec.template.spec.securityContext.runAsGroup)'
+  - name: addifabsent3
+    expression: '!has(object.spec.template.spec.securityContext.fsGroup)'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-add-default-securitycontext-30cc7c-ag1-b
+spec:
+  policyName: other-add-default-securitycontext-30cc7c-ag1
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-add-default-securitycontext-30cc7c-ag2
+spec:
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: 'Object{spec: Object.spec{securityContext: Object.spec.securityContext{runAsNonRoot:
+        true, runAsUser: 1000, runAsGroup: 3000, fsGroup: 2000}}}'
+  matchConditions:
+  - name: addifabsent0
+    expression: '!has(object.spec.jobTemplate.spec.template.spec.securityContext.runAsNonRoot)'
+  - name: addifabsent1
+    expression: '!has(object.spec.jobTemplate.spec.template.spec.securityContext.runAsUser)'
+  - name: addifabsent2
+    expression: '!has(object.spec.jobTemplate.spec.template.spec.securityContext.runAsGroup)'
+  - name: addifabsent3
+    expression: '!has(object.spec.jobTemplate.spec.template.spec.securityContext.fsGroup)'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-add-default-securitycontext-30cc7c-ag2-b
+spec:
+  policyName: other-add-default-securitycontext-30cc7c-ag2

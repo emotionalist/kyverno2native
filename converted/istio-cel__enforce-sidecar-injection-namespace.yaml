@@ -1,0 +1,28 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: istio-cel-enforce-sidecar-injection-namespac-14057b
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      resources:
+      - namespaces
+  validations:
+  - expression: object.metadata.?labels[?'istio-injection'].orValue('') == 'enabled'
+    message: All new Namespaces must have Istio sidecar injection enabled.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: istio-cel-enforce-sidecar-injection-namespac-14057b-b
+spec:
+  policyName: istio-cel-enforce-sidecar-injection-namespac-14057b
+  validationActions:
+  - Deny

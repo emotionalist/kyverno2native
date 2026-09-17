@@ -1,0 +1,63 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-vpol-require-probes-5fead9
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      resources:
+      - pods
+      operations:
+      - CREATE
+      - UPDATE
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+      operations:
+      - CREATE
+      - UPDATE
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      - v1beta1
+      resources:
+      - jobs
+      - cronjobs
+      operations:
+      - CREATE
+      - UPDATE
+  variables:
+  - name: allContainers
+    expression: "has(object.spec.containers) ? \n  object.spec.containers + object.spec.?initContainers.orValue([])\
+      \ + object.spec.?ephemeralContainers.orValue([]) : \n  object.spec.template.spec.containers\
+      \ + object.spec.template.spec.?initContainers.orValue([]) + object.spec.template.spec.?ephemeralContainers.orValue([])\
+      \      "
+  validations:
+  - expression: "variables.allContainers.all(container, \n  has(container.livenessProbe)\
+      \ || has(container.readinessProbe) || has(container.startupProbe)\n)      "
+    messageExpression: "'All containers must have at least one probe (livenessProbe,\
+      \ readinessProbe, or startupProbe) defined. Missing probes in containers: '\
+      \ +  variables.allContainers.filter(container, \n  !(has(container.livenessProbe)\
+      \ || has(container.readinessProbe) || has(container.startupProbe))\n).map(container,\
+      \ container.name).join(', ')  "
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-vpol-require-probes-5fead9-b
+spec:
+  policyName: best-practices-vpol-require-probes-5fead9
+  validationActions:
+  - Deny

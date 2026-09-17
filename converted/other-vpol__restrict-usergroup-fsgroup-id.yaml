@@ -1,0 +1,124 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-restrict-usergroup-fsgroup-id-032c1a
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: object.spec.?securityContext.?runAsUser.orValue(1) == 1000
+    message: User ID should be 1000.
+  - expression: object.spec.?securityContext.?runAsGroup.orValue(1) == 3000
+    message: Group ID should be 3000.
+  - expression: object.spec.?securityContext.?fsGroup.orValue(1) == 2000
+    message: fs Group should be 2000.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-restrict-usergroup-fsgroup-id-032c1a-b
+spec:
+  policyName: other-vpol-restrict-usergroup-fsgroup-id-032c1a
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-restrict-usergroup-fsgroup-id-032c1a-ag1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: object.spec.template.spec.?securityContext.?runAsUser.orValue(1) ==
+      1000
+    message: User ID should be 1000.
+  - expression: object.spec.template.spec.?securityContext.?runAsGroup.orValue(1)
+      == 3000
+    message: Group ID should be 3000.
+  - expression: object.spec.template.spec.?securityContext.?fsGroup.orValue(1) ==
+      2000
+    message: fs Group should be 2000.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-restrict-usergroup-fsgroup-id-032c1a-ag1-b
+spec:
+  policyName: other-vpol-restrict-usergroup-fsgroup-id-032c1a-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-restrict-usergroup-fsgroup-id-032c1a-ag2
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: object.spec.jobTemplate.spec.template.spec.?securityContext.?runAsUser.orValue(1)
+      == 1000
+    message: User ID should be 1000.
+  - expression: object.spec.jobTemplate.spec.template.spec.?securityContext.?runAsGroup.orValue(1)
+      == 3000
+    message: Group ID should be 3000.
+  - expression: object.spec.jobTemplate.spec.template.spec.?securityContext.?fsGroup.orValue(1)
+      == 2000
+    message: fs Group should be 2000.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-restrict-usergroup-fsgroup-id-032c1a-ag2-b
+spec:
+  policyName: other-vpol-restrict-usergroup-fsgroup-id-032c1a-ag2
+  validationActions:
+  - Deny

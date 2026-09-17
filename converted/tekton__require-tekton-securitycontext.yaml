@@ -1,0 +1,35 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: tekton-require-tekton-securitycontext-512db1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - tekton.dev
+      apiVersions:
+      - v1beta1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - taskrun.statuses
+  validations:
+  - expression: (!(has(object.status)) || (has(object.status) && ((!(has(object.status.taskSpec))
+      || (has(object.status.taskSpec) && ((has(object.status.taskSpec.steps) && (object.status.taskSpec.steps.all(__x,
+      !((has(__x.name) && (__x.name != "digest-to-results"))) || ((has(__x.securityContext)
+      && ((has(__x.securityContext.privileged) && (__x.securityContext.privileged
+      == false)) && (has(__x.securityContext.allowPrivilegeEscalation) && (__x.securityContext.allowPrivilegeEscalation
+      == false))))))))))))))
+    message: A securityContext is required with `privileged` and `allowPrivilegeEscalation`
+      set to `false`.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: tekton-require-tekton-securitycontext-512db1-b
+spec:
+  policyName: tekton-require-tekton-securitycontext-512db1
+  validationActions:
+  - Deny

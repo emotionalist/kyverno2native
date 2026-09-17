@@ -1,0 +1,99 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-mitigate-log4shell-1e823a
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - daemonsets
+      - statefulsets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - jobs
+      - cronjobs
+  variables:
+  - name: isPod
+    expression: object.kind == "Pod"
+  - name: isCronJob
+    expression: object.kind == "CronJob"
+  - name: isPodController
+    expression: has(object.spec.template.spec)
+  - name: podSpec
+    expression: 'variables.isPod ? object.spec :
+
+      variables.isCronJob ? object.spec.jobTemplate.spec.template.spec :
+
+      variables.isPodController ? object.spec.template.spec :
+
+      {}
+
+      '
+  - name: specPath
+    expression: 'variables.isPod ? "/spec" :
+
+      variables.isCronJob ? "/spec/jobTemplate/spec/template/spec" :
+
+      "/spec/template/spec"
+
+      '
+  mutations:
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "variables.podSpec.containers.map(c,\n  has(c.env) && c.env.exists(e,\
+        \ e.name == \"LOG4J_FORMAT_MSG_NO_LOOKUPS\") ?\n    JSONPatch{\n      op:\
+        \ \"replace\",\n      path: variables.specPath + \"/containers/\" + string(variables.podSpec.containers.indexOf(c))\
+        \ + \"/env/\" + string(c.env.map(e, e.name).indexOf(\"LOG4J_FORMAT_MSG_NO_LOOKUPS\"\
+        )),\n      value: {\"name\": \"LOG4J_FORMAT_MSG_NO_LOOKUPS\", \"value\": \"\
+        true\"}\n    } :\n  has(c.env) ?\n    JSONPatch{\n      op: \"add\",\n   \
+        \   path: variables.specPath + \"/containers/\" + string(variables.podSpec.containers.indexOf(c))\
+        \ + \"/env/-\",\n      value: {\"name\": \"LOG4J_FORMAT_MSG_NO_LOOKUPS\",\
+        \ \"value\": \"true\"}\n    } :\n    JSONPatch{\n      op: \"add\",\n    \
+        \  path: variables.specPath + \"/containers/\" + string(variables.podSpec.containers.indexOf(c))\
+        \ + \"/env\",\n      value: [{\"name\": \"LOG4J_FORMAT_MSG_NO_LOOKUPS\", \"\
+        value\": \"true\"}]\n    }\n) +\n(has(variables.podSpec.initContainers) ?\n\
+        \  variables.podSpec.initContainers.map(c,\n    has(c.env) && c.env.exists(e,\
+        \ e.name == \"LOG4J_FORMAT_MSG_NO_LOOKUPS\") ?\n      JSONPatch{\n       \
+        \ op: \"replace\",\n        path: variables.specPath + \"/initContainers/\"\
+        \ + string(variables.podSpec.initContainers.indexOf(c)) + \"/env/\" + string(c.env.map(e,\
+        \ e.name).indexOf(\"LOG4J_FORMAT_MSG_NO_LOOKUPS\")),\n        value: {\"name\"\
+        : \"LOG4J_FORMAT_MSG_NO_LOOKUPS\", \"value\": \"true\"}\n      } :\n    has(c.env)\
+        \ ?\n      JSONPatch{\n        op: \"add\",\n        path: variables.specPath\
+        \ + \"/initContainers/\" + string(variables.podSpec.initContainers.indexOf(c))\
+        \ + \"/env/-\",\n        value: {\"name\": \"LOG4J_FORMAT_MSG_NO_LOOKUPS\"\
+        , \"value\": \"true\"}\n      } :\n      JSONPatch{\n        op: \"add\",\n\
+        \        path: variables.specPath + \"/initContainers/\" + string(variables.podSpec.initContainers.indexOf(c))\
+        \ + \"/env\",\n        value: [{\"name\": \"LOG4J_FORMAT_MSG_NO_LOOKUPS\"\
+        , \"value\": \"true\"}]\n      }\n  ) : []\n)"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-mitigate-log4shell-1e823a-b
+spec:
+  policyName: other-mpol-mitigate-log4shell-1e823a

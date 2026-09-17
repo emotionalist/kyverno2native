@@ -1,0 +1,158 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-require-non-root-groups-98083a
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: "(\n  object.spec.?securityContext.?runAsGroup.orValue(-1) > 0 &&\n\
+      \  (object.spec.containers + object.spec.?initContainers.orValue([]) + object.spec.?ephemeralContainers.orValue([]))\n\
+      \  .all(container, container.?securityContext.?runAsGroup.orValue(1) > 0)\n\
+      ) || (\n  (object.spec.containers + object.spec.?initContainers.orValue([])\
+      \ + object.spec.?ephemeralContainers.orValue([]))\n  .all(container, container.?securityContext.?runAsGroup.orValue(-1)\
+      \ > 0)\n)"
+    message: Running with root group IDs is disallowed. The fields spec.securityContext.runAsGroup,
+      spec.containers[*].securityContext.runAsGroup, spec.initContainers[*].securityContext.runAsGroup,
+      and spec.ephemeralContainers[*].securityContext.runAsGroup must be set to a
+      value greater than zero.
+  - expression: object.spec.?securityContext.?supplementalGroups.orValue([]).all(group,
+      group > 0)
+    message: Containers cannot run with a root primary or supplementary GID. The field
+      spec.securityContext.supplementalGroups must be unset or set to a value greater
+      than zero.
+  - expression: object.spec.?securityContext.?fsGroup.orValue(1) > 0
+    message: Containers cannot run with a root primary or supplementary GID. The field
+      spec.securityContext.fsGroup must be unset or set to a value greater than zero.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-require-non-root-groups-98083a-b
+spec:
+  policyName: other-vpol-require-non-root-groups-98083a
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-require-non-root-groups-98083a-ag1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: "(\n  object.spec.template.spec.?securityContext.?runAsGroup.orValue(-1)\
+      \ > 0 &&\n  (object.spec.template.spec.containers + object.spec.template.spec.?initContainers.orValue([])\
+      \ + object.spec.template.spec.?ephemeralContainers.orValue([]))\n  .all(container,\
+      \ container.?securityContext.?runAsGroup.orValue(1) > 0)\n) || (\n  (object.spec.template.spec.containers\
+      \ + object.spec.template.spec.?initContainers.orValue([]) + object.spec.template.spec.?ephemeralContainers.orValue([]))\n\
+      \  .all(container, container.?securityContext.?runAsGroup.orValue(-1) > 0)\n\
+      )"
+    message: Running with root group IDs is disallowed. The fields spec.securityContext.runAsGroup,
+      spec.containers[*].securityContext.runAsGroup, spec.initContainers[*].securityContext.runAsGroup,
+      and spec.ephemeralContainers[*].securityContext.runAsGroup must be set to a
+      value greater than zero.
+  - expression: object.spec.template.spec.?securityContext.?supplementalGroups.orValue([]).all(group,
+      group > 0)
+    message: Containers cannot run with a root primary or supplementary GID. The field
+      spec.securityContext.supplementalGroups must be unset or set to a value greater
+      than zero.
+  - expression: object.spec.template.spec.?securityContext.?fsGroup.orValue(1) > 0
+    message: Containers cannot run with a root primary or supplementary GID. The field
+      spec.securityContext.fsGroup must be unset or set to a value greater than zero.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-require-non-root-groups-98083a-ag1-b
+spec:
+  policyName: other-vpol-require-non-root-groups-98083a-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-require-non-root-groups-98083a-ag2
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: "(\n  object.spec.jobTemplate.spec.template.spec.?securityContext.?runAsGroup.orValue(-1)\
+      \ > 0 &&\n  (object.spec.jobTemplate.spec.template.spec.containers + object.spec.jobTemplate.spec.template.spec.?initContainers.orValue([])\
+      \ + object.spec.jobTemplate.spec.template.spec.?ephemeralContainers.orValue([]))\n\
+      \  .all(container, container.?securityContext.?runAsGroup.orValue(1) > 0)\n\
+      ) || (\n  (object.spec.jobTemplate.spec.template.spec.containers + object.spec.jobTemplate.spec.template.spec.?initContainers.orValue([])\
+      \ + object.spec.jobTemplate.spec.template.spec.?ephemeralContainers.orValue([]))\n\
+      \  .all(container, container.?securityContext.?runAsGroup.orValue(-1) > 0)\n\
+      )"
+    message: Running with root group IDs is disallowed. The fields spec.securityContext.runAsGroup,
+      spec.containers[*].securityContext.runAsGroup, spec.initContainers[*].securityContext.runAsGroup,
+      and spec.ephemeralContainers[*].securityContext.runAsGroup must be set to a
+      value greater than zero.
+  - expression: object.spec.jobTemplate.spec.template.spec.?securityContext.?supplementalGroups.orValue([]).all(group,
+      group > 0)
+    message: Containers cannot run with a root primary or supplementary GID. The field
+      spec.securityContext.supplementalGroups must be unset or set to a value greater
+      than zero.
+  - expression: object.spec.jobTemplate.spec.template.spec.?securityContext.?fsGroup.orValue(1)
+      > 0
+    message: Containers cannot run with a root primary or supplementary GID. The field
+      spec.securityContext.fsGroup must be unset or set to a value greater than zero.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-require-non-root-groups-98083a-ag2-b
+spec:
+  policyName: other-vpol-require-non-root-groups-98083a-ag2
+  validationActions:
+  - Deny

@@ -1,0 +1,63 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-require-storageclass-d71ae4-r0
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - persistentvolumeclaims
+  validations:
+  - expression: (has(object.spec) && ((has(object.spec.storageClassName) && (object.spec.storageClassName
+      != ""))))
+    message: PersistentVolumeClaims must define a storageClassName.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-require-storageclass-d71ae4-r0-b
+spec:
+  policyName: other-require-storageclass-d71ae4-r0
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-require-storageclass-d71ae4-r1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - statefulsets
+  validations:
+  - expression: (has(object.spec) && ((!(has(object.spec.volumeClaimTemplates)) ||
+      (has(object.spec.volumeClaimTemplates) && (object.spec.volumeClaimTemplates.all(__x,
+      (has(__x.spec) && ((has(__x.spec.storageClassName) && (__x.spec.storageClassName
+      != ""))))))))))
+    message: StatefulSets must define a storageClassName.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-require-storageclass-d71ae4-r1-b
+spec:
+  policyName: other-require-storageclass-d71ae4-r1
+  validationActions:
+  - Deny

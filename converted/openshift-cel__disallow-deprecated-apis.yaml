@@ -1,0 +1,32 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: openshift-cel-disallow-deprecated-apis-ba26f7
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - authorization.openshift.io
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - clusterrolebindings
+      - clusterroles
+      - rolebindings
+      - roles
+  validations:
+  - expression: 'false'
+    messageExpression: object.apiVersion + '/' + object.kind + ' is deprecated.'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: openshift-cel-disallow-deprecated-apis-ba26f7-b
+spec:
+  policyName: openshift-cel-disallow-deprecated-apis-ba26f7
+  validationActions:
+  - Deny

@@ -1,0 +1,122 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-baseline-restrict-apparmor-prof-c76013
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: (!(has(object.metadata)) || (has(object.metadata) && ((!(has(object.metadata.annotations))
+      || (has(object.metadata.annotations) && ((!has(object.metadata.annotations)
+      || object.metadata.annotations.all(__k2, !__k2.matches("^container\\.apparmor\\.security\\.beta\\.kubernetes\\.io/.*$")
+      || ((object.metadata.annotations[__k2] == "runtime/default" || object.metadata.annotations[__k2].matches("^localhost/.*$")))))))))))
+    message: Specifying other AppArmor profiles is disallowed. The annotation `container.apparmor.security.beta.kubernetes.io`
+      if defined must not be set to anything other than `runtime/default
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-baseline-restrict-apparmor-prof-c76013-b
+spec:
+  policyName: pod-security-baseline-restrict-apparmor-prof-c76013
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-baseline-restrict-apparmor-prof-c76013-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: (!(has(object.spec.template.metadata)) || (has(object.spec.template.metadata)
+      && ((!(has(object.spec.template.metadata.annotations)) || (has(object.spec.template.metadata.annotations)
+      && ((!has(object.spec.template.metadata.annotations) || object.spec.template.metadata.annotations.all(__k2,
+      !__k2.matches("^container\\.apparmor\\.security\\.beta\\.kubernetes\\.io/.*$")
+      || ((object.spec.template.metadata.annotations[__k2] == "runtime/default" ||
+      object.spec.template.metadata.annotations[__k2].matches("^localhost/.*$")))))))))))
+    message: Specifying other AppArmor profiles is disallowed. The annotation `container.apparmor.security.beta.kubernetes.io`
+      if defined must not be set to anything other than `runtime/default
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-baseline-restrict-apparmor-prof-c76013-ag1-b
+spec:
+  policyName: pod-security-baseline-restrict-apparmor-prof-c76013-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-baseline-restrict-apparmor-prof-c76013-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: (!(has(object.spec.jobTemplate.spec.template.metadata)) || (has(object.spec.jobTemplate.spec.template.metadata)
+      && ((!(has(object.spec.jobTemplate.spec.template.metadata.annotations)) || (has(object.spec.jobTemplate.spec.template.metadata.annotations)
+      && ((!has(object.spec.jobTemplate.spec.template.metadata.annotations) || object.spec.jobTemplate.spec.template.metadata.annotations.all(__k2,
+      !__k2.matches("^container\\.apparmor\\.security\\.beta\\.kubernetes\\.io/.*$")
+      || ((object.spec.jobTemplate.spec.template.metadata.annotations[__k2] == "runtime/default"
+      || object.spec.jobTemplate.spec.template.metadata.annotations[__k2].matches("^localhost/.*$")))))))))))
+    message: Specifying other AppArmor profiles is disallowed. The annotation `container.apparmor.security.beta.kubernetes.io`
+      if defined must not be set to anything other than `runtime/default
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-baseline-restrict-apparmor-prof-c76013-ag2-b
+spec:
+  policyName: pod-security-baseline-restrict-apparmor-prof-c76013-ag2
+  validationActions:
+  - Deny

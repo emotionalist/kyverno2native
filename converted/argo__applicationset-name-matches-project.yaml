@@ -1,0 +1,34 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: argo-applicationset-name-matches-project-b3dad5
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - argoproj.io
+      apiVersions:
+      - v1alpha1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - applicationsets
+  validations:
+  - expression: (has(object.spec) && ((has(object.spec.template) && ((has(object.spec.template.spec)
+      && ((has(object.spec.template.spec.project) && (object.spec.template.spec.project
+      == "{{request.object.metadata.name}}"))))))))
+    message: The name must match the project.
+  matchConditions:
+  - name: preconditions
+    expression: (request.operation != "DELETE")
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: argo-applicationset-name-matches-project-b3dad5-b
+spec:
+  policyName: argo-applicationset-name-matches-project-b3dad5
+  validationActions:
+  - Deny

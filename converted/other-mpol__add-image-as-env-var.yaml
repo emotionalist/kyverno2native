@@ -1,0 +1,123 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-add-image-as-env-var-bd77d4
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  mutations:
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "object.spec.containers.map(c, \n  !has(c.env) ? \n  JSONPatch{\n\
+        \    op: \"add\",\n    path: \"/spec/containers/\" + string(object.spec.containers.indexOf(c))\
+        \ + \"/env\",\n    value: [{\"name\": \"K8S_IMAGE\", \"value\": string(c.image)}]\n\
+        \  } :\n  JSONPatch{\n    op: \"add\",\n    path: \"/spec/containers/\" +\
+        \ string(object.spec.containers.indexOf(c)) + \"/env/-\",\n    value: {\"\
+        name\": \"K8S_IMAGE\", \"value\": string(c.image)}\n  }\n)"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-add-image-as-env-var-bd77d4-b
+spec:
+  policyName: other-mpol-add-image-as-env-var-bd77d4
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-add-image-as-env-var-bd77d4-ag1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  mutations:
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "object.spec.template.spec.containers.map(c, \n  !has(c.env) ? \n\
+        \  JSONPatch{\n    op: \"add\",\n    path: \"/spec/containers/\" + string(object.spec.template.spec.containers.indexOf(c))\
+        \ + \"/env\",\n    value: [{\"name\": \"K8S_IMAGE\", \"value\": string(c.image)}]\n\
+        \  } :\n  JSONPatch{\n    op: \"add\",\n    path: \"/spec/containers/\" +\
+        \ string(object.spec.template.spec.containers.indexOf(c)) + \"/env/-\",\n\
+        \    value: {\"name\": \"K8S_IMAGE\", \"value\": string(c.image)}\n  }\n)"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-add-image-as-env-var-bd77d4-ag1-b
+spec:
+  policyName: other-mpol-add-image-as-env-var-bd77d4-ag1
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-add-image-as-env-var-bd77d4-ag2
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  mutations:
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "object.spec.jobTemplate.spec.template.spec.containers.map(c, \n\
+        \  !has(c.env) ? \n  JSONPatch{\n    op: \"add\",\n    path: \"/spec/containers/\"\
+        \ + string(object.spec.jobTemplate.spec.template.spec.containers.indexOf(c))\
+        \ + \"/env\",\n    value: [{\"name\": \"K8S_IMAGE\", \"value\": string(c.image)}]\n\
+        \  } :\n  JSONPatch{\n    op: \"add\",\n    path: \"/spec/containers/\" +\
+        \ string(object.spec.jobTemplate.spec.template.spec.containers.indexOf(c))\
+        \ + \"/env/-\",\n    value: {\"name\": \"K8S_IMAGE\", \"value\": string(c.image)}\n\
+        \  }\n)"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-add-image-as-env-var-bd77d4-ag2-b
+spec:
+  policyName: other-mpol-add-image-as-env-var-bd77d4-ag2

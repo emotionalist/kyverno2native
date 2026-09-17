@@ -1,0 +1,35 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: nginx-ingress-cel-restrict-annotations-6682bd
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - networking.k8s.io
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - ingresses
+  validations:
+  - expression: "!has(object.metadata.annotations) || (\n  !object.metadata.annotations.exists(annotation,\
+      \ object.metadata.annotations[annotation].matches('\\\\s*alias\\\\s*.*;')) &&\n\
+      \  !object.metadata.annotations.exists(annotation, object.metadata.annotations[annotation].matches('\\\
+      \\s*root\\\\s*.*;')) &&\n  !object.metadata.annotations.exists(annotation, object.metadata.annotations[annotation].matches('/etc/(passwd|shadow|group|nginx|ingress-controller)'))\
+      \ &&\n  !object.metadata.annotations.exists(annotation, object.metadata.annotations[annotation].matches('/var/run/secrets'))\
+      \ &&\n  !object.metadata.annotations.exists(annotation, object.metadata.annotations[annotation].matches('.*_by_lua.*'))\n\
+      )"
+    message: spec.rules[].http.paths[].path value is not allowed
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: nginx-ingress-cel-restrict-annotations-6682bd-b
+spec:
+  policyName: nginx-ingress-cel-restrict-annotations-6682bd
+  validationActions:
+  - Deny

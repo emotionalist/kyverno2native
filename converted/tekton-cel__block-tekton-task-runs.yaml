@@ -1,0 +1,29 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: tekton-cel-block-tekton-task-runs-6affb8
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - tekton.dev
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - taskruns
+  validations:
+  - expression: 'false'
+    message: Creating a TaskRun is not allowed.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: tekton-cel-block-tekton-task-runs-6affb8-b
+spec:
+  policyName: tekton-cel-block-tekton-task-runs-6affb8
+  validationActions:
+  - Deny

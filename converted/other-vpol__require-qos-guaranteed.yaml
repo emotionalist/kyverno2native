@@ -1,0 +1,122 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-require-qos-guaranteed-0e3b4f
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: object.spec.containers.all(container, has(container.resources) &&
+      container.resources.?requests.orValue({}).?cpu.hasValue() && container.resources.?requests.orValue({}).?memory.hasValue()
+      && container.resources.?limits.orValue({}).?cpu.hasValue() && container.resources.?limits.orValue({}).?memory.hasValue()
+      && container.resources.requests.orValue({}).cpu == container.resources.limits.orValue({}).cpu
+      && container.resources.requests.orValue({}).memory == container.resources.limits.orValue({}).memory)
+    message: All containers must define memory and CPU requests and limits where they
+      are equal.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-require-qos-guaranteed-0e3b4f-b
+spec:
+  policyName: other-vpol-require-qos-guaranteed-0e3b4f
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-require-qos-guaranteed-0e3b4f-ag1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: object.spec.template.spec.containers.all(container, has(container.resources)
+      && container.resources.?requests.orValue({}).?cpu.hasValue() && container.resources.?requests.orValue({}).?memory.hasValue()
+      && container.resources.?limits.orValue({}).?cpu.hasValue() && container.resources.?limits.orValue({}).?memory.hasValue()
+      && container.resources.requests.orValue({}).cpu == container.resources.limits.orValue({}).cpu
+      && container.resources.requests.orValue({}).memory == container.resources.limits.orValue({}).memory)
+    message: All containers must define memory and CPU requests and limits where they
+      are equal.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-require-qos-guaranteed-0e3b4f-ag1-b
+spec:
+  policyName: other-vpol-require-qos-guaranteed-0e3b4f-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-require-qos-guaranteed-0e3b4f-ag2
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: object.spec.jobTemplate.spec.template.spec.containers.all(container,
+      has(container.resources) && container.resources.?requests.orValue({}).?cpu.hasValue()
+      && container.resources.?requests.orValue({}).?memory.hasValue() && container.resources.?limits.orValue({}).?cpu.hasValue()
+      && container.resources.?limits.orValue({}).?memory.hasValue() && container.resources.requests.orValue({}).cpu
+      == container.resources.limits.orValue({}).cpu && container.resources.requests.orValue({}).memory
+      == container.resources.limits.orValue({}).memory)
+    message: All containers must define memory and CPU requests and limits where they
+      are equal.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-require-qos-guaranteed-0e3b4f-ag2-b
+spec:
+  policyName: other-vpol-require-qos-guaranteed-0e3b4f-ag2
+  validationActions:
+  - Deny

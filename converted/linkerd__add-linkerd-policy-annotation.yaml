@@ -1,0 +1,33 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: linkerd-add-linkerd-policy-annotation-8e9871
+spec:
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - namespaces
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: 'Object{metadata: Object.metadata{annotations: {"config.linkerd.io/default-inbound-policy":
+        "deny"}}}'
+  matchConditions:
+  - name: addifabsent0
+    expression: '!("config.linkerd.io/default-inbound-policy" in object.metadata.annotations)'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: linkerd-add-linkerd-policy-annotation-8e9871-b
+spec:
+  policyName: linkerd-add-linkerd-policy-annotation-8e9871

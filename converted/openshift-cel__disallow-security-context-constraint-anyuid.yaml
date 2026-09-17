@@ -1,0 +1,62 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: openshift-cel-disallow-security-context-cons-6adfd0-r0
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - rbac.authorization.k8s.io
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - clusterroles
+      - roles
+  validations:
+  - expression: '!object.?rules.orValue([]).exists(rule, ''anyuid'' in rule.resourceNames
+      && (''use'' in rule.verbs || ''*'' in rule.verbs))'
+    message: Use of the SecurityContextConstraint (SCC) anyuid is not allowed
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: openshift-cel-disallow-security-context-cons-6adfd0-r0-b
+spec:
+  policyName: openshift-cel-disallow-security-context-cons-6adfd0-r0
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: openshift-cel-disallow-security-context-cons-6adfd0-r1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - rbac.authorization.k8s.io
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - clusterrolebindings
+      - rolebindings
+  validations:
+  - expression: object.roleRef.name != 'system:openshift:scc:anyuid'
+    message: Use of the SecurityContextConstraint (SCC) anyuid is not allowed
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: openshift-cel-disallow-security-context-cons-6adfd0-r1-b
+spec:
+  policyName: openshift-cel-disallow-security-context-cons-6adfd0-r1
+  validationActions:
+  - Deny

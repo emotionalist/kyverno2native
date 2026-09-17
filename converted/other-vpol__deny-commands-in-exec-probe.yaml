@@ -1,0 +1,121 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-deny-commands-in-exec-probe-a032d4
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  matchConditions:
+  - name: check-liveness-probes-commands-exist
+    expression: object.spec.containers.exists(container, size(container.?livenessProbe.?exec.?command.orValue([]))
+      > 0)
+  validations:
+  - expression: object.spec.containers.all(container,  !container.?livenessProbe.?exec.?command.orValue([]).exists(command,  command.matches('\\bjcmd\\b')
+      || command.matches('\\bps\\b') || command.matches('\\bls\\b')))
+    message: Cannot use commands `jcmd`, `ps`, or `ls` in liveness probes.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-deny-commands-in-exec-probe-a032d4-b
+spec:
+  policyName: other-vpol-deny-commands-in-exec-probe-a032d4
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-deny-commands-in-exec-probe-a032d4-ag1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  matchConditions:
+  - name: check-liveness-probes-commands-exist
+    expression: object.spec.template.spec.containers.exists(container, size(container.?livenessProbe.?exec.?command.orValue([]))
+      > 0)
+  validations:
+  - expression: object.spec.template.spec.containers.all(container,  !container.?livenessProbe.?exec.?command.orValue([]).exists(command,  command.matches('\\bjcmd\\b')
+      || command.matches('\\bps\\b') || command.matches('\\bls\\b')))
+    message: Cannot use commands `jcmd`, `ps`, or `ls` in liveness probes.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-deny-commands-in-exec-probe-a032d4-ag1-b
+spec:
+  policyName: other-vpol-deny-commands-in-exec-probe-a032d4-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-deny-commands-in-exec-probe-a032d4-ag2
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  matchConditions:
+  - name: check-liveness-probes-commands-exist
+    expression: object.spec.jobTemplate.spec.template.spec.containers.exists(container,
+      size(container.?livenessProbe.?exec.?command.orValue([])) > 0)
+  validations:
+  - expression: object.spec.jobTemplate.spec.template.spec.containers.all(container,  !container.?livenessProbe.?exec.?command.orValue([]).exists(command,  command.matches('\\bjcmd\\b')
+      || command.matches('\\bps\\b') || command.matches('\\bls\\b')))
+    message: Cannot use commands `jcmd`, `ps`, or `ls` in liveness probes.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-deny-commands-in-exec-probe-a032d4-ag2-b
+spec:
+  policyName: other-vpol-deny-commands-in-exec-probe-a032d4-ag2
+  validationActions:
+  - Deny

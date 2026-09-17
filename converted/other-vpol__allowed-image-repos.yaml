@@ -1,0 +1,151 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-allowed-image-repos-432adc
+spec:
+  variables:
+  - name: allContainers
+    expression: object.spec.containers + object.spec.?initContainers.orValue([]) +
+      object.spec.?ephemeralContainers.orValue([])
+  - name: allowedRepos
+    expression: '["myknownimage", "kyverno"]'
+  matchConstraints:
+    resourceRules:
+    - resources:
+      - pods
+      operations:
+      - CREATE
+      - UPDATE
+      apiGroups:
+      - ''
+      apiVersions:
+      - v1
+  validations:
+  - messageExpression: '''All images in this Pod must come from an authorized repository.
+      Allowed repositories: '' + variables.allowedRepos.join('', '') + ''. Found unauthorized
+      images: '' + variables.allContainers.filter(container, !variables.allowedRepos.exists(repo,
+      (container.image.contains(''/'') ? container.image.split(''/'')[container.image.split(''/'').size()
+      - 1].split('':'')[0] : container.image.split('':'')[0]) == repo)).map(container,
+      container.image).join('', '')
+
+      '
+    expression: 'variables.allContainers.all(container, variables.allowedRepos.exists(repo,
+      (container.image.contains(''/'') ? container.image.split(''/'')[container.image.split(''/'').size()
+      - 1].split('':'')[0] : container.image.split('':'')[0]) == repo))'
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-allowed-image-repos-432adc-b
+spec:
+  policyName: other-vpol-allowed-image-repos-432adc
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-allowed-image-repos-432adc-ag1
+spec:
+  variables:
+  - name: allContainers
+    expression: object.spec.template.spec.containers + object.spec.template.spec.?initContainers.orValue([])
+      + object.spec.template.spec.?ephemeralContainers.orValue([])
+  - name: allowedRepos
+    expression: '["myknownimage", "kyverno"]'
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - messageExpression: '''All images in this Pod must come from an authorized repository.
+      Allowed repositories: '' + variables.allowedRepos.join('', '') + ''. Found unauthorized
+      images: '' + variables.allContainers.filter(container, !variables.allowedRepos.exists(repo,
+      (container.image.contains(''/'') ? container.image.split(''/'')[container.image.split(''/'').size()
+      - 1].split('':'')[0] : container.image.split('':'')[0]) == repo)).map(container,
+      container.image).join('', '')
+
+      '
+    expression: 'variables.allContainers.all(container, variables.allowedRepos.exists(repo,
+      (container.image.contains(''/'') ? container.image.split(''/'')[container.image.split(''/'').size()
+      - 1].split('':'')[0] : container.image.split('':'')[0]) == repo))'
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-allowed-image-repos-432adc-ag1-b
+spec:
+  policyName: other-vpol-allowed-image-repos-432adc-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-allowed-image-repos-432adc-ag2
+spec:
+  variables:
+  - name: allContainers
+    expression: object.spec.jobTemplate.spec.template.spec.containers + object.spec.jobTemplate.spec.template.spec.?initContainers.orValue([])
+      + object.spec.jobTemplate.spec.template.spec.?ephemeralContainers.orValue([])
+  - name: allowedRepos
+    expression: '["myknownimage", "kyverno"]'
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - messageExpression: '''All images in this Pod must come from an authorized repository.
+      Allowed repositories: '' + variables.allowedRepos.join('', '') + ''. Found unauthorized
+      images: '' + variables.allContainers.filter(container, !variables.allowedRepos.exists(repo,
+      (container.image.contains(''/'') ? container.image.split(''/'')[container.image.split(''/'').size()
+      - 1].split('':'')[0] : container.image.split('':'')[0]) == repo)).map(container,
+      container.image).join('', '')
+
+      '
+    expression: 'variables.allContainers.all(container, variables.allowedRepos.exists(repo,
+      (container.image.contains(''/'') ? container.image.split(''/'')[container.image.split(''/'').size()
+      - 1].split('':'')[0] : container.image.split('':'')[0]) == repo))'
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-allowed-image-repos-432adc-ag2-b
+spec:
+  policyName: other-vpol-allowed-image-repos-432adc-ag2
+  validationActions:
+  - Deny

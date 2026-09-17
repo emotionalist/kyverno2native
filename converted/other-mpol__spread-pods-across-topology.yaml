@@ -1,0 +1,38 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-spread-pods-across-topology-c4429d
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+    objectSelector:
+      matchLabels:
+        distributed: required
+  mutations:
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "!has(object.spec.template.spec.topologySpreadConstraints) ?\n[JSONPatch{\n\
+        \  op: \"add\",\n  path: \"/spec/template/spec/topologySpreadConstraints\"\
+        ,\n  value: dyn([\n    {\n      \"maxSkew\": dyn(1),\n      \"topologyKey\"\
+        : dyn(\"zone\"),\n      \"whenUnsatisfiable\": dyn(\"DoNotSchedule\"),\n \
+        \     \"labelSelector\": dyn({\n        \"matchLabels\": dyn({\n         \
+        \ \"distributed\": dyn(\"required\")\n        })\n      })\n    }\n  ])\n\
+        }] : []"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-spread-pods-across-topology-c4429d-b
+spec:
+  policyName: other-mpol-spread-pods-across-topology-c4429d

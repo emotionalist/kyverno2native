@@ -1,0 +1,33 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: cert-manager-restrict-issuer-537018
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - cert-manager.io
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - certificates
+  validations:
+  - expression: (has(object.spec) && (!((has(object.spec.dnsNames) && (object.spec.dnsNames.all(__x,
+      __x.matches("^.*\\.corp\\.com$"))))) || ((has(object.spec.issuerRef) && ((has(object.spec.issuerRef.name)
+      && (object.spec.issuerRef.name == "our-corp-issuer")) && (has(object.spec.issuerRef.kind)
+      && (object.spec.issuerRef.kind == "ClusterIssuer")) && (has(object.spec.issuerRef.group)
+      && (object.spec.issuerRef.group == "cert-manager.io")))))))
+    message: When requesting a cert for this domain, you must use our corporate issuer.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: cert-manager-restrict-issuer-537018-b
+spec:
+  policyName: cert-manager-restrict-issuer-537018
+  validationActions:
+  - Deny

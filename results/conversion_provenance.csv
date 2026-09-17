@@ -1,0 +1,524 @@
+slug,family,ruletypes,converted,method,generator_script,native_file,native_mtime,has_notes_txt,rq1_autogen_applied
+argo-cel__application-field-validation,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/argo-cel__application-field-validation.yaml,2026-08-24 16:46,no,missing-CRD
+argo-cel__application-prevent-default-project,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/argo-cel__application-prevent-default-project.yaml,2026-08-24 16:46,no,missing-CRD
+argo-cel__application-prevent-updates-project,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/argo-cel__application-prevent-updates-project.yaml,2026-08-24 16:46,no,missing-CRD
+argo-cel__applicationset-name-matches-project,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/argo-cel__applicationset-name-matches-project.yaml,2026-08-24 16:46,no,missing-CRD
+argo-cel__appproject-clusterresourceblacklist,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/argo-cel__appproject-clusterresourceblacklist.yaml,2026-08-24 16:46,no,missing-CRD
+argo-vpol__application-prevent-default-project,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/argo-vpol__application-prevent-default-project.yaml,2026-08-24 16:46,no,missing-CRD
+argo__application-field-validation,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/argo__application-field-validation.yaml,2026-09-02 21:53,yes,missing-CRD
+argo__application-prevent-default-project,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/argo__application-prevent-default-project.yaml,2026-09-02 21:53,no,missing-CRD
+argo__application-prevent-updates-project,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/argo__application-prevent-updates-project.yaml,2026-09-02 21:53,no,missing-CRD
+argo__applicationset-name-matches-project,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/argo__applicationset-name-matches-project.yaml,2026-09-02 21:53,no,missing-CRD
+argo__appproject-clusterresourceblacklist,clusterpolicy,validate,no,not-converted,,,,no,missing-CRD
+aws-cel__require-encryption-aws-loadbalancers,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/aws-cel__require-encryption-aws-loadbalancers.yaml,2026-08-24 16:46,no,generated
+aws__require-aws-node-irsa,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+aws__require-encryption-aws-loadbalancers,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/aws__require-encryption-aws-loadbalancers.yaml,2026-09-02 21:53,no,generated
+best-practices-cel__check-deprecated-apis,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/best-practices-cel__check-deprecated-apis.yaml,2026-08-24 16:46,no,structural-skip
+best-practices-cel__disallow-cri-sock-mount,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/best-practices-cel__disallow-cri-sock-mount.yaml,2026-08-24 17:41,no,not-applied
+best-practices-cel__disallow-default-namespace,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/best-practices-cel__disallow-default-namespace.yaml,2026-08-24 17:41,no,structural-skip
+best-practices-cel__disallow-empty-ingress-host,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/best-practices-cel__disallow-empty-ingress-host.yaml,2026-08-24 16:46,no,generated
+best-practices-cel__disallow-helm-tiller,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/best-practices-cel__disallow-helm-tiller.yaml,2026-08-24 17:41,no,not-applied
+best-practices-cel__disallow-latest-tag,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/best-practices-cel__disallow-latest-tag.yaml,2026-08-24 17:41,no,not-applied
+best-practices-cel__require-drop-all,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/best-practices-cel__require-drop-all.yaml,2026-08-24 17:41,no,generated
+best-practices-cel__require-drop-cap-net-raw,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/best-practices-cel__require-drop-cap-net-raw.yaml,2026-08-24 17:41,no,not-applied
+best-practices-cel__require-labels,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/best-practices-cel__require-labels.yaml,2026-08-24 17:41,no,not-applied
+best-practices-cel__require-pod-requests-limits,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/best-practices-cel__require-pod-requests-limits.yaml,2026-08-24 17:41,no,not-applied
+best-practices-cel__require-probes,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/best-practices-cel__require-probes.yaml,2026-08-24 17:41,no,generated
+best-practices-cel__require-ro-rootfs,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/best-practices-cel__require-ro-rootfs.yaml,2026-08-24 17:41,no,not-applied
+best-practices-cel__restrict-image-registries,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/best-practices-cel__restrict-image-registries.yaml,2026-08-24 17:41,no,not-applied
+best-practices-cel__restrict-node-port,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/best-practices-cel__restrict-node-port.yaml,2026-08-24 16:46,no,not-applied
+best-practices-cel__restrict-service-external-ips,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/best-practices-cel__restrict-service-external-ips.yaml,2026-08-24 16:46,no,not-applied
+best-practices-mpol__add-safe-to-evict,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/best-practices-mpol__add-safe-to-evict.yaml,2026-08-24 21:37,no,not-applied
+best-practices-vpol__check-deprecated-apis,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/best-practices-vpol__check-deprecated-apis.yaml,2026-08-24 16:46,no,structural-skip
+best-practices-vpol__disallow-cri-sock-mount,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/best-practices-vpol__disallow-cri-sock-mount.yaml,2026-08-24 21:37,no,not-applied
+best-practices-vpol__disallow-default-namespace,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/best-practices-vpol__disallow-default-namespace.yaml,2026-08-24 21:37,no,structural-skip
+best-practices-vpol__disallow-empty-ingress-host,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/best-practices-vpol__disallow-empty-ingress-host.yaml,2026-08-24 16:46,no,generated
+best-practices-vpol__disallow-helm-tiller,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/best-practices-vpol__disallow-helm-tiller.yaml,2026-08-24 21:37,no,not-applied
+best-practices-vpol__disallow-latest-tag,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/best-practices-vpol__disallow-latest-tag.yaml,2026-08-24 21:37,no,not-applied
+best-practices-vpol__require-drop-all,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/best-practices-vpol__require-drop-all.yaml,2026-08-24 21:37,no,generated
+best-practices-vpol__require-drop-cap-net-raw,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/best-practices-vpol__require-drop-cap-net-raw.yaml,2026-08-24 21:37,no,not-applied
+best-practices-vpol__require-labels,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/best-practices-vpol__require-labels.yaml,2026-08-24 21:37,no,not-applied
+best-practices-vpol__require-pod-requests-limits,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/best-practices-vpol__require-pod-requests-limits.yaml,2026-08-24 21:37,no,not-applied
+best-practices-vpol__require-probes,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/best-practices-vpol__require-probes.yaml,2026-08-24 16:46,no,generated
+best-practices-vpol__require-ro-rootfs,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/best-practices-vpol__require-ro-rootfs.yaml,2026-08-24 21:37,no,not-applied
+best-practices-vpol__restrict-image-registries,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/best-practices-vpol__restrict-image-registries.yaml,2026-08-24 21:37,no,not-applied
+best-practices-vpol__restrict-node-port,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/best-practices-vpol__restrict-node-port.yaml,2026-08-24 16:46,no,not-applied
+best-practices-vpol__restrict-service-external-ips,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/best-practices-vpol__restrict-service-external-ips.yaml,2026-08-24 16:46,no,not-applied
+best-practices__add-safe-to-evict,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+best-practices__check-deprecated-apis,clusterpolicy,validate,no,not-converted,,,,no,structural-skip
+best-practices__disallow-cri-sock-mount,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/best-practices__disallow-cri-sock-mount.yaml,2026-09-02 21:53,no,not-applied
+best-practices__disallow-default-namespace,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/best-practices__disallow-default-namespace.yaml,2026-09-02 21:53,no,structural-skip
+best-practices__disallow-empty-ingress-host,clusterpolicy,validate,no,not-converted,,,,no,generated
+best-practices__disallow-helm-tiller,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+best-practices__disallow-latest-tag,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+best-practices__require-drop-all,clusterpolicy,validate,no,not-converted,,,,no,generated
+best-practices__require-drop-cap-net-raw,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+best-practices__require-labels,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/best-practices__require-labels.yaml,2026-09-02 21:53,no,not-applied
+best-practices__require-pod-requests-limits,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/best-practices__require-pod-requests-limits.yaml,2026-09-02 21:53,no,not-applied
+best-practices__require-probes,clusterpolicy,validate,no,not-converted,,,,no,generated
+best-practices__require-ro-rootfs,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/best-practices__require-ro-rootfs.yaml,2026-09-02 21:53,no,not-applied
+best-practices__restrict-image-registries,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/best-practices__restrict-image-registries.yaml,2026-09-02 21:53,no,not-applied
+best-practices__restrict-node-port,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/best-practices__restrict-node-port.yaml,2026-09-02 21:53,no,not-applied
+best-practices__restrict-service-external-ips,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/best-practices__restrict-service-external-ips.yaml,2026-09-02 21:53,no,not-applied
+castai-mpol__add-castai-removal-disabled,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/castai-mpol__add-castai-removal-disabled.yaml,2026-08-24 16:46,no,not-applied
+castai__add-castai-removal-disabled,clusterpolicy,mutate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/castai__add-castai-removal-disabled.yaml,2026-09-02 21:53,no,not-applied
+cert-manager__limit-dnsnames,clusterpolicy,validate,yes,llm-agent (잔존),briefs/ 샤드 에이전트,native/cert-manager__limit-dnsnames.yaml,2026-08-24 17:32,yes,not-applied
+cert-manager__limit-duration,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+cert-manager__restrict-issuer,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/cert-manager__restrict-issuer.yaml,2026-09-02 21:53,no,not-applied
+consul-cel__enforce-min-tls-version,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/consul-cel__enforce-min-tls-version.yaml,2026-08-24 16:46,no,missing-CRD
+consul__enforce-min-tls-version,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/consul__enforce-min-tls-version.yaml,2026-09-02 21:53,no,missing-CRD
+cost-optimization__schedule-based-quotas,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+external-secret-operator__add-external-secret-prefix,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+flux-cel__verify-flux-sources,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/flux-cel__verify-flux-sources.yaml,2026-08-24 16:46,no,not-applied
+flux-cel__verify-git-repositories,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/flux-cel__verify-git-repositories.yaml,2026-08-24 16:46,no,not-applied
+flux__verify-flux-sources,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/flux__verify-flux-sources.yaml,2026-09-02 21:53,no,not-applied
+flux__verify-git-repositories,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/flux__verify-git-repositories.yaml,2026-09-02 21:53,no,not-applied
+istio-cel__enforce-sidecar-injection-namespace,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/istio-cel__enforce-sidecar-injection-namespace.yaml,2026-08-24 16:46,no,generated
+istio-cel__enforce-strict-mtls,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/istio-cel__enforce-strict-mtls.yaml,2026-08-24 16:46,no,missing-CRD
+istio-cel__prevent-disabling-injection-pods,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/istio-cel__prevent-disabling-injection-pods.yaml,2026-08-24 17:41,no,generated
+istio-mpol__add-ambient-mode-namespace,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/istio-mpol__add-ambient-mode-namespace.yaml,2026-08-24 16:46,no,not-applied
+istio-mpol__add-sidecar-injection-namespace,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/istio-mpol__add-sidecar-injection-namespace.yaml,2026-08-24 16:46,no,not-applied
+istio__add-ambient-mode-namespace,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+istio__add-sidecar-injection-namespace,clusterpolicy,mutate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/istio__add-sidecar-injection-namespace.yaml,2026-09-02 21:53,no,not-applied
+istio__enforce-ambient-mode-namespace,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/istio__enforce-ambient-mode-namespace.yaml,2026-09-02 21:53,no,not-applied
+istio__enforce-sidecar-injection-namespace,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/istio__enforce-sidecar-injection-namespace.yaml,2026-09-02 21:53,no,generated
+istio__enforce-strict-mtls,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/istio__enforce-strict-mtls.yaml,2026-09-02 21:53,no,missing-CRD
+istio__enforce-tls-hosts-host-subnets,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/istio__enforce-tls-hosts-host-subnets.yaml,2026-09-02 21:53,no,not-applied
+istio__prevent-disabling-injection-pods,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/istio__prevent-disabling-injection-pods.yaml,2026-09-02 21:53,no,generated
+istio__restrict-virtual-service-wildcard,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+istio__service-mesh-disallow-capabilities,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+istio__service-mesh-require-run-as-nonroot,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/istio__service-mesh-require-run-as-nonroot.yaml,2026-09-02 21:53,no,not-applied
+karpenter-mpol__add-karpenter-daemonset-priority-class,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/karpenter-mpol__add-karpenter-daemonset-priority-class.yaml,2026-08-24 16:46,no,not-applied
+karpenter-mpol__add-karpenter-donot-evict,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/karpenter-mpol__add-karpenter-donot-evict.yaml,2026-08-24 16:46,no,not-applied
+karpenter-mpol__set-karpenter-non-cpu-limits,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/karpenter-mpol__set-karpenter-non-cpu-limits.yaml,2026-08-24 16:46,no,not-applied
+karpenter__add-karpenter-daemonset-priority-class,clusterpolicy,mutate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/karpenter__add-karpenter-daemonset-priority-class.yaml,2026-09-02 21:53,no,not-applied
+karpenter__add-karpenter-donot-evict,clusterpolicy,mutate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/karpenter__add-karpenter-donot-evict.yaml,2026-09-02 21:53,no,not-applied
+karpenter__add-karpenter-nodeselector,clusterpolicy,mutate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/karpenter__add-karpenter-nodeselector.yaml,2026-09-02 21:53,no,not-applied
+karpenter__set-karpenter-non-cpu-limits,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+kasten-cel__k10-data-protection-by-label,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/kasten-cel__k10-data-protection-by-label.yaml,2026-08-24 16:46,no,generated
+kasten-cel__k10-hourly-rpo,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/kasten-cel__k10-hourly-rpo.yaml,2026-08-24 16:46,no,missing-CRD
+kasten-cel__k10-validate-ns-by-preset-label,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/kasten-cel__k10-validate-ns-by-preset-label.yaml,2026-08-25 02:20,no,empty-other
+kasten__kasten-3-2-1-backup,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+kasten__kasten-data-protection-by-label,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/kasten__kasten-data-protection-by-label.yaml,2026-09-02 21:53,yes,not-applied
+kasten__kasten-immutable-location-profile,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/kasten__kasten-immutable-location-profile.yaml,2026-09-02 21:53,no,not-applied
+kasten__kasten-minimum-retention,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+kasten__kasten-validate-ns-by-preset-label,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/kasten__kasten-validate-ns-by-preset-label.yaml,2026-09-02 21:53,no,not-applied
+kubecost-cel__require-kubecost-labels,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/kubecost-cel__require-kubecost-labels.yaml,2026-08-24 17:41,no,not-applied
+kubecost-mpol__enable-kubecost-continuous-rightsizing,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/kubecost-mpol__enable-kubecost-continuous-rightsizing.yaml,2026-08-24 16:46,no,not-applied
+kubecost__enable-kubecost-continuous-rightsizing,clusterpolicy,mutate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/kubecost__enable-kubecost-continuous-rightsizing.yaml,2026-09-02 21:53,no,not-applied
+kubecost__require-kubecost-labels,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/kubecost__require-kubecost-labels.yaml,2026-09-02 21:53,no,not-applied
+kubevirt__enforce-instancetype,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/kubevirt__enforce-instancetype.yaml,2026-09-02 21:53,no,not-applied
+linkerd-cel__prevent-linkerd-pod-injection-override,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/linkerd-cel__prevent-linkerd-pod-injection-override.yaml,2026-08-24 17:41,no,not-applied
+linkerd-cel__prevent-linkerd-port-skipping,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/linkerd-cel__prevent-linkerd-port-skipping.yaml,2026-08-24 17:41,no,not-applied
+linkerd-cel__require-linkerd-mesh-injection,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/linkerd-cel__require-linkerd-mesh-injection.yaml,2026-08-24 16:46,no,generated
+linkerd-mpol__add-linkerd-mesh-injection,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/linkerd-mpol__add-linkerd-mesh-injection.yaml,2026-08-24 16:46,no,not-applied
+linkerd-mpol__add-linkerd-policy-annotation,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/linkerd-mpol__add-linkerd-policy-annotation.yaml,2026-08-24 16:46,no,not-applied
+linkerd__add-linkerd-mesh-injection,clusterpolicy,mutate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/linkerd__add-linkerd-mesh-injection.yaml,2026-09-02 21:53,no,not-applied
+linkerd__add-linkerd-policy-annotation,clusterpolicy,mutate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/linkerd__add-linkerd-policy-annotation.yaml,2026-09-02 21:53,no,not-applied
+linkerd__prevent-linkerd-pod-injection-override,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/linkerd__prevent-linkerd-pod-injection-override.yaml,2026-09-02 21:53,no,not-applied
+linkerd__prevent-linkerd-port-skipping,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/linkerd__prevent-linkerd-port-skipping.yaml,2026-09-02 21:53,no,not-applied
+linkerd__require-linkerd-mesh-injection,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/linkerd__require-linkerd-mesh-injection.yaml,2026-09-02 21:53,no,generated
+nginx-ingress-cel__disallow-ingress-nginx-custom-snippets,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/nginx-ingress-cel__disallow-ingress-nginx-custom-snippets.yaml,2026-08-24 16:46,no,missing-CRD
+nginx-ingress-cel__restrict-annotations,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/nginx-ingress-cel__restrict-annotations.yaml,2026-08-24 16:46,no,not-applied
+nginx-ingress-cel__restrict-ingress-paths,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/nginx-ingress-cel__restrict-ingress-paths.yaml,2026-08-24 16:46,no,not-applied
+nginx-ingress__disallow-ingress-nginx-custom-snippets,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/nginx-ingress__disallow-ingress-nginx-custom-snippets.yaml,2026-09-02 21:53,no,missing-CRD
+nginx-ingress__restrict-annotations,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+nginx-ingress__restrict-ingress-paths,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+openshift-cel__check-routes,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/openshift-cel__check-routes.yaml,2026-08-24 16:46,no,missing-CRD
+openshift-cel__disallow-deprecated-apis,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/openshift-cel__disallow-deprecated-apis.yaml,2026-08-24 16:46,no,missing-CRD
+openshift-cel__disallow-jenkins-pipeline-strategy,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/openshift-cel__disallow-jenkins-pipeline-strategy.yaml,2026-08-24 16:46,no,missing-CRD
+openshift-cel__disallow-security-context-constraint-anyuid,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/openshift-cel__disallow-security-context-constraint-anyuid.yaml,2026-08-24 16:46,no,structural-skip
+openshift-cel__enforce-etcd-encryption,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/openshift-cel__enforce-etcd-encryption.yaml,2026-08-24 16:46,no,missing-CRD
+openshift__check-routes,clusterpolicy,validate,no,not-converted,,,,no,missing-CRD
+openshift__disallow-deprecated-apis,clusterpolicy,validate,no,not-converted,,,,no,missing-CRD
+openshift__disallow-jenkins-pipeline-strategy,clusterpolicy,validate,no,not-converted,,,,no,missing-CRD
+openshift__disallow-security-context-constraint-anyuid,clusterpolicy,validate,no,not-converted,,,,no,structural-skip
+openshift__disallow-self-provisioner-binding,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+openshift__enforce-etcd-encryption,clusterpolicy,validate,no,not-converted,,,,no,missing-CRD
+openshift__inject-infrastructurename,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+openshift__team-validate-ns-name,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other-cel__advanced-restrict-image-registries,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__advanced-restrict-image-registries.yaml,2026-08-24 17:41,no,generated
+other-cel__allowed-annotations,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__allowed-annotations.yaml,2026-08-24 17:41,no,generated
+other-cel__allowed-pod-priorities,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__allowed-pod-priorities.yaml,2026-08-24 17:41,no,generated
+other-cel__block-ephemeral-containers,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__block-ephemeral-containers.yaml,2026-08-24 17:41,no,not-applied
+other-cel__check-env-vars,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__check-env-vars.yaml,2026-08-24 17:41,no,not-applied
+other-cel__check-node-for-cve-2022-0185,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__check-node-for-cve-2022-0185.yaml,2026-08-24 16:46,no,generated
+other-cel__check-serviceaccount-secrets,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__check-serviceaccount-secrets.yaml,2026-08-24 16:46,no,generated
+other-cel__deny-commands-in-exec-probe,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__deny-commands-in-exec-probe.yaml,2026-08-24 17:41,no,not-applied
+other-cel__deny-secret-service-account-token-type,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__deny-secret-service-account-token-type.yaml,2026-08-24 16:46,no,generated
+other-cel__disallow-all-secrets,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__disallow-all-secrets.yaml,2026-08-24 17:41,no,not-applied
+other-cel__disallow-localhost-services,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__disallow-localhost-services.yaml,2026-08-24 16:46,no,generated
+other-cel__disallow-secrets-from-env-vars,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__disallow-secrets-from-env-vars.yaml,2026-08-24 17:41,no,not-applied
+other-cel__docker-socket-requires-label,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__docker-socket-requires-label.yaml,2026-08-24 17:41,no,not-applied
+other-cel__enforce-pod-duration,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__enforce-pod-duration.yaml,2026-08-24 17:41,no,not-applied
+other-cel__enforce-readwriteonce-pod,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__enforce-readwriteonce-pod.yaml,2026-08-24 16:46,no,generated
+other-cel__ensure-probes-different,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__ensure-probes-different.yaml,2026-08-24 16:46,no,not-applied
+other-cel__ensure-readonly-hostpath,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__ensure-readonly-hostpath.yaml,2026-08-24 17:41,no,not-applied
+other-cel__exclude-namespaces-dynamically,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__exclude-namespaces-dynamically.yaml,2026-08-24 17:41,no,not-applied
+other-cel__forbid-cpu-limits,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__forbid-cpu-limits.yaml,2026-08-24 17:41,no,not-applied
+other-cel__imagepullpolicy-always,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__imagepullpolicy-always.yaml,2026-08-24 17:41,no,not-applied
+other-cel__ingress-host-match-tls,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__ingress-host-match-tls.yaml,2026-08-24 16:46,no,generated
+other-cel__limit-containers-per-pod,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__limit-containers-per-pod.yaml,2026-08-24 17:41,no,not-applied
+other-cel__limit-hostpath-type-pv,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__limit-hostpath-type-pv.yaml,2026-08-24 16:46,no,generated
+other-cel__limit-hostpath-vols,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__limit-hostpath-vols.yaml,2026-08-24 17:41,no,not-applied
+other-cel__memory-requests-equal-limits,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__memory-requests-equal-limits.yaml,2026-08-24 17:41,no,not-applied
+other-cel__metadata-match-regex,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__metadata-match-regex.yaml,2026-08-24 17:41,no,generated
+other-cel__pdb-maxunavailable,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__pdb-maxunavailable.yaml,2026-08-24 16:46,no,generated
+other-cel__prevent-bare-pods,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__prevent-bare-pods.yaml,2026-08-24 17:41,no,generated
+other-cel__prevent-cr8escape,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__prevent-cr8escape.yaml,2026-08-24 17:41,no,not-applied
+other-cel__require-annotations,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__require-annotations.yaml,2026-08-24 17:41,no,not-applied
+other-cel__require-container-port-names,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__require-container-port-names.yaml,2026-08-24 17:41,no,not-applied
+other-cel__require-deployments-have-multiple-replicas,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__require-deployments-have-multiple-replicas.yaml,2026-08-24 16:46,no,generated
+other-cel__require-emptydir-requests-limits,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__require-emptydir-requests-limits.yaml,2026-08-24 17:41,no,not-applied
+other-cel__require-image-checksum,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__require-image-checksum.yaml,2026-08-24 17:41,no,not-applied
+other-cel__require-ingress-https,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__require-ingress-https.yaml,2026-08-24 16:46,no,structural-skip
+other-cel__require-non-root-groups,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__require-non-root-groups.yaml,2026-08-24 17:41,no,not-applied
+other-cel__require-pod-priorityclassname,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__require-pod-priorityclassname.yaml,2026-08-24 17:41,no,not-applied
+other-cel__require-qos-burstable,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__require-qos-burstable.yaml,2026-08-24 17:41,no,not-applied
+other-cel__require-qos-guaranteed,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__require-qos-guaranteed.yaml,2026-08-24 17:41,no,generated
+other-cel__require-storageclass,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__require-storageclass.yaml,2026-08-24 16:46,no,not-applied
+other-cel__restrict-annotations,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__restrict-annotations.yaml,2026-08-24 16:46,no,not-applied
+other-cel__restrict-binding-clusteradmin,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__restrict-binding-clusteradmin.yaml,2026-08-24 16:46,no,not-applied
+other-cel__restrict-binding-system-groups,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__restrict-binding-system-groups.yaml,2026-08-24 16:46,no,not-applied
+other-cel__restrict-clusterrole-nodesproxy,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__restrict-clusterrole-nodesproxy.yaml,2026-08-24 16:46,no,not-applied
+other-cel__restrict-controlplane-scheduling,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__restrict-controlplane-scheduling.yaml,2026-08-24 17:41,no,not-applied
+other-cel__restrict-deprecated-registry,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__restrict-deprecated-registry.yaml,2026-08-24 17:41,no,not-applied
+other-cel__restrict-edit-for-endpoints,clusterpolicy-cel,validate,no,not-converted,,,,no,not-applied
+other-cel__restrict-escalation-verbs-roles,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__restrict-escalation-verbs-roles.yaml,2026-08-24 16:46,no,not-applied
+other-cel__restrict-ingress-classes,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__restrict-ingress-classes.yaml,2026-08-24 16:46,no,not-applied
+other-cel__restrict-ingress-defaultbackend,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__restrict-ingress-defaultbackend.yaml,2026-08-24 16:46,no,not-applied
+other-cel__restrict-ingress-wildcard,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__restrict-ingress-wildcard.yaml,2026-08-24 16:46,no,not-applied
+other-cel__restrict-jobs,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__restrict-jobs.yaml,2026-08-24 16:46,no,not-applied
+other-cel__restrict-loadbalancer,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__restrict-loadbalancer.yaml,2026-08-24 16:46,no,generated
+other-cel__restrict-networkpolicy-empty-podselector,clusterpolicy-cel,validate,no,not-converted,,,,no,not-applied
+other-cel__restrict-node-affinity,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__restrict-node-affinity.yaml,2026-08-24 17:41,no,not-applied
+other-cel__restrict-node-label-creation,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__restrict-node-label-creation.yaml,2026-08-24 16:46,no,not-applied
+other-cel__restrict-pod-controller-serviceaccount-updates,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__restrict-pod-controller-serviceaccount-updates.yaml,2026-08-24 16:46,no,not-applied
+other-cel__restrict-sa-automount-sa-token,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__restrict-sa-automount-sa-token.yaml,2026-08-24 16:46,no,not-applied
+other-cel__restrict-secret-role-verbs,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__restrict-secret-role-verbs.yaml,2026-08-24 16:46,no,not-applied
+other-cel__restrict-secrets-by-name,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__restrict-secrets-by-name.yaml,2026-08-24 17:41,no,not-applied
+other-cel__restrict-service-port-range,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__restrict-service-port-range.yaml,2026-08-24 16:46,no,not-applied
+other-cel__restrict-storageclass,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__restrict-storageclass.yaml,2026-08-24 16:46,no,not-applied
+other-cel__restrict-usergroup-fsgroup-id,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__restrict-usergroup-fsgroup-id.yaml,2026-08-24 17:41,no,not-applied
+other-cel__restrict-wildcard-resources,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__restrict-wildcard-resources.yaml,2026-08-24 16:46,no,not-applied
+other-cel__restrict-wildcard-verbs,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__restrict-wildcard-verbs.yaml,2026-08-24 16:46,no,not-applied
+other-cel__topologyspreadconstraints-policy,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-cel__topologyspreadconstraints-policy.yaml,2026-08-24 16:46,no,not-applied
+other-mpol__add-certificates-volume,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-mpol__add-certificates-volume.yaml,2026-08-24 21:37,no,not-applied
+other-mpol__add-default-resources,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-mpol__add-default-resources.yaml,2026-08-24 21:37,no,not-applied
+other-mpol__add-default-securitycontext,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-mpol__add-default-securitycontext.yaml,2026-08-24 21:37,no,not-applied
+other-mpol__add-emptydir-sizelimit,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-mpol__add-emptydir-sizelimit.yaml,2026-08-24 21:37,no,not-applied
+other-mpol__add-env-vars-from-cm,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-mpol__add-env-vars-from-cm.yaml,2026-08-24 16:46,no,not-applied
+other-mpol__add-image-as-env-var,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-mpol__add-image-as-env-var.yaml,2026-08-24 21:37,no,not-applied
+other-mpol__add-imagepullsecrets,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-mpol__add-imagepullsecrets.yaml,2026-08-24 16:46,no,not-applied
+other-mpol__add-imagepullsecrets-for-containers-and-initcontainers,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-mpol__add-imagepullsecrets-for-containers-and-initcontainers.yaml,2026-08-25 02:20,no,not-applied
+other-mpol__add-labels,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-mpol__add-labels.yaml,2026-08-24 21:37,no,not-applied
+other-mpol__add-ndots,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-mpol__add-ndots.yaml,2026-08-24 16:46,no,not-applied
+other-mpol__add-nodeSelector,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-mpol__add-nodeSelector.yaml,2026-08-24 16:46,no,not-applied
+other-mpol__add-pod-priorityclassname,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-mpol__add-pod-priorityclassname.yaml,2026-08-24 16:46,no,not-applied
+other-mpol__add-pod-proxies,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-mpol__add-pod-proxies.yaml,2026-08-24 16:46,no,not-applied
+other-mpol__add-tolerations,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-mpol__add-tolerations.yaml,2026-08-24 21:37,no,not-applied
+other-mpol__add-ttl-jobs,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-mpol__add-ttl-jobs.yaml,2026-08-25 02:20,no,not-applied
+other-mpol__add-volume-deployment,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-mpol__add-volume-deployment.yaml,2026-08-24 16:46,no,not-applied
+other-mpol__always-pull-images,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-mpol__always-pull-images.yaml,2026-08-24 21:37,no,not-applied
+other-mpol__apply-pss-restricted-profile,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-mpol__apply-pss-restricted-profile.yaml,2026-08-24 16:46,no,not-applied
+other-mpol__disable-automountserviceaccounttoken,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-mpol__disable-automountserviceaccounttoken.yaml,2026-08-24 16:46,no,not-applied
+other-mpol__disable-service-discovery,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-mpol__disable-service-discovery.yaml,2026-08-24 21:37,no,not-applied
+other-mpol__inject-kata-cc-runtime,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-mpol__inject-kata-cc-runtime.yaml,2026-08-24 21:37,no,not-applied
+other-mpol__inject-sidecar-deployment,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-mpol__inject-sidecar-deployment.yaml,2026-08-24 16:46,no,not-applied
+other-mpol__label-existing-namespaces,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-mpol__label-existing-namespaces.yaml,2026-08-24 16:46,no,not-applied
+other-mpol__label-nodes-cri,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-mpol__label-nodes-cri.yaml,2026-08-24 16:46,no,not-applied
+other-mpol__mitigate-log4shell,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-mpol__mitigate-log4shell.yaml,2026-08-24 16:46,no,not-applied
+other-mpol__mutate-large-termination-gps,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-mpol__mutate-large-termination-gps.yaml,2026-08-24 21:37,no,not-applied
+other-mpol__prepend-image-registry,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-mpol__prepend-image-registry.yaml,2026-08-24 21:37,no,not-applied
+other-mpol__remove-hostpath-volumes,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-mpol__remove-hostpath-volumes.yaml,2026-08-25 02:20,no,not-applied
+other-mpol__replace-image-registry,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-mpol__replace-image-registry.yaml,2026-08-25 02:20,no,not-applied
+other-mpol__replace-ingress-hosts,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-mpol__replace-ingress-hosts.yaml,2026-08-24 16:46,no,not-applied
+other-mpol__spread-pods-across-topology,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-mpol__spread-pods-across-topology.yaml,2026-08-24 16:46,no,not-applied
+other-mpol__update-image-tag,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-mpol__update-image-tag.yaml,2026-08-24 16:46,no,not-applied
+other-vpol__advanced-restrict-image-registries,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__advanced-restrict-image-registries.yaml,2026-08-25 02:20,no,generated
+other-vpol__allowed-annotations,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__allowed-annotations.yaml,2026-08-24 21:37,no,generated
+other-vpol__allowed-image-repos,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__allowed-image-repos.yaml,2026-08-24 21:37,no,not-applied
+other-vpol__allowed-pod-priorities,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__allowed-pod-priorities.yaml,2026-08-25 02:20,no,generated
+other-vpol__block-cluster-admin-from-ns,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__block-cluster-admin-from-ns.yaml,2026-08-24 16:46,no,not-applied
+other-vpol__block-ephemeral-containers,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__block-ephemeral-containers.yaml,2026-08-24 21:37,no,not-applied
+other-vpol__block-kubectl-cp,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__block-kubectl-cp.yaml,2026-08-24 16:46,no,not-applied
+other-vpol__block-pod-exec-by-namespace,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__block-pod-exec-by-namespace.yaml,2026-08-24 16:46,no,not-applied
+other-vpol__block-pod-exec-by-pod-and-container,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__block-pod-exec-by-pod-and-container.yaml,2026-08-24 16:46,no,not-applied
+other-vpol__block-pod-exec-by-pod-name,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__block-pod-exec-by-pod-name.yaml,2026-08-24 16:46,no,not-applied
+other-vpol__block-updates-deletes,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__block-updates-deletes.yaml,2026-08-24 16:46,no,not-applied
+other-vpol__check-env-vars,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__check-env-vars.yaml,2026-08-24 21:37,no,not-applied
+other-vpol__check-ingress-nginx-controller-version-and-annotation-policy,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__check-ingress-nginx-controller-version-and-annotation-policy.yaml,2026-08-24 21:37,no,not-applied
+other-vpol__check-node-for-cve-2022-0185,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__check-node-for-cve-2022-0185.yaml,2026-08-24 16:46,no,generated
+other-vpol__check-serviceaccount,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__check-serviceaccount.yaml,2026-08-24 21:37,no,not-applied
+other-vpol__check-serviceaccount-secrets,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__check-serviceaccount-secrets.yaml,2026-08-24 16:46,no,generated
+other-vpol__deny-commands-in-exec-probe,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__deny-commands-in-exec-probe.yaml,2026-08-24 21:37,no,not-applied
+other-vpol__deny-secret-service-account-token-type,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__deny-secret-service-account-token-type.yaml,2026-08-24 16:46,no,generated
+other-vpol__disallow-all-secrets,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__disallow-all-secrets.yaml,2026-08-24 21:37,no,not-applied
+other-vpol__disallow-localhost-services,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__disallow-localhost-services.yaml,2026-08-24 16:46,no,generated
+other-vpol__disallow-secrets-from-env-vars,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__disallow-secrets-from-env-vars.yaml,2026-08-24 21:37,no,not-applied
+other-vpol__docker-socket-requires-label,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__docker-socket-requires-label.yaml,2026-08-24 21:37,no,not-applied
+other-vpol__enforce-pod-duration,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__enforce-pod-duration.yaml,2026-08-24 21:37,no,not-applied
+other-vpol__enforce-readwriteonce-pod,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__enforce-readwriteonce-pod.yaml,2026-08-24 16:46,no,generated
+other-vpol__ensure-probes-different,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__ensure-probes-different.yaml,2026-08-24 16:46,no,not-applied
+other-vpol__ensure-readonly-hostpath,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__ensure-readonly-hostpath.yaml,2026-08-24 21:37,no,not-applied
+other-vpol__exclude-namespaces-dynamically,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__exclude-namespaces-dynamically.yaml,2026-08-24 16:46,no,not-applied
+other-vpol__forbid-cpu-limits,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__forbid-cpu-limits.yaml,2026-08-24 21:37,no,not-applied
+other-vpol__imagepullpolicy-always,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__imagepullpolicy-always.yaml,2026-08-24 21:37,no,not-applied
+other-vpol__ingress-host-match-tls,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__ingress-host-match-tls.yaml,2026-08-24 16:46,no,generated
+other-vpol__limit-configmap-for-sa,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__limit-configmap-for-sa.yaml,2026-08-25 02:20,no,not-applied
+other-vpol__limit-containers-per-pod,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__limit-containers-per-pod.yaml,2026-08-24 21:37,no,not-applied
+other-vpol__limit-hostpath-type-pv,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__limit-hostpath-type-pv.yaml,2026-08-24 16:46,no,generated
+other-vpol__limit-hostpath-vols,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__limit-hostpath-vols.yaml,2026-08-24 21:37,no,not-applied
+other-vpol__memory-requests-equal-limits,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__memory-requests-equal-limits.yaml,2026-08-24 21:37,no,not-applied
+other-vpol__metadata-match-regex,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__metadata-match-regex.yaml,2026-08-24 21:37,no,generated
+other-vpol__pdb-maxunavailable,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__pdb-maxunavailable.yaml,2026-08-24 16:46,no,generated
+other-vpol__prevent-bare-pods,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__prevent-bare-pods.yaml,2026-08-24 21:37,no,generated
+other-vpol__prevent-cr8escape,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__prevent-cr8escape.yaml,2026-08-24 21:37,no,not-applied
+other-vpol__require-annotations,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__require-annotations.yaml,2026-08-24 21:37,no,not-applied
+other-vpol__require-container-port-names,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__require-container-port-names.yaml,2026-08-24 21:37,no,not-applied
+other-vpol__require-deployments-have-multiple-replicas,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__require-deployments-have-multiple-replicas.yaml,2026-08-24 16:46,no,generated
+other-vpol__require-emptydir-requests-limits,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__require-emptydir-requests-limits.yaml,2026-08-24 21:37,no,not-applied
+other-vpol__require-image-checksum,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__require-image-checksum.yaml,2026-08-24 21:37,no,not-applied
+other-vpol__require-ingress-https,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__require-ingress-https.yaml,2026-08-24 16:46,no,structural-skip
+other-vpol__require-non-root-groups,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__require-non-root-groups.yaml,2026-08-24 21:37,no,not-applied
+other-vpol__require-pod-priorityclassname,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__require-pod-priorityclassname.yaml,2026-08-24 21:37,no,not-applied
+other-vpol__require-qos-burstable,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__require-qos-burstable.yaml,2026-08-24 21:37,no,not-applied
+other-vpol__require-qos-guaranteed,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__require-qos-guaranteed.yaml,2026-08-24 21:37,no,generated
+other-vpol__require-storageclass,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__require-storageclass.yaml,2026-08-24 16:46,no,not-applied
+other-vpol__restrict-annotations,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__restrict-annotations.yaml,2026-08-24 16:46,no,not-applied
+other-vpol__restrict-binding-clusteradmin,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__restrict-binding-clusteradmin.yaml,2026-08-24 16:46,no,not-applied
+other-vpol__restrict-binding-system-groups,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__restrict-binding-system-groups.yaml,2026-08-24 16:46,no,not-applied
+other-vpol__restrict-clusterrole-nodesproxy,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__restrict-clusterrole-nodesproxy.yaml,2026-08-24 16:46,no,not-applied
+other-vpol__restrict-controlplane-scheduling,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__restrict-controlplane-scheduling.yaml,2026-08-24 21:37,no,not-applied
+other-vpol__restrict-deprecated-registry,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__restrict-deprecated-registry.yaml,2026-08-24 21:37,no,not-applied
+other-vpol__restrict-edit-for-endpoints,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__restrict-edit-for-endpoints.yaml,2026-08-24 16:46,no,not-applied
+other-vpol__restrict-escalation-verbs-roles,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__restrict-escalation-verbs-roles.yaml,2026-08-24 16:46,no,not-applied
+other-vpol__restrict-ingress-classes,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__restrict-ingress-classes.yaml,2026-08-24 16:46,no,not-applied
+other-vpol__restrict-ingress-defaultbackend,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__restrict-ingress-defaultbackend.yaml,2026-08-24 16:46,no,not-applied
+other-vpol__restrict-ingress-wildcard,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__restrict-ingress-wildcard.yaml,2026-08-24 16:46,no,not-applied
+other-vpol__restrict-jobs,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__restrict-jobs.yaml,2026-08-24 16:46,no,not-applied
+other-vpol__restrict-loadbalancer,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__restrict-loadbalancer.yaml,2026-08-24 16:46,no,generated
+other-vpol__restrict-networkpolicy-empty-podselector,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__restrict-networkpolicy-empty-podselector.yaml,2026-08-24 16:46,no,not-applied
+other-vpol__restrict-node-affinity,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__restrict-node-affinity.yaml,2026-08-24 21:37,no,not-applied
+other-vpol__restrict-node-label-creation,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__restrict-node-label-creation.yaml,2026-08-24 16:46,no,not-applied
+other-vpol__restrict-pod-controller-serviceaccount-updates,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__restrict-pod-controller-serviceaccount-updates.yaml,2026-08-24 16:46,no,not-applied
+other-vpol__restrict-sa-automount-sa-token,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__restrict-sa-automount-sa-token.yaml,2026-08-24 16:46,no,not-applied
+other-vpol__restrict-secret-role-verbs,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__restrict-secret-role-verbs.yaml,2026-08-24 16:46,no,not-applied
+other-vpol__restrict-secrets-by-name,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__restrict-secrets-by-name.yaml,2026-08-24 21:37,no,not-applied
+other-vpol__restrict-service-port-range,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__restrict-service-port-range.yaml,2026-08-24 16:46,no,not-applied
+other-vpol__restrict-storageclass,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__restrict-storageclass.yaml,2026-08-24 16:46,no,not-applied
+other-vpol__restrict-usergroup-fsgroup-id,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__restrict-usergroup-fsgroup-id.yaml,2026-08-24 21:37,no,not-applied
+other-vpol__restrict-wildcard-resources,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__restrict-wildcard-resources.yaml,2026-08-24 16:46,no,not-applied
+other-vpol__restrict-wildcard-verbs,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__restrict-wildcard-verbs.yaml,2026-08-24 16:46,no,not-applied
+other-vpol__topologyspreadconstraints-policy,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__topologyspreadconstraints-policy.yaml,2026-08-24 16:46,no,not-applied
+other-vpol__validate-initdata-configmap,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/other-vpol__validate-initdata-configmap.yaml,2026-08-24 16:46,no,not-applied
+other__add-certificates-volume,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+other__add-default-resources,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+other__add-default-securitycontext,clusterpolicy,mutate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__add-default-securitycontext.yaml,2026-09-02 21:53,no,not-applied
+other__add-emptydir-sizelimit,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+other__add-env-vars-from-cm,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+other__add-image-as-env-var,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+other__add-imagepullsecrets,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+other__add-imagepullsecrets-for-containers-and-initcontainers,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+other__add-labels,clusterpolicy,mutate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__add-labels.yaml,2026-09-02 21:53,no,not-applied
+other__add-ndots,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+other__add-node-affinity,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+other__add-nodeSelector,clusterpolicy,mutate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__add-nodeSelector.yaml,2026-09-02 21:53,no,not-applied
+other__add-pod-priorityclassname,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+other__add-pod-proxies,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+other__add-tolerations,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+other__add-ttl-jobs,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+other__add-volume-deployment,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+other__advertise-node-extended-resources,clusterpolicy,mutate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__advertise-node-extended-resources.yaml,2026-09-02 21:53,no,not-applied
+other__allowed-annotations,clusterpolicy,validate,no,not-converted,,,,no,generated
+other__allowed-image-repos,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__allowed-label-changes,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__allowed-pod-priorities,clusterpolicy,validate,no,not-converted,,,,no,generated
+other__always-pull-images,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+other__apply-pss-restricted-profile,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+other__block-ephemeral-containers,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__block-ephemeral-containers.yaml,2026-09-02 21:53,no,not-applied
+other__block-kubectl-cp,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__block-kubectl-cp.yaml,2026-09-02 21:53,no,not-applied
+other__block-pod-exec-by-namespace,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__block-pod-exec-by-namespace.yaml,2026-09-02 21:53,no,not-applied
+other__block-pod-exec-by-pod-and-container,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__block-pod-exec-by-pod-and-container.yaml,2026-09-02 21:53,no,not-applied
+other__block-pod-exec-by-pod-name,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__block-pod-exec-by-pod-name.yaml,2026-09-02 21:53,no,not-applied
+other__check-env-vars,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__check-env-vars.yaml,2026-09-02 21:53,no,not-applied
+other__check-ingress-nginx-controller-version-and-annotation-policy,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__check-node-for-cve-2022-0185,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__check-node-for-cve-2022-0185.yaml,2026-09-02 21:53,no,generated
+other__check-serviceaccount,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__check-serviceaccount.yaml,2026-09-02 21:53,no,not-applied
+other__check-serviceaccount-secrets,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__check-serviceaccount-secrets.yaml,2026-09-02 21:53,no,generated
+other__create-pod-antiaffinity,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+other__deny-commands-in-exec-probe,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__deny-secret-service-account-token-type,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__deny-secret-service-account-token-type.yaml,2026-09-02 21:53,no,generated
+other__disable-automountserviceaccounttoken,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+other__disable-service-discovery,clusterpolicy,mutate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__disable-service-discovery.yaml,2026-09-02 21:53,no,not-applied
+other__disallow-all-secrets,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__disallow-all-secrets.yaml,2026-09-02 21:53,no,not-applied
+other__disallow-localhost-services,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__disallow-localhost-services.yaml,2026-09-02 21:53,no,generated
+other__disallow-secrets-from-env-vars,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__disallow-secrets-from-env-vars.yaml,2026-09-02 21:53,no,not-applied
+other__dns-policy-and-dns-config,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+other__docker-socket-requires-label,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__docker-socket-requires-label.yaml,2026-09-02 21:53,no,not-applied
+other__enforce-pod-duration,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__enforce-readwriteonce-pod,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__enforce-readwriteonce-pod.yaml,2026-09-02 21:53,no,generated
+other__enforce-resources-as-ratio,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__ensure-probes-different,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__ensure-readonly-hostpath,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__exclude-namespaces-dynamically,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__forbid-cpu-limits,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__forbid-cpu-limits.yaml,2026-09-02 21:53,no,not-applied
+other__imagepullpolicy-always,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__imagepullpolicy-always.yaml,2026-09-02 21:53,no,not-applied
+other__ingress-host-match-tls,clusterpolicy,validate,no,not-converted,,,,no,generated
+other__inject-sidecar-deployment,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+other__inspect-csr,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__limit-configmap-for-sa,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__limit-configmap-for-sa.yaml,2026-09-02 21:53,no,not-applied
+other__limit-containers-per-pod,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__limit-hostpath-type-pv,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__limit-hostpath-type-pv.yaml,2026-09-02 21:53,no,generated
+other__limit-hostpath-vols,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__memory-requests-equal-limits,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__metadata-match-regex,clusterpolicy,validate,no,not-converted,,,,no,generated
+other__mitigate-log4shell,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+other__mutate-large-termination-gps,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+other__namespace-protection,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__nfs-subdir-external-provisioner-storage-path,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__pdb-maxunavailable,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__pdb-maxunavailable.yaml,2026-09-02 21:53,no,generated
+other__policy-for-exceptions,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__prepend-image-registry,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+other__prevent-bare-pods,clusterpolicy,validate,no,not-converted,,,,no,generated
+other__prevent-cr8escape,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__prevent-cr8escape.yaml,2026-09-02 21:53,no,not-applied
+other__record-creation-details,clusterpolicy,mutate/validate,no,not-converted,,,,no,not-applied
+other__remove-hostpath-volumes,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+other__remove-serviceaccount-token,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+other__replace-image-registry,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+other__replace-ingress-hosts,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+other__require-annotations,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__require-annotations.yaml,2026-09-02 21:53,no,not-applied
+other__require-container-port-names,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__require-container-port-names.yaml,2026-09-02 21:53,no,not-applied
+other__require-cpu-limits,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__require-cpu-limits.yaml,2026-09-02 21:53,no,not-applied
+other__require-deployments-have-multiple-replicas,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__require-deployments-have-multiple-replicas.yaml,2026-09-02 21:53,no,generated
+other__require-emptydir-requests-limits,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__require-image-checksum,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__require-image-checksum.yaml,2026-09-02 21:53,no,not-applied
+other__require-imagepullsecrets,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__require-ingress-https,clusterpolicy,validate,no,not-converted,,,,no,structural-skip
+other__require-non-root-groups,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__require-non-root-groups.yaml,2026-09-02 21:53,no,not-applied
+other__require-pod-priorityclassname,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__require-pod-priorityclassname.yaml,2026-09-02 21:53,no,not-applied
+other__require-qos-burstable,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__require-qos-guaranteed,clusterpolicy,validate,no,not-converted,,,,no,generated
+other__require-reasonable-pdbs,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__require-storageclass,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__require-storageclass.yaml,2026-09-02 21:53,no,not-applied
+other__resource-creation-updating-denied,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__restrict-annotations,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__restrict-annotations.yaml,2026-09-02 21:53,no,not-applied
+other__restrict-automount-sa-token,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__restrict-binding-clusteradmin,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__restrict-binding-clusteradmin.yaml,2026-09-02 21:53,no,not-applied
+other__restrict-binding-system-groups,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__restrict-binding-system-groups.yaml,2026-09-02 21:53,no,not-applied
+other__restrict-clusterrole-csr,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__restrict-clusterrole-mutating-validating-admission-webhooks,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__restrict-clusterrole-nodesproxy,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__restrict-controlplane-scheduling,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__restrict-controlplane-scheduling.yaml,2026-09-02 21:53,no,not-applied
+other__restrict-deprecated-registry,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__restrict-edit-for-endpoints,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__restrict-escalation-verbs-roles,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__restrict-ingress-classes,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__restrict-ingress-classes.yaml,2026-09-02 21:53,no,not-applied
+other__restrict-ingress-defaultbackend,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__restrict-ingress-defaultbackend.yaml,2026-09-02 21:53,no,not-applied
+other__restrict-ingress-wildcard,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__restrict-jobs,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__restrict-loadbalancer,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__restrict-loadbalancer.yaml,2026-09-02 21:53,no,generated
+other__restrict-networkpolicy-empty-podselector,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__restrict-node-affinity,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__restrict-node-affinity.yaml,2026-09-02 21:53,no,not-applied
+other__restrict-node-label-changes,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__restrict-node-label-creation,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__restrict-node-selection,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__restrict-node-selection.yaml,2026-09-02 21:53,no,not-applied
+other__restrict-pod-controller-serviceaccount-updates,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__restrict-pod-controller-serviceaccount-updates.yaml,2026-09-02 21:53,no,not-applied
+other__restrict-sa-automount-sa-token,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__restrict-sa-automount-sa-token.yaml,2026-09-02 21:53,no,not-applied
+other__restrict-secret-role-verbs,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__restrict-secrets-by-name,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__restrict-secrets-by-name.yaml,2026-09-02 21:53,no,not-applied
+other__restrict-service-account,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__restrict-service-port-range,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__restrict-service-port-range.yaml,2026-09-02 21:53,no,not-applied
+other__restrict-storageclass,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__restrict-storageclass.yaml,2026-09-02 21:53,no,not-applied
+other__restrict-usergroup-fsgroup-id,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/other__restrict-usergroup-fsgroup-id.yaml,2026-09-02 21:53,no,not-applied
+other__restrict-wildcard-resources,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__restrict-wildcard-verbs,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__spread-pods-across-topology,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+other__time-bound-policy,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__topologyspreadconstraints-policy,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+other__verify-manifest-integrity,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+pod-security-cel__baseline__disallow-capabilities,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/pod-security-cel__baseline__disallow-capabilities.yaml,2026-08-24 17:41,no,not-applied
+pod-security-cel__baseline__disallow-host-namespaces,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/pod-security-cel__baseline__disallow-host-namespaces.yaml,2026-08-24 17:41,no,not-applied
+pod-security-cel__baseline__disallow-host-path,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/pod-security-cel__baseline__disallow-host-path.yaml,2026-08-24 17:41,no,not-applied
+pod-security-cel__baseline__disallow-host-ports,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/pod-security-cel__baseline__disallow-host-ports.yaml,2026-08-24 17:41,no,generated
+pod-security-cel__baseline__disallow-host-ports-range,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/pod-security-cel__baseline__disallow-host-ports-range.yaml,2026-08-24 17:41,no,not-applied
+pod-security-cel__baseline__disallow-host-process,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/pod-security-cel__baseline__disallow-host-process.yaml,2026-08-24 17:41,no,not-applied
+pod-security-cel__baseline__disallow-privileged-containers,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/pod-security-cel__baseline__disallow-privileged-containers.yaml,2026-08-24 17:41,no,not-applied
+pod-security-cel__baseline__disallow-proc-mount,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/pod-security-cel__baseline__disallow-proc-mount.yaml,2026-08-24 17:41,no,generated
+pod-security-cel__baseline__disallow-selinux,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/pod-security-cel__baseline__disallow-selinux.yaml,2026-08-24 17:41,no,not-applied
+pod-security-cel__baseline__restrict-seccomp,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/pod-security-cel__baseline__restrict-seccomp.yaml,2026-08-24 17:41,no,not-applied
+pod-security-cel__baseline__restrict-sysctls,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/pod-security-cel__baseline__restrict-sysctls.yaml,2026-08-24 17:41,no,not-applied
+pod-security-cel__restricted__disallow-capabilities-strict,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/pod-security-cel__restricted__disallow-capabilities-strict.yaml,2026-08-24 17:41,no,not-applied
+pod-security-cel__restricted__disallow-privilege-escalation,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/pod-security-cel__restricted__disallow-privilege-escalation.yaml,2026-08-24 17:41,no,not-applied
+pod-security-cel__restricted__require-run-as-non-root-user,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/pod-security-cel__restricted__require-run-as-non-root-user.yaml,2026-08-24 17:41,no,not-applied
+pod-security-cel__restricted__require-run-as-nonroot,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/pod-security-cel__restricted__require-run-as-nonroot.yaml,2026-08-24 17:41,no,not-applied
+pod-security-cel__restricted__restrict-seccomp-strict,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/pod-security-cel__restricted__restrict-seccomp-strict.yaml,2026-08-24 17:41,no,not-applied
+pod-security-cel__restricted__restrict-volume-types,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/pod-security-cel__restricted__restrict-volume-types.yaml,2026-08-24 17:41,no,not-applied
+pod-security-vpol__baseline__disallow-capabilities,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/pod-security-vpol__baseline__disallow-capabilities.yaml,2026-08-24 21:37,no,not-applied
+pod-security-vpol__baseline__disallow-host-namespaces,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/pod-security-vpol__baseline__disallow-host-namespaces.yaml,2026-08-24 21:37,no,not-applied
+pod-security-vpol__baseline__disallow-host-path,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/pod-security-vpol__baseline__disallow-host-path.yaml,2026-08-24 21:37,no,not-applied
+pod-security-vpol__baseline__disallow-host-ports,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/pod-security-vpol__baseline__disallow-host-ports.yaml,2026-08-24 21:37,no,generated
+pod-security-vpol__baseline__disallow-host-process,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/pod-security-vpol__baseline__disallow-host-process.yaml,2026-08-24 21:37,no,not-applied
+pod-security-vpol__baseline__disallow-privileged-containers,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/pod-security-vpol__baseline__disallow-privileged-containers.yaml,2026-08-24 21:37,no,not-applied
+pod-security-vpol__baseline__disallow-proc-mount,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/pod-security-vpol__baseline__disallow-proc-mount.yaml,2026-08-24 21:37,no,generated
+pod-security-vpol__baseline__disallow-selinux,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/pod-security-vpol__baseline__disallow-selinux.yaml,2026-08-24 21:37,no,not-applied
+pod-security-vpol__baseline__restrict-seccomp,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/pod-security-vpol__baseline__restrict-seccomp.yaml,2026-08-24 21:37,no,not-applied
+pod-security-vpol__baseline__restrict-sysctls,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/pod-security-vpol__baseline__restrict-sysctls.yaml,2026-08-24 21:37,no,not-applied
+pod-security-vpol__restricted__disallow-capabilities-strict,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/pod-security-vpol__restricted__disallow-capabilities-strict.yaml,2026-08-24 21:37,no,not-applied
+pod-security-vpol__restricted__disallow-privilege-escalation,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/pod-security-vpol__restricted__disallow-privilege-escalation.yaml,2026-08-24 21:37,no,not-applied
+pod-security-vpol__restricted__require-run-as-non-root-user,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/pod-security-vpol__restricted__require-run-as-non-root-user.yaml,2026-08-24 21:37,no,not-applied
+pod-security-vpol__restricted__require-run-as-nonroot,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/pod-security-vpol__restricted__require-run-as-nonroot.yaml,2026-08-24 21:37,no,not-applied
+pod-security-vpol__restricted__restrict-seccomp-strict,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/pod-security-vpol__restricted__restrict-seccomp-strict.yaml,2026-08-24 21:37,no,not-applied
+pod-security-vpol__restricted__restrict-volume-types,vpol,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/pod-security-vpol__restricted__restrict-volume-types.yaml,2026-08-24 21:37,no,not-applied
+pod-security__baseline__disallow-capabilities,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+pod-security__baseline__disallow-host-namespaces,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/pod-security__baseline__disallow-host-namespaces.yaml,2026-09-02 21:53,no,not-applied
+pod-security__baseline__disallow-host-path,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/pod-security__baseline__disallow-host-path.yaml,2026-09-02 21:53,no,not-applied
+pod-security__baseline__disallow-host-ports,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/pod-security__baseline__disallow-host-ports.yaml,2026-09-02 21:53,no,generated
+pod-security__baseline__disallow-host-ports-range,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+pod-security__baseline__disallow-host-process,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/pod-security__baseline__disallow-host-process.yaml,2026-09-02 21:53,no,not-applied
+pod-security__baseline__disallow-privileged-containers,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/pod-security__baseline__disallow-privileged-containers.yaml,2026-09-02 21:53,no,not-applied
+pod-security__baseline__disallow-proc-mount,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/pod-security__baseline__disallow-proc-mount.yaml,2026-09-02 21:53,no,generated
+pod-security__baseline__disallow-selinux,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/pod-security__baseline__disallow-selinux.yaml,2026-09-02 21:53,no,not-applied
+pod-security__baseline__restrict-apparmor-profiles,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/pod-security__baseline__restrict-apparmor-profiles.yaml,2026-09-02 21:53,no,not-applied
+pod-security__baseline__restrict-seccomp,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/pod-security__baseline__restrict-seccomp.yaml,2026-09-02 21:53,no,not-applied
+pod-security__baseline__restrict-sysctls,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/pod-security__baseline__restrict-sysctls.yaml,2026-09-02 21:53,no,not-applied
+pod-security__restricted__disallow-capabilities-strict,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+pod-security__restricted__disallow-privilege-escalation,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/pod-security__restricted__disallow-privilege-escalation.yaml,2026-09-02 21:53,no,not-applied
+pod-security__restricted__require-run-as-non-root-user,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/pod-security__restricted__require-run-as-non-root-user.yaml,2026-09-02 21:53,no,not-applied
+pod-security__restricted__require-run-as-nonroot,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/pod-security__restricted__require-run-as-nonroot.yaml,2026-09-02 21:53,no,not-applied
+pod-security__restricted__restrict-seccomp-strict,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/pod-security__restricted__restrict-seccomp-strict.yaml,2026-09-02 21:53,no,not-applied
+pod-security__restricted__restrict-volume-types,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+pod-security__subrule__podsecurity-subrule-baseline,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+pod-security__subrule__restricted__restricted-exclude-capabilities,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+pod-security__subrule__restricted__restricted-exclude-seccomp,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+pod-security__subrule__restricted__restricted-latest,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+psa-cel__add-psa-namespace-reporting,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/psa-cel__add-psa-namespace-reporting.yaml,2026-08-24 16:46,no,generated
+psa-mpol__add-privileged-existing-namespaces,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/psa-mpol__add-privileged-existing-namespaces.yaml,2026-08-24 16:46,no,not-applied
+psa-mpol__add-psa-labels,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/psa-mpol__add-psa-labels.yaml,2026-08-24 16:46,no,not-applied
+psa__add-psa-labels,clusterpolicy,mutate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/psa__add-psa-labels.yaml,2026-09-02 21:53,no,not-applied
+psa__add-psa-namespace-reporting,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/psa__add-psa-namespace-reporting.yaml,2026-09-02 21:53,no,generated
+psp-migration-cel__check-supplemental-groups,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/psp-migration-cel__check-supplemental-groups.yaml,2026-08-24 17:41,no,generated
+psp-migration-cel__restrict-adding-capabilities,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/psp-migration-cel__restrict-adding-capabilities.yaml,2026-08-24 17:41,no,not-applied
+psp-migration-cel__restrict-runtimeClassName,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/psp-migration-cel__restrict-runtimeClassName.yaml,2026-08-24 17:41,no,not-applied
+psp-migration-mpol__add-apparmor,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/psp-migration-mpol__add-apparmor.yaml,2026-08-24 21:37,no,not-applied
+psp-migration-mpol__add-capabilities,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/psp-migration-mpol__add-capabilities.yaml,2026-08-24 21:37,no,not-applied
+psp-migration-mpol__add-runtimeClassName,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/psp-migration-mpol__add-runtimeClassName.yaml,2026-08-24 21:37,no,not-applied
+psp-migration__add-apparmor,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+psp-migration__add-capabilities,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+psp-migration__add-runtimeClassName,clusterpolicy,mutate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/psp-migration__add-runtimeClassName.yaml,2026-09-02 21:53,no,not-applied
+psp-migration__check-supplemental-groups,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/psp-migration__check-supplemental-groups.yaml,2026-09-02 21:53,no,generated
+psp-migration__restrict-adding-capabilities,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+psp-migration__restrict-runtimeClassName,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/psp-migration__restrict-runtimeClassName.yaml,2026-09-02 21:53,no,not-applied
+tekton-cel__block-tekton-task-runs,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/tekton-cel__block-tekton-task-runs.yaml,2026-08-24 16:46,no,structural-skip
+tekton-cel__require-tekton-bundle,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/tekton-cel__require-tekton-bundle.yaml,2026-08-24 16:46,no,not-applied
+tekton__block-tekton-task-runs,clusterpolicy,validate,no,not-converted,,,,no,structural-skip
+tekton__require-tekton-bundle,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/tekton__require-tekton-bundle.yaml,2026-09-02 21:53,no,not-applied
+tekton__require-tekton-namespace-pipelinerun,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/tekton__require-tekton-namespace-pipelinerun.yaml,2026-09-02 21:53,no,not-applied
+tekton__require-tekton-securitycontext,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/tekton__require-tekton-securitycontext.yaml,2026-09-02 21:53,no,not-applied
+velero-cel__block-velero-restore,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/velero-cel__block-velero-restore.yaml,2026-08-24 16:46,no,missing-CRD
+velero-cel__validate-cron-schedule,clusterpolicy-cel,validate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/velero-cel__validate-cron-schedule.yaml,2026-08-24 16:46,no,not-applied
+velero-mpol__backup-all-volumes,mpol,mutate,yes,deterministic (CEL-CRD 기계변환),rq4tool.py + autogen_expand.py,native/velero-mpol__backup-all-volumes.yaml,2026-08-24 16:46,no,not-applied
+velero__backup-all-volumes,clusterpolicy,mutate,no,not-converted,,,,no,not-applied
+velero__block-velero-restore,clusterpolicy,validate,no,not-converted,,,,no,missing-CRD
+velero__validate-cron-schedule,clusterpolicy,validate,no,not-converted,,,,no,not-applied
+windows-security__require-run-as-containeruser,clusterpolicy,validate,yes,compiler (전통 패턴->CEL 컴파일),compile_trad.py + autogen_expand.py,native/windows-security__require-run-as-containeruser.yaml,2026-09-02 21:53,no,not-applied

@@ -1,0 +1,31 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: consul-enforce-min-tls-version-72734c
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - consul.hashicorp.com
+      apiVersions:
+      - v1alpha1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - meshes
+  validations:
+  - expression: (has(object.spec) && ((has(object.spec.tls) && ((has(object.spec.tls.incoming)
+      && ((has(object.spec.tls.incoming.tlsMinVersion) && (object.spec.tls.incoming.tlsMinVersion
+      == "TLSv1_2"))))))))
+    message: The minimum version of TLS is TLS v1_2
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: consul-enforce-min-tls-version-72734c-b
+spec:
+  policyName: consul-enforce-min-tls-version-72734c
+  validationActions:
+  - Deny

@@ -1,0 +1,30 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: linkerd-cel-require-linkerd-mesh-injection-a934e3
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - namespaces
+  validations:
+  - expression: object.metadata.?annotations[?'linkerd.io/inject'].orValue('') ==
+      'enabled'
+    message: All Namespaces must set the annotation `linkerd.io/inject` to `enabled`.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: linkerd-cel-require-linkerd-mesh-injection-a934e3-b
+spec:
+  policyName: linkerd-cel-require-linkerd-mesh-injection-a934e3
+  validationActions:
+  - Deny

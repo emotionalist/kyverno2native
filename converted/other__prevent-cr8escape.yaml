@@ -1,0 +1,118 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-prevent-cr8escape-bc1695
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: (has(object.spec) && ((!(has(object.spec.securityContext)) || (has(object.spec.securityContext)
+      && ((!(has(object.spec.securityContext.sysctls)) || (has(object.spec.securityContext.sysctls)
+      && (object.spec.securityContext.sysctls.all(__x, (!(has(__x.value)) || (has(__x.value)
+      && (!__x.value.matches("^.*\\+.*\\ \\&\\ !.*=.*$")))))))))))))
+    message: characters '+' or '=' are not allowed in sysctls values
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-prevent-cr8escape-bc1695-b
+spec:
+  policyName: other-prevent-cr8escape-bc1695
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-prevent-cr8escape-bc1695-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: (has(object.spec.template.spec) && ((!(has(object.spec.template.spec.securityContext))
+      || (has(object.spec.template.spec.securityContext) && ((!(has(object.spec.template.spec.securityContext.sysctls))
+      || (has(object.spec.template.spec.securityContext.sysctls) && (object.spec.template.spec.securityContext.sysctls.all(__x,
+      (!(has(__x.value)) || (has(__x.value) && (!__x.value.matches("^.*\\+.*\\ \\&\\
+      !.*=.*$")))))))))))))
+    message: characters '+' or '=' are not allowed in sysctls values
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-prevent-cr8escape-bc1695-ag1-b
+spec:
+  policyName: other-prevent-cr8escape-bc1695-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-prevent-cr8escape-bc1695-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: (has(object.spec.jobTemplate.spec.template.spec) && ((!(has(object.spec.jobTemplate.spec.template.spec.securityContext))
+      || (has(object.spec.jobTemplate.spec.template.spec.securityContext) && ((!(has(object.spec.jobTemplate.spec.template.spec.securityContext.sysctls))
+      || (has(object.spec.jobTemplate.spec.template.spec.securityContext.sysctls)
+      && (object.spec.jobTemplate.spec.template.spec.securityContext.sysctls.all(__x,
+      (!(has(__x.value)) || (has(__x.value) && (!__x.value.matches("^.*\\+.*\\ \\&\\
+      !.*=.*$")))))))))))))
+    message: characters '+' or '=' are not allowed in sysctls values
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-prevent-cr8escape-bc1695-ag2-b
+spec:
+  policyName: other-prevent-cr8escape-bc1695-ag2
+  validationActions:
+  - Deny

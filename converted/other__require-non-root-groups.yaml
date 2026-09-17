@@ -1,0 +1,413 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-require-non-root-groups-ebecd3-r0
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: ((has(object.spec) && ((has(object.spec.securityContext) && ((has(object.spec.securityContext.runAsGroup)
+      && (object.spec.securityContext.runAsGroup > 0)))) && (!(has(object.spec.ephemeralContainers))
+      || (has(object.spec.ephemeralContainers) && (object.spec.ephemeralContainers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.runAsGroup))
+      || (has(__x.securityContext.runAsGroup) && (__x.securityContext.runAsGroup >
+      0)))))))))) && (!(has(object.spec.initContainers)) || (has(object.spec.initContainers)
+      && (object.spec.initContainers.all(__x, (!(has(__x.securityContext)) || (has(__x.securityContext)
+      && ((!(has(__x.securityContext.runAsGroup)) || (has(__x.securityContext.runAsGroup)
+      && (__x.securityContext.runAsGroup > 0)))))))))) && (has(object.spec.containers)
+      && (object.spec.containers.all(__x, (!(has(__x.securityContext)) || (has(__x.securityContext)
+      && ((!(has(__x.securityContext.runAsGroup)) || (has(__x.securityContext.runAsGroup)
+      && (__x.securityContext.runAsGroup > 0)))))))))))) || ((has(object.spec) &&
+      ((!(has(object.spec.ephemeralContainers)) || (has(object.spec.ephemeralContainers)
+      && (object.spec.ephemeralContainers.all(__x, (has(__x.securityContext) && ((has(__x.securityContext.runAsGroup)
+      && (__x.securityContext.runAsGroup > 0)))))))) && (!(has(object.spec.initContainers))
+      || (has(object.spec.initContainers) && (object.spec.initContainers.all(__x,
+      (has(__x.securityContext) && ((has(__x.securityContext.runAsGroup) && (__x.securityContext.runAsGroup
+      > 0)))))))) && (has(object.spec.containers) && (object.spec.containers.all(__x,
+      (has(__x.securityContext) && ((has(__x.securityContext.runAsGroup) && (__x.securityContext.runAsGroup
+      > 0))))))))))
+    message: Running with root group IDs is disallowed. The fields spec.securityContext.runAsGroup,
+      spec.containers[*].securityContext.runAsGroup, spec.initContainers[*].securityContext.runAsGr
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-require-non-root-groups-ebecd3-r0-b
+spec:
+  policyName: other-require-non-root-groups-ebecd3-r0
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-require-non-root-groups-ebecd3-r1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: (has(object.spec) && ((!(has(object.spec.securityContext)) || (has(object.spec.securityContext)
+      && ((!(has(object.spec.securityContext.supplementalGroups)) || (has(object.spec.securityContext.supplementalGroups)
+      && (object.spec.securityContext.supplementalGroups > 0))))))))
+    message: Containers cannot run with a root primary or supplementary GID. The field
+      spec.securityContext.supplementalGroups must be unset or set to a value greater
+      than zero.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-require-non-root-groups-ebecd3-r1-b
+spec:
+  policyName: other-require-non-root-groups-ebecd3-r1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-require-non-root-groups-ebecd3-r2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: (has(object.spec) && ((!(has(object.spec.securityContext)) || (has(object.spec.securityContext)
+      && ((!(has(object.spec.securityContext.fsGroup)) || (has(object.spec.securityContext.fsGroup)
+      && (object.spec.securityContext.fsGroup > 0))))))))
+    message: Containers cannot run with a root primary or supplementary GID. The field
+      spec.securityContext.fsGroup must be unset or set to a value greater than zero.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-require-non-root-groups-ebecd3-r2-b
+spec:
+  policyName: other-require-non-root-groups-ebecd3-r2
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-require-non-root-groups-ebecd3-r0-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: ((has(object.spec.template.spec) && ((has(object.spec.template.spec.securityContext)
+      && ((has(object.spec.template.spec.securityContext.runAsGroup) && (object.spec.template.spec.securityContext.runAsGroup
+      > 0)))) && (!(has(object.spec.template.spec.ephemeralContainers)) || (has(object.spec.template.spec.ephemeralContainers)
+      && (object.spec.template.spec.ephemeralContainers.all(__x, (!(has(__x.securityContext))
+      || (has(__x.securityContext) && ((!(has(__x.securityContext.runAsGroup)) ||
+      (has(__x.securityContext.runAsGroup) && (__x.securityContext.runAsGroup > 0))))))))))
+      && (!(has(object.spec.template.spec.initContainers)) || (has(object.spec.template.spec.initContainers)
+      && (object.spec.template.spec.initContainers.all(__x, (!(has(__x.securityContext))
+      || (has(__x.securityContext) && ((!(has(__x.securityContext.runAsGroup)) ||
+      (has(__x.securityContext.runAsGroup) && (__x.securityContext.runAsGroup > 0))))))))))
+      && (has(object.spec.template.spec.containers) && (object.spec.template.spec.containers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.runAsGroup))
+      || (has(__x.securityContext.runAsGroup) && (__x.securityContext.runAsGroup >
+      0)))))))))))) || ((has(object.spec.template.spec) && ((!(has(object.spec.template.spec.ephemeralContainers))
+      || (has(object.spec.template.spec.ephemeralContainers) && (object.spec.template.spec.ephemeralContainers.all(__x,
+      (has(__x.securityContext) && ((has(__x.securityContext.runAsGroup) && (__x.securityContext.runAsGroup
+      > 0)))))))) && (!(has(object.spec.template.spec.initContainers)) || (has(object.spec.template.spec.initContainers)
+      && (object.spec.template.spec.initContainers.all(__x, (has(__x.securityContext)
+      && ((has(__x.securityContext.runAsGroup) && (__x.securityContext.runAsGroup
+      > 0)))))))) && (has(object.spec.template.spec.containers) && (object.spec.template.spec.containers.all(__x,
+      (has(__x.securityContext) && ((has(__x.securityContext.runAsGroup) && (__x.securityContext.runAsGroup
+      > 0))))))))))
+    message: Running with root group IDs is disallowed. The fields spec.securityContext.runAsGroup,
+      spec.containers[*].securityContext.runAsGroup, spec.initContainers[*].securityContext.runAsGr
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-require-non-root-groups-ebecd3-r0-ag1-b
+spec:
+  policyName: other-require-non-root-groups-ebecd3-r0-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-require-non-root-groups-ebecd3-r0-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: ((has(object.spec.jobTemplate.spec.template.spec) && ((has(object.spec.jobTemplate.spec.template.spec.securityContext)
+      && ((has(object.spec.jobTemplate.spec.template.spec.securityContext.runAsGroup)
+      && (object.spec.jobTemplate.spec.template.spec.securityContext.runAsGroup >
+      0)))) && (!(has(object.spec.jobTemplate.spec.template.spec.ephemeralContainers))
+      || (has(object.spec.jobTemplate.spec.template.spec.ephemeralContainers) && (object.spec.jobTemplate.spec.template.spec.ephemeralContainers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.runAsGroup))
+      || (has(__x.securityContext.runAsGroup) && (__x.securityContext.runAsGroup >
+      0)))))))))) && (!(has(object.spec.jobTemplate.spec.template.spec.initContainers))
+      || (has(object.spec.jobTemplate.spec.template.spec.initContainers) && (object.spec.jobTemplate.spec.template.spec.initContainers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.runAsGroup))
+      || (has(__x.securityContext.runAsGroup) && (__x.securityContext.runAsGroup >
+      0)))))))))) && (has(object.spec.jobTemplate.spec.template.spec.containers) &&
+      (object.spec.jobTemplate.spec.template.spec.containers.all(__x, (!(has(__x.securityContext))
+      || (has(__x.securityContext) && ((!(has(__x.securityContext.runAsGroup)) ||
+      (has(__x.securityContext.runAsGroup) && (__x.securityContext.runAsGroup > 0))))))))))))
+      || ((has(object.spec.jobTemplate.spec.template.spec) && ((!(has(object.spec.jobTemplate.spec.template.spec.ephemeralContainers))
+      || (has(object.spec.jobTemplate.spec.template.spec.ephemeralContainers) && (object.spec.jobTemplate.spec.template.spec.ephemeralContainers.all(__x,
+      (has(__x.securityContext) && ((has(__x.securityContext.runAsGroup) && (__x.securityContext.runAsGroup
+      > 0)))))))) && (!(has(object.spec.jobTemplate.spec.template.spec.initContainers))
+      || (has(object.spec.jobTemplate.spec.template.spec.initContainers) && (object.spec.jobTemplate.spec.template.spec.initContainers.all(__x,
+      (has(__x.securityContext) && ((has(__x.securityContext.runAsGroup) && (__x.securityContext.runAsGroup
+      > 0)))))))) && (has(object.spec.jobTemplate.spec.template.spec.containers) &&
+      (object.spec.jobTemplate.spec.template.spec.containers.all(__x, (has(__x.securityContext)
+      && ((has(__x.securityContext.runAsGroup) && (__x.securityContext.runAsGroup
+      > 0))))))))))
+    message: Running with root group IDs is disallowed. The fields spec.securityContext.runAsGroup,
+      spec.containers[*].securityContext.runAsGroup, spec.initContainers[*].securityContext.runAsGr
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-require-non-root-groups-ebecd3-r0-ag2-b
+spec:
+  policyName: other-require-non-root-groups-ebecd3-r0-ag2
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-require-non-root-groups-ebecd3-r1-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: (has(object.spec.template.spec) && ((!(has(object.spec.template.spec.securityContext))
+      || (has(object.spec.template.spec.securityContext) && ((!(has(object.spec.template.spec.securityContext.supplementalGroups))
+      || (has(object.spec.template.spec.securityContext.supplementalGroups) && (object.spec.template.spec.securityContext.supplementalGroups
+      > 0))))))))
+    message: Containers cannot run with a root primary or supplementary GID. The field
+      spec.securityContext.supplementalGroups must be unset or set to a value greater
+      than zero.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-require-non-root-groups-ebecd3-r1-ag1-b
+spec:
+  policyName: other-require-non-root-groups-ebecd3-r1-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-require-non-root-groups-ebecd3-r1-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: (has(object.spec.jobTemplate.spec.template.spec) && ((!(has(object.spec.jobTemplate.spec.template.spec.securityContext))
+      || (has(object.spec.jobTemplate.spec.template.spec.securityContext) && ((!(has(object.spec.jobTemplate.spec.template.spec.securityContext.supplementalGroups))
+      || (has(object.spec.jobTemplate.spec.template.spec.securityContext.supplementalGroups)
+      && (object.spec.jobTemplate.spec.template.spec.securityContext.supplementalGroups
+      > 0))))))))
+    message: Containers cannot run with a root primary or supplementary GID. The field
+      spec.securityContext.supplementalGroups must be unset or set to a value greater
+      than zero.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-require-non-root-groups-ebecd3-r1-ag2-b
+spec:
+  policyName: other-require-non-root-groups-ebecd3-r1-ag2
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-require-non-root-groups-ebecd3-r2-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: (has(object.spec.template.spec) && ((!(has(object.spec.template.spec.securityContext))
+      || (has(object.spec.template.spec.securityContext) && ((!(has(object.spec.template.spec.securityContext.fsGroup))
+      || (has(object.spec.template.spec.securityContext.fsGroup) && (object.spec.template.spec.securityContext.fsGroup
+      > 0))))))))
+    message: Containers cannot run with a root primary or supplementary GID. The field
+      spec.securityContext.fsGroup must be unset or set to a value greater than zero.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-require-non-root-groups-ebecd3-r2-ag1-b
+spec:
+  policyName: other-require-non-root-groups-ebecd3-r2-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-require-non-root-groups-ebecd3-r2-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: (has(object.spec.jobTemplate.spec.template.spec) && ((!(has(object.spec.jobTemplate.spec.template.spec.securityContext))
+      || (has(object.spec.jobTemplate.spec.template.spec.securityContext) && ((!(has(object.spec.jobTemplate.spec.template.spec.securityContext.fsGroup))
+      || (has(object.spec.jobTemplate.spec.template.spec.securityContext.fsGroup)
+      && (object.spec.jobTemplate.spec.template.spec.securityContext.fsGroup > 0))))))))
+    message: Containers cannot run with a root primary or supplementary GID. The field
+      spec.securityContext.fsGroup must be unset or set to a value greater than zero.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-require-non-root-groups-ebecd3-r2-ag2-b
+spec:
+  policyName: other-require-non-root-groups-ebecd3-r2-ag2
+  validationActions:
+  - Deny

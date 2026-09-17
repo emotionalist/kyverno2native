@@ -1,0 +1,171 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-vpol-baseline-disallow-selinux-eb04f4
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  variables:
+  - name: allContainerTypes
+    expression: object.spec.containers +  object.spec.?initContainers.orValue([])
+      +  object.spec.?ephemeralContainers.orValue([])
+  - name: seLinuxTypes
+    expression: '[''container_t'', ''container_init_t'', ''container_kvm_t'']'
+  - name: hasValidSELinuxType
+    expression: object.spec.?securityContext.?seLinuxOptions.?type.orValue('') ==
+      '' ||  variables.seLinuxTypes.exists(type, type == object.spec.securityContext.seLinuxOptions.type)
+  - name: hasValidSELinuxUserRole
+    expression: object.spec.?securityContext.?seLinuxOptions.?user.orValue('') ==
+      '' && object.spec.?securityContext.?seLinuxOptions.?role.orValue('') == ''
+  validations:
+  - expression: "variables.hasValidSELinuxType && variables.allContainerTypes.all(container,\
+      \ \n  container.?securityContext.?seLinuxOptions.?type.orValue('') == '' ||\
+      \ \n  variables.seLinuxTypes.exists(type, type == container.securityContext.seLinuxOptions.type))"
+    message: Setting the SELinux type is restricted. The field securityContext.seLinuxOptions.type  must
+      either be unset or set to one of the allowed values (container_t, container_init_t,
+      or container_kvm_t).
+  - expression: "variables.hasValidSELinuxUserRole && variables.allContainerTypes.all(container,\n\
+      \  container.?securityContext.?seLinuxOptions.?user.orValue('') == '' &&\n \
+      \ container.?securityContext.?seLinuxOptions.?role.orValue('') == '')"
+    message: Setting the SELinux user or role is forbidden. The fields seLinuxOptions.user
+      and seLinuxOptions.role must be unset.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-vpol-baseline-disallow-selinux-eb04f4-b
+spec:
+  policyName: pod-security-vpol-baseline-disallow-selinux-eb04f4
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-vpol-baseline-disallow-selinux-eb04f4-ag1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  variables:
+  - name: allContainerTypes
+    expression: object.spec.template.spec.containers +  object.spec.template.spec.?initContainers.orValue([])
+      +  object.spec.template.spec.?ephemeralContainers.orValue([])
+  - name: seLinuxTypes
+    expression: '[''container_t'', ''container_init_t'', ''container_kvm_t'']'
+  - name: hasValidSELinuxType
+    expression: object.spec.template.spec.?securityContext.?seLinuxOptions.?type.orValue('')
+      == '' ||  variables.seLinuxTypes.exists(type, type == object.spec.template.spec.securityContext.seLinuxOptions.type)
+  - name: hasValidSELinuxUserRole
+    expression: object.spec.template.spec.?securityContext.?seLinuxOptions.?user.orValue('')
+      == '' && object.spec.template.spec.?securityContext.?seLinuxOptions.?role.orValue('')
+      == ''
+  validations:
+  - expression: "variables.hasValidSELinuxType && variables.allContainerTypes.all(container,\
+      \ \n  container.?securityContext.?seLinuxOptions.?type.orValue('') == '' ||\
+      \ \n  variables.seLinuxTypes.exists(type, type == container.securityContext.seLinuxOptions.type))"
+    message: Setting the SELinux type is restricted. The field securityContext.seLinuxOptions.type  must
+      either be unset or set to one of the allowed values (container_t, container_init_t,
+      or container_kvm_t).
+  - expression: "variables.hasValidSELinuxUserRole && variables.allContainerTypes.all(container,\n\
+      \  container.?securityContext.?seLinuxOptions.?user.orValue('') == '' &&\n \
+      \ container.?securityContext.?seLinuxOptions.?role.orValue('') == '')"
+    message: Setting the SELinux user or role is forbidden. The fields seLinuxOptions.user
+      and seLinuxOptions.role must be unset.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-vpol-baseline-disallow-selinux-eb04f4-ag1-b
+spec:
+  policyName: pod-security-vpol-baseline-disallow-selinux-eb04f4-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-vpol-baseline-disallow-selinux-eb04f4-ag2
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  variables:
+  - name: allContainerTypes
+    expression: object.spec.jobTemplate.spec.template.spec.containers +  object.spec.jobTemplate.spec.template.spec.?initContainers.orValue([])
+      +  object.spec.jobTemplate.spec.template.spec.?ephemeralContainers.orValue([])
+  - name: seLinuxTypes
+    expression: '[''container_t'', ''container_init_t'', ''container_kvm_t'']'
+  - name: hasValidSELinuxType
+    expression: object.spec.jobTemplate.spec.template.spec.?securityContext.?seLinuxOptions.?type.orValue('')
+      == '' ||  variables.seLinuxTypes.exists(type, type == object.spec.jobTemplate.spec.template.spec.securityContext.seLinuxOptions.type)
+  - name: hasValidSELinuxUserRole
+    expression: object.spec.jobTemplate.spec.template.spec.?securityContext.?seLinuxOptions.?user.orValue('')
+      == '' && object.spec.jobTemplate.spec.template.spec.?securityContext.?seLinuxOptions.?role.orValue('')
+      == ''
+  validations:
+  - expression: "variables.hasValidSELinuxType && variables.allContainerTypes.all(container,\
+      \ \n  container.?securityContext.?seLinuxOptions.?type.orValue('') == '' ||\
+      \ \n  variables.seLinuxTypes.exists(type, type == container.securityContext.seLinuxOptions.type))"
+    message: Setting the SELinux type is restricted. The field securityContext.seLinuxOptions.type  must
+      either be unset or set to one of the allowed values (container_t, container_init_t,
+      or container_kvm_t).
+  - expression: "variables.hasValidSELinuxUserRole && variables.allContainerTypes.all(container,\n\
+      \  container.?securityContext.?seLinuxOptions.?user.orValue('') == '' &&\n \
+      \ container.?securityContext.?seLinuxOptions.?role.orValue('') == '')"
+    message: Setting the SELinux user or role is forbidden. The fields seLinuxOptions.user
+      and seLinuxOptions.role must be unset.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-vpol-baseline-disallow-selinux-eb04f4-ag2-b
+spec:
+  policyName: pod-security-vpol-baseline-disallow-selinux-eb04f4-ag2
+  validationActions:
+  - Deny

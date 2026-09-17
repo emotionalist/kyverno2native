@@ -1,0 +1,32 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: argo-cel-appproject-clusterresourceblacklist-d236a0
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - argoproj.io
+      apiVersions:
+      - v1alpha1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - appprojects
+  validations:
+  - expression: has(object.spec.clusterResourceBlacklist)
+    message: AppProject must specify clusterResourceBlacklist.
+  - expression: object.spec.clusterResourceBlacklist.all(element, element.group.contains('*')
+      && element.kind.contains('*'))
+    message: Wildcards must be present in group and kind for clusterResourceBlacklist.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: argo-cel-appproject-clusterresourceblacklist-d236a0-b
+spec:
+  policyName: argo-cel-appproject-clusterresourceblacklist-d236a0
+  validationActions:
+  - Deny

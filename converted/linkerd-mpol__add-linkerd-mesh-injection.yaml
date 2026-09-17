@@ -1,0 +1,49 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: linkerd-mpol-add-linkerd-mesh-injection-0e7916
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - namespaces
+  variables:
+  - name: hasInjectAnnotation
+    expression: "has(object.metadata.annotations) && \nobject.metadata.annotations.exists(k,\
+      \ k == 'linkerd.io/inject')\n"
+  - name: hasProxyAwaitAnnotation
+    expression: "has(object.metadata.annotations) && \nobject.metadata.annotations.exists(k,\
+      \ k == 'config.linkerd.io/proxy-await')\n"
+  - name: needsInject
+    expression: '!variables.hasInjectAnnotation'
+  - name: needsProxyAwait
+    expression: '!variables.hasProxyAwaitAnnotation'
+  matchConditions:
+  - name: needs-at-least-one-annotation
+    expression: variables.needsInject || variables.needsProxyAwait
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: "variables.needsInject && variables.needsProxyAwait ?\nObject{\n\
+        \  metadata: Object.metadata{\n    annotations: {\n      \"linkerd.io/inject\"\
+        : \"enabled\",\n      \"config.linkerd.io/proxy-await\": \"enabled\"\n   \
+        \ }\n  }\n} :\nvariables.needsInject ?\nObject{\n  metadata: Object.metadata{\n\
+        \    annotations: {\n      \"linkerd.io/inject\": \"enabled\"\n    }\n  }\n\
+        } :\nObject{\n  metadata: Object.metadata{\n    annotations: {\n      \"config.linkerd.io/proxy-await\"\
+        : \"enabled\"\n    }\n  }\n}"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: linkerd-mpol-add-linkerd-mesh-injection-0e7916-b
+spec:
+  policyName: linkerd-mpol-add-linkerd-mesh-injection-0e7916

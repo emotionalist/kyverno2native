@@ -1,0 +1,153 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: windows-security-require-run-as-containeruse-13013d
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: (has(object.spec) && ((!(has(object.spec.securityContext)) || (has(object.spec.securityContext)
+      && ((!(has(object.spec.securityContext.windowsOptions)) || (has(object.spec.securityContext.windowsOptions)
+      && ((!(has(object.spec.securityContext.windowsOptions.runAsUserName)) || (has(object.spec.securityContext.windowsOptions.runAsUserName)
+      && (object.spec.securityContext.windowsOptions.runAsUserName == "ContainerUser")))))))))
+      && (!(has(object.spec.initContainers)) || (has(object.spec.initContainers) &&
+      (object.spec.initContainers.all(__x, (!(has(__x.securityContext)) || (has(__x.securityContext)
+      && ((!(has(__x.securityContext.windowsOptions)) || (has(__x.securityContext.windowsOptions)
+      && ((!(has(__x.securityContext.windowsOptions.runAsUserName)) || (has(__x.securityContext.windowsOptions.runAsUserName)
+      && (__x.securityContext.windowsOptions.runAsUserName == "ContainerUser")))))))))))))
+      && (has(object.spec.containers) && (object.spec.containers.all(__x, (!(has(__x.securityContext))
+      || (has(__x.securityContext) && ((!(has(__x.securityContext.windowsOptions))
+      || (has(__x.securityContext.windowsOptions) && ((!(has(__x.securityContext.windowsOptions.runAsUserName))
+      || (has(__x.securityContext.windowsOptions.runAsUserName) && (__x.securityContext.windowsOptions.runAsUserName
+      == "ContainerUser"))))))))))))))
+    message: Running the container as ContainerAdministrator,NT AUTHORITY\NETWORK
+      SERVICE, NT AUTHORITY\LOCAL SERVICE is not allowed.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: windows-security-require-run-as-containeruse-13013d-b
+spec:
+  policyName: windows-security-require-run-as-containeruse-13013d
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: windows-security-require-run-as-containeruse-13013d-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: (has(object.spec.template.spec) && ((!(has(object.spec.template.spec.securityContext))
+      || (has(object.spec.template.spec.securityContext) && ((!(has(object.spec.template.spec.securityContext.windowsOptions))
+      || (has(object.spec.template.spec.securityContext.windowsOptions) && ((!(has(object.spec.template.spec.securityContext.windowsOptions.runAsUserName))
+      || (has(object.spec.template.spec.securityContext.windowsOptions.runAsUserName)
+      && (object.spec.template.spec.securityContext.windowsOptions.runAsUserName ==
+      "ContainerUser"))))))))) && (!(has(object.spec.template.spec.initContainers))
+      || (has(object.spec.template.spec.initContainers) && (object.spec.template.spec.initContainers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.windowsOptions))
+      || (has(__x.securityContext.windowsOptions) && ((!(has(__x.securityContext.windowsOptions.runAsUserName))
+      || (has(__x.securityContext.windowsOptions.runAsUserName) && (__x.securityContext.windowsOptions.runAsUserName
+      == "ContainerUser"))))))))))))) && (has(object.spec.template.spec.containers)
+      && (object.spec.template.spec.containers.all(__x, (!(has(__x.securityContext))
+      || (has(__x.securityContext) && ((!(has(__x.securityContext.windowsOptions))
+      || (has(__x.securityContext.windowsOptions) && ((!(has(__x.securityContext.windowsOptions.runAsUserName))
+      || (has(__x.securityContext.windowsOptions.runAsUserName) && (__x.securityContext.windowsOptions.runAsUserName
+      == "ContainerUser"))))))))))))))
+    message: Running the container as ContainerAdministrator,NT AUTHORITY\NETWORK
+      SERVICE, NT AUTHORITY\LOCAL SERVICE is not allowed.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: windows-security-require-run-as-containeruse-13013d-ag1-b
+spec:
+  policyName: windows-security-require-run-as-containeruse-13013d-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: windows-security-require-run-as-containeruse-13013d-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: (has(object.spec.jobTemplate.spec.template.spec) && ((!(has(object.spec.jobTemplate.spec.template.spec.securityContext))
+      || (has(object.spec.jobTemplate.spec.template.spec.securityContext) && ((!(has(object.spec.jobTemplate.spec.template.spec.securityContext.windowsOptions))
+      || (has(object.spec.jobTemplate.spec.template.spec.securityContext.windowsOptions)
+      && ((!(has(object.spec.jobTemplate.spec.template.spec.securityContext.windowsOptions.runAsUserName))
+      || (has(object.spec.jobTemplate.spec.template.spec.securityContext.windowsOptions.runAsUserName)
+      && (object.spec.jobTemplate.spec.template.spec.securityContext.windowsOptions.runAsUserName
+      == "ContainerUser"))))))))) && (!(has(object.spec.jobTemplate.spec.template.spec.initContainers))
+      || (has(object.spec.jobTemplate.spec.template.spec.initContainers) && (object.spec.jobTemplate.spec.template.spec.initContainers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.windowsOptions))
+      || (has(__x.securityContext.windowsOptions) && ((!(has(__x.securityContext.windowsOptions.runAsUserName))
+      || (has(__x.securityContext.windowsOptions.runAsUserName) && (__x.securityContext.windowsOptions.runAsUserName
+      == "ContainerUser"))))))))))))) && (has(object.spec.jobTemplate.spec.template.spec.containers)
+      && (object.spec.jobTemplate.spec.template.spec.containers.all(__x, (!(has(__x.securityContext))
+      || (has(__x.securityContext) && ((!(has(__x.securityContext.windowsOptions))
+      || (has(__x.securityContext.windowsOptions) && ((!(has(__x.securityContext.windowsOptions.runAsUserName))
+      || (has(__x.securityContext.windowsOptions.runAsUserName) && (__x.securityContext.windowsOptions.runAsUserName
+      == "ContainerUser"))))))))))))))
+    message: Running the container as ContainerAdministrator,NT AUTHORITY\NETWORK
+      SERVICE, NT AUTHORITY\LOCAL SERVICE is not allowed.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: windows-security-require-run-as-containeruse-13013d-ag2-b
+spec:
+  policyName: windows-security-require-run-as-containeruse-13013d-ag2
+  validationActions:
+  - Deny

@@ -1,0 +1,33 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-ingress-host-match-tls-890fad
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - networking.k8s.io
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - ingresses
+  variables:
+  - name: tls
+    expression: object.spec.?tls.orValue([])
+  validations:
+  - expression: object.spec.rules.all(rule,  !has(rule.host) ||  variables.tls.exists(tls,
+      tls.?hosts.orValue([]).exists(tlsHost, tlsHost == rule.host)))
+    message: The host(s) in spec.rules[].host must match those in spec.tls[].hosts[].
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-ingress-host-match-tls-890fad-b
+spec:
+  policyName: other-vpol-ingress-host-match-tls-890fad
+  validationActions:
+  - Deny

@@ -1,0 +1,160 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-cel-restricted-require-run-as-n-53b21f
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: '!has(object.spec.securityContext) || !has(object.spec.securityContext.runAsUser)
+      || object.spec.securityContext.runAsUser > 0'
+    message: Running as root is not allowed. The field spec.securityContext.runAsUser
+      must be unset or set to a number greater than zero.
+  - expression: object.spec.containers.all(container, !has(container.securityContext)
+      || !has(container.securityContext.runAsUser) || container.securityContext.runAsUser
+      > 0)
+    message: Running as root is not allowed. The field spec.containers[*].securityContext.runAsUser
+      must be unset or set to a number greater than zero
+  - expression: '!has(object.spec.initContainers) || object.spec.initContainers.all(container,
+      !has(container.securityContext) || !has(container.securityContext.runAsUser)
+      || container.securityContext.runAsUser > 0)'
+    message: Running as root is not allowed. The field spec.initContainers[*].securityContext.runAsUser
+      must be unset or set to a number greater than zero
+  - expression: '!has(object.spec.ephemeralContainers) || object.spec.ephemeralContainers.all(container,
+      !has(container.securityContext) || !has(container.securityContext.runAsUser)
+      || container.securityContext.runAsUser > 0)'
+    message: Running as root is not allowed. The field spec.ephemeralContainers[*].securityContext.runAsUser
+      must be unset or set to a number greater than zero
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-cel-restricted-require-run-as-n-53b21f-b
+spec:
+  policyName: pod-security-cel-restricted-require-run-as-n-53b21f
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-cel-restricted-require-run-as-n-53b21f-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: '!has(object.spec.template.spec.securityContext) || !has(object.spec.template.spec.securityContext.runAsUser)
+      || object.spec.template.spec.securityContext.runAsUser > 0'
+    message: Running as root is not allowed. The field spec.securityContext.runAsUser
+      must be unset or set to a number greater than zero.
+  - expression: object.spec.template.spec.containers.all(container, !has(container.securityContext)
+      || !has(container.securityContext.runAsUser) || container.securityContext.runAsUser
+      > 0)
+    message: Running as root is not allowed. The field spec.containers[*].securityContext.runAsUser
+      must be unset or set to a number greater than zero
+  - expression: '!has(object.spec.template.spec.initContainers) || object.spec.template.spec.initContainers.all(container,
+      !has(container.securityContext) || !has(container.securityContext.runAsUser)
+      || container.securityContext.runAsUser > 0)'
+    message: Running as root is not allowed. The field spec.initContainers[*].securityContext.runAsUser
+      must be unset or set to a number greater than zero
+  - expression: '!has(object.spec.template.spec.ephemeralContainers) || object.spec.template.spec.ephemeralContainers.all(container,
+      !has(container.securityContext) || !has(container.securityContext.runAsUser)
+      || container.securityContext.runAsUser > 0)'
+    message: Running as root is not allowed. The field spec.ephemeralContainers[*].securityContext.runAsUser
+      must be unset or set to a number greater than zero
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-cel-restricted-require-run-as-n-53b21f-ag1-b
+spec:
+  policyName: pod-security-cel-restricted-require-run-as-n-53b21f-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-cel-restricted-require-run-as-n-53b21f-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: '!has(object.spec.jobTemplate.spec.template.spec.securityContext)
+      || !has(object.spec.jobTemplate.spec.template.spec.securityContext.runAsUser)
+      || object.spec.jobTemplate.spec.template.spec.securityContext.runAsUser > 0'
+    message: Running as root is not allowed. The field spec.securityContext.runAsUser
+      must be unset or set to a number greater than zero.
+  - expression: object.spec.jobTemplate.spec.template.spec.containers.all(container,
+      !has(container.securityContext) || !has(container.securityContext.runAsUser)
+      || container.securityContext.runAsUser > 0)
+    message: Running as root is not allowed. The field spec.containers[*].securityContext.runAsUser
+      must be unset or set to a number greater than zero
+  - expression: '!has(object.spec.jobTemplate.spec.template.spec.initContainers) ||
+      object.spec.jobTemplate.spec.template.spec.initContainers.all(container, !has(container.securityContext)
+      || !has(container.securityContext.runAsUser) || container.securityContext.runAsUser
+      > 0)'
+    message: Running as root is not allowed. The field spec.initContainers[*].securityContext.runAsUser
+      must be unset or set to a number greater than zero
+  - expression: '!has(object.spec.jobTemplate.spec.template.spec.ephemeralContainers)
+      || object.spec.jobTemplate.spec.template.spec.ephemeralContainers.all(container,
+      !has(container.securityContext) || !has(container.securityContext.runAsUser)
+      || container.securityContext.runAsUser > 0)'
+    message: Running as root is not allowed. The field spec.ephemeralContainers[*].securityContext.runAsUser
+      must be unset or set to a number greater than zero
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-cel-restricted-require-run-as-n-53b21f-ag2-b
+spec:
+  policyName: pod-security-cel-restricted-require-run-as-n-53b21f-ag2
+  validationActions:
+  - Deny

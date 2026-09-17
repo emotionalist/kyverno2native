@@ -1,0 +1,142 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-vpol-baseline-restrict-seccomp-692964
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  variables:
+  - name: allContainers
+    expression: object.spec.containers +  object.spec.?initContainers.orValue([])
+      +  object.spec.?ephemeralContainers.orValue([])
+  - name: allowedProfileTypes
+    expression: '[''RuntimeDefault'', ''Localhost'']'
+  - name: hasValidSeccompProfile
+    expression: object.spec.?securityContext.?seccompProfile.?type.orValue('Localhost')
+      in variables.allowedProfileTypes
+  validations:
+  - expression: "variables.hasValidSeccompProfile && variables.allContainers.all(container,\
+      \ \n  container.?securityContext.?seccompProfile.?type.orValue('Localhost')\
+      \ in variables.allowedProfileTypes)"
+    message: Use of custom Seccomp profiles is disallowed. The field  `securityContext.seccompProfile.type`
+      must be unset or set to `RuntimeDefault` or `Localhost`.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-vpol-baseline-restrict-seccomp-692964-b
+spec:
+  policyName: pod-security-vpol-baseline-restrict-seccomp-692964
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-vpol-baseline-restrict-seccomp-692964-ag1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  variables:
+  - name: allContainers
+    expression: object.spec.template.spec.containers +  object.spec.template.spec.?initContainers.orValue([])
+      +  object.spec.template.spec.?ephemeralContainers.orValue([])
+  - name: allowedProfileTypes
+    expression: '[''RuntimeDefault'', ''Localhost'']'
+  - name: hasValidSeccompProfile
+    expression: object.spec.template.spec.?securityContext.?seccompProfile.?type.orValue('Localhost')
+      in variables.allowedProfileTypes
+  validations:
+  - expression: "variables.hasValidSeccompProfile && variables.allContainers.all(container,\
+      \ \n  container.?securityContext.?seccompProfile.?type.orValue('Localhost')\
+      \ in variables.allowedProfileTypes)"
+    message: Use of custom Seccomp profiles is disallowed. The field  `securityContext.seccompProfile.type`
+      must be unset or set to `RuntimeDefault` or `Localhost`.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-vpol-baseline-restrict-seccomp-692964-ag1-b
+spec:
+  policyName: pod-security-vpol-baseline-restrict-seccomp-692964-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-vpol-baseline-restrict-seccomp-692964-ag2
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  variables:
+  - name: allContainers
+    expression: object.spec.jobTemplate.spec.template.spec.containers +  object.spec.jobTemplate.spec.template.spec.?initContainers.orValue([])
+      +  object.spec.jobTemplate.spec.template.spec.?ephemeralContainers.orValue([])
+  - name: allowedProfileTypes
+    expression: '[''RuntimeDefault'', ''Localhost'']'
+  - name: hasValidSeccompProfile
+    expression: object.spec.jobTemplate.spec.template.spec.?securityContext.?seccompProfile.?type.orValue('Localhost')
+      in variables.allowedProfileTypes
+  validations:
+  - expression: "variables.hasValidSeccompProfile && variables.allContainers.all(container,\
+      \ \n  container.?securityContext.?seccompProfile.?type.orValue('Localhost')\
+      \ in variables.allowedProfileTypes)"
+    message: Use of custom Seccomp profiles is disallowed. The field  `securityContext.seccompProfile.type`
+      must be unset or set to `RuntimeDefault` or `Localhost`.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-vpol-baseline-restrict-seccomp-692964-ag2-b
+spec:
+  policyName: pod-security-vpol-baseline-restrict-seccomp-692964-ag2
+  validationActions:
+  - Deny

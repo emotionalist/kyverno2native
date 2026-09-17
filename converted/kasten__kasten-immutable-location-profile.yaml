@@ -1,0 +1,31 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: kasten-kasten-immutable-location-profile-6d7f19
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - config.kio.kasten.io
+      apiVersions:
+      - v1alpha1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - profiles
+  validations:
+  - expression: (has(object.spec) && (!((has(object.spec.type) && (object.spec.type
+      == "Location"))) || ((has(object.spec.locationSpec) && ((has(object.spec.locationSpec.objectStore)
+      && ((has(object.spec.locationSpec.objectStore.protectionPeriod)))))))))
+    message: All Kasten Location Profiles must have immutability enabled.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: kasten-kasten-immutable-location-profile-6d7f19-b
+spec:
+  policyName: kasten-kasten-immutable-location-profile-6d7f19
+  validationActions:
+  - Deny

@@ -1,0 +1,124 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-cel-restricted-disallow-privile-49aa74
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: variables.allContainers.all(container,  container.?securityContext.allowPrivilegeEscalation.orValue(true)
+      == false)
+    message: Privilege escalation is disallowed.  All containers must set the securityContext.allowPrivilegeEscalation
+      field to `false`.
+  variables:
+  - name: allContainers
+    expression: object.spec.containers +  object.spec.?initContainers.orValue([])
+      +  object.spec.?ephemeralContainers.orValue([])
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-cel-restricted-disallow-privile-49aa74-b
+spec:
+  policyName: pod-security-cel-restricted-disallow-privile-49aa74
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-cel-restricted-disallow-privile-49aa74-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: variables.allContainers.all(container,  container.?securityContext.allowPrivilegeEscalation.orValue(true)
+      == false)
+    message: Privilege escalation is disallowed.  All containers must set the securityContext.allowPrivilegeEscalation
+      field to `false`.
+  variables:
+  - name: allContainers
+    expression: object.spec.template.spec.containers +  object.spec.template.spec.?initContainers.orValue([])
+      +  object.spec.template.spec.?ephemeralContainers.orValue([])
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-cel-restricted-disallow-privile-49aa74-ag1-b
+spec:
+  policyName: pod-security-cel-restricted-disallow-privile-49aa74-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-cel-restricted-disallow-privile-49aa74-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: variables.allContainers.all(container,  container.?securityContext.allowPrivilegeEscalation.orValue(true)
+      == false)
+    message: Privilege escalation is disallowed.  All containers must set the securityContext.allowPrivilegeEscalation
+      field to `false`.
+  variables:
+  - name: allContainers
+    expression: object.spec.jobTemplate.spec.template.spec.containers +  object.spec.jobTemplate.spec.template.spec.?initContainers.orValue([])
+      +  object.spec.jobTemplate.spec.template.spec.?ephemeralContainers.orValue([])
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-cel-restricted-disallow-privile-49aa74-ag2-b
+spec:
+  policyName: pod-security-cel-restricted-disallow-privile-49aa74-ag2
+  validationActions:
+  - Deny

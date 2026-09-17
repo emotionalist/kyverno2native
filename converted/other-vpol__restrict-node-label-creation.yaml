@@ -1,0 +1,34 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-restrict-node-label-creation-954dc5
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - nodes
+  matchConditions:
+  - name: operation-should-be-update
+    expression: request.operation == 'UPDATE'
+  - name: has-foo-label
+    expression: oldObject.metadata.?labels.?foo != object.metadata.?labels.?foo
+  validations:
+  - expression: 'false'
+    message: Setting the `foo` label on a Node is not allowed.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-restrict-node-label-creation-954dc5-b
+spec:
+  policyName: other-vpol-restrict-node-label-creation-954dc5
+  validationActions:
+  - Deny

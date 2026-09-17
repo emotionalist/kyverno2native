@@ -1,0 +1,34 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: kasten-kasten-validate-ns-by-preset-label-ef5f57
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - namespaces
+  validations:
+  - expression: (has(object.metadata) && ((has(object.metadata.labels) && ((has(object.metadata.labels.dataprotection)
+      && ((object.metadata.labels.dataprotection == "gold" || object.metadata.labels.dataprotection
+      == "silver" || object.metadata.labels.dataprotection == "bronze" || object.metadata.labels.dataprotection
+      == "none")))))))
+    message: "Namespaces must specify a \"dataprotection\" label with a value corresponding\
+      \ to a Kasten Policy Preset:\n\n  \"gold\" - <Insert human readable settings\
+      \ of each preset option>\n  \"silver\""
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: kasten-kasten-validate-ns-by-preset-label-ef5f57-b
+spec:
+  policyName: kasten-kasten-validate-ns-by-preset-label-ef5f57
+  validationActions:
+  - Deny

@@ -1,0 +1,31 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-cel-restrict-clusterrole-nodesproxy-e20a85
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - rbac.authorization.k8s.io
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - clusterroles
+  validations:
+  - expression: object.rules == null ||  !object.rules.exists(rule, has(rule.resources)
+      && rule.resources.exists(resource, resource == 'nodes/proxy') &&  rule.apiGroups.exists(apiGroup,
+      apiGroup == ''))
+    message: A ClusterRole containing the nodes/proxy resource is not allowed.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-cel-restrict-clusterrole-nodesproxy-e20a85-b
+spec:
+  policyName: other-cel-restrict-clusterrole-nodesproxy-e20a85
+  validationActions:
+  - Deny

@@ -1,0 +1,127 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: kubecost-require-kubecost-labels-e32535
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: (has(object.metadata) && ((has(object.metadata.labels) && ((has(object.metadata.labels.owner)
+      && (object.metadata.labels.owner != "")) && (has(object.metadata.labels.team)
+      && (object.metadata.labels.team != "")) && (has(object.metadata.labels.department)
+      && (object.metadata.labels.department != "")) && (has(object.metadata.labels.app)
+      && (object.metadata.labels.app != "")) && (has(object.metadata.labels.env) &&
+      (object.metadata.labels.env != ""))))))
+    message: The Kubecost labels `owner`, `team`, `department`, `app`, and `env` are
+      all required for Pods.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: kubecost-require-kubecost-labels-e32535-b
+spec:
+  policyName: kubecost-require-kubecost-labels-e32535
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: kubecost-require-kubecost-labels-e32535-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: (has(object.spec.template.metadata) && ((has(object.spec.template.metadata.labels)
+      && ((has(object.spec.template.metadata.labels.owner) && (object.spec.template.metadata.labels.owner
+      != "")) && (has(object.spec.template.metadata.labels.team) && (object.spec.template.metadata.labels.team
+      != "")) && (has(object.spec.template.metadata.labels.department) && (object.spec.template.metadata.labels.department
+      != "")) && (has(object.spec.template.metadata.labels.app) && (object.spec.template.metadata.labels.app
+      != "")) && (has(object.spec.template.metadata.labels.env) && (object.spec.template.metadata.labels.env
+      != ""))))))
+    message: The Kubecost labels `owner`, `team`, `department`, `app`, and `env` are
+      all required for Pods.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: kubecost-require-kubecost-labels-e32535-ag1-b
+spec:
+  policyName: kubecost-require-kubecost-labels-e32535-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: kubecost-require-kubecost-labels-e32535-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: (has(object.spec.jobTemplate.spec.template.metadata) && ((has(object.spec.jobTemplate.spec.template.metadata.labels)
+      && ((has(object.spec.jobTemplate.spec.template.metadata.labels.owner) && (object.spec.jobTemplate.spec.template.metadata.labels.owner
+      != "")) && (has(object.spec.jobTemplate.spec.template.metadata.labels.team)
+      && (object.spec.jobTemplate.spec.template.metadata.labels.team != "")) && (has(object.spec.jobTemplate.spec.template.metadata.labels.department)
+      && (object.spec.jobTemplate.spec.template.metadata.labels.department != ""))
+      && (has(object.spec.jobTemplate.spec.template.metadata.labels.app) && (object.spec.jobTemplate.spec.template.metadata.labels.app
+      != "")) && (has(object.spec.jobTemplate.spec.template.metadata.labels.env) &&
+      (object.spec.jobTemplate.spec.template.metadata.labels.env != ""))))))
+    message: The Kubecost labels `owner`, `team`, `department`, `app`, and `env` are
+      all required for Pods.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: kubecost-require-kubecost-labels-e32535-ag2-b
+spec:
+  policyName: kubecost-require-kubecost-labels-e32535-ag2
+  validationActions:
+  - Deny

@@ -1,0 +1,112 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-require-container-port-names-ff8059
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: (has(object.spec) && ((has(object.spec.containers) && (object.spec.containers.all(__x,
+      (has(__x.name)) && (!(has(__x.ports)) || (has(__x.ports) && (__x.ports.all(__x,
+      (has(__x.name)))))))))))
+    message: Name is required for every containerPort.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-require-container-port-names-ff8059-b
+spec:
+  policyName: other-require-container-port-names-ff8059
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-require-container-port-names-ff8059-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: (has(object.spec.template.spec) && ((has(object.spec.template.spec.containers)
+      && (object.spec.template.spec.containers.all(__x, (has(__x.name)) && (!(has(__x.ports))
+      || (has(__x.ports) && (__x.ports.all(__x, (has(__x.name)))))))))))
+    message: Name is required for every containerPort.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-require-container-port-names-ff8059-ag1-b
+spec:
+  policyName: other-require-container-port-names-ff8059-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-require-container-port-names-ff8059-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: (has(object.spec.jobTemplate.spec.template.spec) && ((has(object.spec.jobTemplate.spec.template.spec.containers)
+      && (object.spec.jobTemplate.spec.template.spec.containers.all(__x, (has(__x.name))
+      && (!(has(__x.ports)) || (has(__x.ports) && (__x.ports.all(__x, (has(__x.name)))))))))))
+    message: Name is required for every containerPort.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-require-container-port-names-ff8059-ag2-b
+spec:
+  policyName: other-require-container-port-names-ff8059-ag2
+  validationActions:
+  - Deny

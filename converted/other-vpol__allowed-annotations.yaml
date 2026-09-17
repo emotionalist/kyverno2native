@@ -1,0 +1,109 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-allowed-annotations-2c0ff9
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: object.metadata.?annotations.orValue([]).all(annotation, !annotation.contains('fluxcd.io/')
+      || annotation in ['fluxcd.io/cow', 'fluxcd.io/dog'])
+    message: The only approved FluxCD annotations are `fluxcd.io/cow` and `fluxcd.io/dog`.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-allowed-annotations-2c0ff9-b
+spec:
+  policyName: other-vpol-allowed-annotations-2c0ff9
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-allowed-annotations-2c0ff9-ag1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: object.spec.template.metadata.?annotations.orValue([]).all(annotation,
+      !annotation.contains('fluxcd.io/') || annotation in ['fluxcd.io/cow', 'fluxcd.io/dog'])
+    message: The only approved FluxCD annotations are `fluxcd.io/cow` and `fluxcd.io/dog`.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-allowed-annotations-2c0ff9-ag1-b
+spec:
+  policyName: other-vpol-allowed-annotations-2c0ff9-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-allowed-annotations-2c0ff9-ag2
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: object.spec.jobTemplate.spec.template.metadata.?annotations.orValue([]).all(annotation,
+      !annotation.contains('fluxcd.io/') || annotation in ['fluxcd.io/cow', 'fluxcd.io/dog'])
+    message: The only approved FluxCD annotations are `fluxcd.io/cow` and `fluxcd.io/dog`.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-allowed-annotations-2c0ff9-ag2-b
+spec:
+  policyName: other-vpol-allowed-annotations-2c0ff9-ag2
+  validationActions:
+  - Deny

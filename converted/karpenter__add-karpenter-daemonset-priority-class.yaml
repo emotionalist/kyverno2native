@@ -1,0 +1,30 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: karpenter-add-karpenter-daemonset-priority-c-4bc09d
+spec:
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - daemonsets
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: 'Object{spec: Object.spec{template: Object.spec.template{spec: Object.spec.template.spec{priorityClassName:
+        "system-node-critical"}}}}'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: karpenter-add-karpenter-daemonset-priority-c-4bc09d-b
+spec:
+  policyName: karpenter-add-karpenter-daemonset-priority-c-4bc09d

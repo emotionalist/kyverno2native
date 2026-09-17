@@ -1,0 +1,132 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-baseline-disallow-host-namespac-79c6eb
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: '(has(object.spec) && ((!(has(object.spec.hostPID)) || (has(object.spec.hostPID)
+      && ((type(object.spec.hostPID) == bool ? object.spec.hostPID == false : object.spec.hostPID
+      == "false")))) && (!(has(object.spec.hostIPC)) || (has(object.spec.hostIPC)
+      && ((type(object.spec.hostIPC) == bool ? object.spec.hostIPC == false : object.spec.hostIPC
+      == "false")))) && (!(has(object.spec.hostNetwork)) || (has(object.spec.hostNetwork)
+      && ((type(object.spec.hostNetwork) == bool ? object.spec.hostNetwork == false
+      : object.spec.hostNetwork == "false"))))))'
+    message: Sharing the host namespaces is disallowed. The fields spec.hostNetwork,
+      spec.hostIPC, and spec.hostPID must be unset or set to `false`.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-baseline-disallow-host-namespac-79c6eb-b
+spec:
+  policyName: pod-security-baseline-disallow-host-namespac-79c6eb
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-baseline-disallow-host-namespac-79c6eb-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: '(has(object.spec.template.spec) && ((!(has(object.spec.template.spec.hostPID))
+      || (has(object.spec.template.spec.hostPID) && ((type(object.spec.template.spec.hostPID)
+      == bool ? object.spec.template.spec.hostPID == false : object.spec.template.spec.hostPID
+      == "false")))) && (!(has(object.spec.template.spec.hostIPC)) || (has(object.spec.template.spec.hostIPC)
+      && ((type(object.spec.template.spec.hostIPC) == bool ? object.spec.template.spec.hostIPC
+      == false : object.spec.template.spec.hostIPC == "false")))) && (!(has(object.spec.template.spec.hostNetwork))
+      || (has(object.spec.template.spec.hostNetwork) && ((type(object.spec.template.spec.hostNetwork)
+      == bool ? object.spec.template.spec.hostNetwork == false : object.spec.template.spec.hostNetwork
+      == "false"))))))'
+    message: Sharing the host namespaces is disallowed. The fields spec.hostNetwork,
+      spec.hostIPC, and spec.hostPID must be unset or set to `false`.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-baseline-disallow-host-namespac-79c6eb-ag1-b
+spec:
+  policyName: pod-security-baseline-disallow-host-namespac-79c6eb-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-baseline-disallow-host-namespac-79c6eb-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: '(has(object.spec.jobTemplate.spec.template.spec) && ((!(has(object.spec.jobTemplate.spec.template.spec.hostPID))
+      || (has(object.spec.jobTemplate.spec.template.spec.hostPID) && ((type(object.spec.jobTemplate.spec.template.spec.hostPID)
+      == bool ? object.spec.jobTemplate.spec.template.spec.hostPID == false : object.spec.jobTemplate.spec.template.spec.hostPID
+      == "false")))) && (!(has(object.spec.jobTemplate.spec.template.spec.hostIPC))
+      || (has(object.spec.jobTemplate.spec.template.spec.hostIPC) && ((type(object.spec.jobTemplate.spec.template.spec.hostIPC)
+      == bool ? object.spec.jobTemplate.spec.template.spec.hostIPC == false : object.spec.jobTemplate.spec.template.spec.hostIPC
+      == "false")))) && (!(has(object.spec.jobTemplate.spec.template.spec.hostNetwork))
+      || (has(object.spec.jobTemplate.spec.template.spec.hostNetwork) && ((type(object.spec.jobTemplate.spec.template.spec.hostNetwork)
+      == bool ? object.spec.jobTemplate.spec.template.spec.hostNetwork == false :
+      object.spec.jobTemplate.spec.template.spec.hostNetwork == "false"))))))'
+    message: Sharing the host namespaces is disallowed. The fields spec.hostNetwork,
+      spec.hostIPC, and spec.hostPID must be unset or set to `false`.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-baseline-disallow-host-namespac-79c6eb-ag2-b
+spec:
+  policyName: pod-security-baseline-disallow-host-namespac-79c6eb-ag2
+  validationActions:
+  - Deny

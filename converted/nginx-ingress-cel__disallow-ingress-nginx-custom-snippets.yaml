@@ -1,0 +1,59 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: nginx-ingress-cel-disallow-ingress-nginx-cus-f8339b-r0
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - configmaps
+  validations:
+  - expression: object.?data[?'allow-snippet-annotations'].orValue('false') == 'false'
+    message: ingress-nginx allow-snippet-annotations must be set to false
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: nginx-ingress-cel-disallow-ingress-nginx-cus-f8339b-r0-b
+spec:
+  policyName: nginx-ingress-cel-disallow-ingress-nginx-cus-f8339b-r0
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: nginx-ingress-cel-disallow-ingress-nginx-cus-f8339b-r1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - networking.k8s.io
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - ingresses
+  validations:
+  - expression: '!object.metadata.?annotations.orValue([]).exists(annotation, annotation.endsWith(''-snippet''))'
+    message: ingress-nginx custom snippets are not allowed
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: nginx-ingress-cel-disallow-ingress-nginx-cus-f8339b-r1-b
+spec:
+  policyName: nginx-ingress-cel-disallow-ingress-nginx-cus-f8339b-r1
+  validationActions:
+  - Deny

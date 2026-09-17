@@ -1,0 +1,29 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-restrict-ingress-wildcard-5929fa
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - networking.k8s.io
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - ingresses
+  validations:
+  - expression: '!object.spec.?rules.orValue([]).exists(rule, has(rule.host) && rule.host.contains(''*''))'
+    message: Wildcards are not permitted as hosts.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-restrict-ingress-wildcard-5929fa-b
+spec:
+  policyName: other-vpol-restrict-ingress-wildcard-5929fa
+  validationActions:
+  - Deny

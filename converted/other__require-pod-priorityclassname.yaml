@@ -1,0 +1,109 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-require-pod-priorityclassname-d01b08
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: (has(object.spec) && ((has(object.spec.priorityClassName) && (object.spec.priorityClassName
+      != ""))))
+    message: Pods must define the priorityClassName field.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-require-pod-priorityclassname-d01b08-b
+spec:
+  policyName: other-require-pod-priorityclassname-d01b08
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-require-pod-priorityclassname-d01b08-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: (has(object.spec.template.spec) && ((has(object.spec.template.spec.priorityClassName)
+      && (object.spec.template.spec.priorityClassName != ""))))
+    message: Pods must define the priorityClassName field.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-require-pod-priorityclassname-d01b08-ag1-b
+spec:
+  policyName: other-require-pod-priorityclassname-d01b08-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-require-pod-priorityclassname-d01b08-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: (has(object.spec.jobTemplate.spec.template.spec) && ((has(object.spec.jobTemplate.spec.template.spec.priorityClassName)
+      && (object.spec.jobTemplate.spec.template.spec.priorityClassName != ""))))
+    message: Pods must define the priorityClassName field.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-require-pod-priorityclassname-d01b08-ag2-b
+spec:
+  policyName: other-require-pod-priorityclassname-d01b08-ag2
+  validationActions:
+  - Deny

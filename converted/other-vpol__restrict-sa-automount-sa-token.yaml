@@ -1,0 +1,29 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-restrict-sa-automount-sa-token-7aef65
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - serviceaccounts
+  validations:
+  - expression: object.?automountServiceAccountToken.orValue(true) == false
+    message: ServiceAccounts must set automountServiceAccountToken to false.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-restrict-sa-automount-sa-token-7aef65-b
+spec:
+  policyName: other-vpol-restrict-sa-automount-sa-token-7aef65
+  validationActions:
+  - Deny

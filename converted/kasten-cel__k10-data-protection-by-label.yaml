@@ -1,0 +1,34 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: kasten-cel-k10-data-protection-by-label-bf6b59
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+    objectSelector:
+      matchLabels:
+        purpose: production
+  validations:
+  - expression: object.metadata.?labels.?dataprotection.orValue('').startsWith('k10-')
+    message: 'Deployments and StatefulSets that specify ''dataprotection'' label must
+      have a valid k10-?* name (use labels: dataprotection: k10-<policyname>)'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: kasten-cel-k10-data-protection-by-label-bf6b59-b
+spec:
+  policyName: kasten-cel-k10-data-protection-by-label-bf6b59
+  validationActions:
+  - Deny

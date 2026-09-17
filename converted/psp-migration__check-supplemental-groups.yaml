@@ -1,0 +1,127 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: psp-migration-check-supplemental-groups-5bdb9e
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: (has(object.spec) && ((!(has(object.spec.securityContext)) || (has(object.spec.securityContext)
+      && ((!(has(object.spec.securityContext.supplementalGroups)) || (has(object.spec.securityContext.supplementalGroups)
+      && ((object.spec.securityContext.supplementalGroups == "100-200" || object.spec.securityContext.supplementalGroups
+      == "500-600")))))))))
+    message: Any supplementalGroup ID must be within the range 100-200 or 500-600.
+  matchConditions:
+  - name: preconditions
+    expression: ((request.operation == "CREATE" || request.operation == "UPDATE"))
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: psp-migration-check-supplemental-groups-5bdb9e-b
+spec:
+  policyName: psp-migration-check-supplemental-groups-5bdb9e
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: psp-migration-check-supplemental-groups-5bdb9e-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: (has(object.spec.template.spec) && ((!(has(object.spec.template.spec.securityContext))
+      || (has(object.spec.template.spec.securityContext) && ((!(has(object.spec.template.spec.securityContext.supplementalGroups))
+      || (has(object.spec.template.spec.securityContext.supplementalGroups) && ((object.spec.template.spec.securityContext.supplementalGroups
+      == "100-200" || object.spec.template.spec.securityContext.supplementalGroups
+      == "500-600")))))))))
+    message: Any supplementalGroup ID must be within the range 100-200 or 500-600.
+  matchConditions:
+  - name: preconditions
+    expression: ((request.operation == "CREATE" || request.operation == "UPDATE"))
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: psp-migration-check-supplemental-groups-5bdb9e-ag1-b
+spec:
+  policyName: psp-migration-check-supplemental-groups-5bdb9e-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: psp-migration-check-supplemental-groups-5bdb9e-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: (has(object.spec.jobTemplate.spec.template.spec) && ((!(has(object.spec.jobTemplate.spec.template.spec.securityContext))
+      || (has(object.spec.jobTemplate.spec.template.spec.securityContext) && ((!(has(object.spec.jobTemplate.spec.template.spec.securityContext.supplementalGroups))
+      || (has(object.spec.jobTemplate.spec.template.spec.securityContext.supplementalGroups)
+      && ((object.spec.jobTemplate.spec.template.spec.securityContext.supplementalGroups
+      == "100-200" || object.spec.jobTemplate.spec.template.spec.securityContext.supplementalGroups
+      == "500-600")))))))))
+    message: Any supplementalGroup ID must be within the range 100-200 or 500-600.
+  matchConditions:
+  - name: preconditions
+    expression: ((request.operation == "CREATE" || request.operation == "UPDATE"))
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: psp-migration-check-supplemental-groups-5bdb9e-ag2-b
+spec:
+  policyName: psp-migration-check-supplemental-groups-5bdb9e-ag2
+  validationActions:
+  - Deny

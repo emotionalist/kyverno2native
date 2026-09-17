@@ -1,0 +1,30 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: istio-cel-enforce-strict-mtls-906035
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - security.istio.io
+      apiVersions:
+      - v1beta1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - peerauthentications
+  validations:
+  - expression: '!has(object.spec) || !has(object.spec.mtls) || !has(object.spec.mtls.mode)
+      ||  object.spec.mtls.mode in [''UNSET'', ''STRICT'']'
+    message: PeerAuthentication resources may only set UNSET or STRICT for the mode.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: istio-cel-enforce-strict-mtls-906035-b
+spec:
+  policyName: istio-cel-enforce-strict-mtls-906035
+  validationActions:
+  - Deny

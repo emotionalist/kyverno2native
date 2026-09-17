@@ -1,0 +1,106 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-apply-pss-restricted-profile-e81c1e
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - jobs
+      - cronjobs
+  variables:
+  - name: podSpecPath
+    expression: 'object.kind == "Pod" ? "/spec" :
+
+      object.kind == "CronJob" ? "/spec/jobTemplate/spec/template/spec" :
+
+      "/spec/template/spec"
+
+      '
+  - name: podSpec
+    expression: 'object.kind == "Pod" ? object.spec :
+
+      object.kind == "CronJob" ? object.spec.jobTemplate.spec.template.spec :
+
+      object.kind in ["Deployment", "StatefulSet", "DaemonSet", "Job"] ? object.spec.template.spec
+      :
+
+      {}
+
+      '
+  mutations:
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "has(variables.podSpec.securityContext) ?\n[\n  JSONPatch{\n   \
+        \ op: \"add\",\n    path: variables.podSpecPath + \"/securityContext/seccompProfile\"\
+        ,\n    value: dyn({\"type\": \"RuntimeDefault\"})\n  },\n  JSONPatch{\n  \
+        \  op: \"add\",\n    path: variables.podSpecPath + \"/securityContext/runAsNonRoot\"\
+        ,\n    value: dyn(true)\n  },\n  JSONPatch{\n    op: \"add\",\n    path: variables.podSpecPath\
+        \ + \"/securityContext/runAsUser\",\n    value: dyn(1000)\n  },\n  JSONPatch{\n\
+        \    op: \"add\",\n    path: variables.podSpecPath + \"/securityContext/runAsGroup\"\
+        ,\n    value: dyn(3000)\n  },\n  JSONPatch{\n    op: \"add\",\n    path: variables.podSpecPath\
+        \ + \"/securityContext/fsGroup\",\n    value: dyn(2000)\n  }\n] :\n[\n  JSONPatch{\n\
+        \    op: \"add\",\n    path: variables.podSpecPath + \"/securityContext\"\
+        ,\n    value: dyn({\n      \"seccompProfile\": dyn({\"type\": \"RuntimeDefault\"\
+        }),\n      \"runAsNonRoot\": dyn(true),\n      \"runAsUser\": dyn(1000),\n\
+        \      \"runAsGroup\": dyn(3000),\n      \"fsGroup\": dyn(2000)\n    })\n\
+        \  }\n]\n"
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "variables.podSpec.containers.map(c, \n  !has(c.securityContext)\
+        \ ?\n  JSONPatch{\n    op: \"add\",\n    path: variables.podSpecPath + \"\
+        /containers/\" + string(variables.podSpec.containers.indexOf(c)) + \"/securityContext\"\
+        ,\n    value: dyn({})\n  } : null\n).filter(p, p != null)\n"
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "variables.podSpec.containers.map(c, \n  JSONPatch{\n    op: \"\
+        add\",\n    path: variables.podSpecPath + \"/containers/\" + string(variables.podSpec.containers.indexOf(c))\
+        \ + \"/securityContext/privileged\",\n    value: dyn(false)\n  }\n)\n"
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "variables.podSpec.containers.map(c, \n  JSONPatch{\n    op: \"\
+        add\",\n    path: variables.podSpecPath + \"/containers/\" + string(variables.podSpec.containers.indexOf(c))\
+        \ + \"/securityContext/capabilities\",\n    value: dyn({\"drop\": dyn([\"\
+        ALL\"])})\n  }\n)\n"
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "variables.podSpec.containers.map(c, \n  JSONPatch{\n    op: \"\
+        add\",\n    path: variables.podSpecPath + \"/containers/\" + string(variables.podSpec.containers.indexOf(c))\
+        \ + \"/securityContext/allowPrivilegeEscalation\",\n    value: dyn(false)\n\
+        \  }\n)"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-apply-pss-restricted-profile-e81c1e-b
+spec:
+  policyName: other-mpol-apply-pss-restricted-profile-e81c1e

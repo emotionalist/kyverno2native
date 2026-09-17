@@ -1,0 +1,34 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: linkerd-mpol-add-linkerd-policy-annotation-bd58c1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - namespaces
+  matchConditions:
+  - name: annotation-not-present
+    expression: "!has(object.metadata.annotations) || \n!object.metadata.annotations.exists(k,\
+      \ k == 'config.linkerd.io/default-inbound-policy')\n"
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: "Object{\n  metadata: Object.metadata{\n    annotations: {\n   \
+        \   \"config.linkerd.io/default-inbound-policy\": \"deny\"\n    }\n  }\n}"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: linkerd-mpol-add-linkerd-policy-annotation-bd58c1-b
+spec:
+  policyName: linkerd-mpol-add-linkerd-policy-annotation-bd58c1

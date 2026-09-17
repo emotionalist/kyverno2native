@@ -1,0 +1,118 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: linkerd-prevent-linkerd-port-skipping-82350c
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: (has(object.metadata) && ((!(has(object.metadata.annotations)) ||
+      (has(object.metadata.annotations) && ((!("config.linkerd.io/skip-inbound-ports"
+      in object.metadata.annotations)) && (!("config.linkerd.io/skip-outbound-ports"
+      in object.metadata.annotations)))))))
+    message: Pods may not skip ports. The annotations `config.linkerd.io/skip-inbound-ports`
+      or `config.linkerd.io/skip-outbound-ports` must not be set.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: linkerd-prevent-linkerd-port-skipping-82350c-b
+spec:
+  policyName: linkerd-prevent-linkerd-port-skipping-82350c
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: linkerd-prevent-linkerd-port-skipping-82350c-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: (has(object.spec.template.metadata) && ((!(has(object.spec.template.metadata.annotations))
+      || (has(object.spec.template.metadata.annotations) && ((!("config.linkerd.io/skip-inbound-ports"
+      in object.spec.template.metadata.annotations)) && (!("config.linkerd.io/skip-outbound-ports"
+      in object.spec.template.metadata.annotations)))))))
+    message: Pods may not skip ports. The annotations `config.linkerd.io/skip-inbound-ports`
+      or `config.linkerd.io/skip-outbound-ports` must not be set.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: linkerd-prevent-linkerd-port-skipping-82350c-ag1-b
+spec:
+  policyName: linkerd-prevent-linkerd-port-skipping-82350c-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: linkerd-prevent-linkerd-port-skipping-82350c-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: (has(object.spec.jobTemplate.spec.template.metadata) && ((!(has(object.spec.jobTemplate.spec.template.metadata.annotations))
+      || (has(object.spec.jobTemplate.spec.template.metadata.annotations) && ((!("config.linkerd.io/skip-inbound-ports"
+      in object.spec.jobTemplate.spec.template.metadata.annotations)) && (!("config.linkerd.io/skip-outbound-ports"
+      in object.spec.jobTemplate.spec.template.metadata.annotations)))))))
+    message: Pods may not skip ports. The annotations `config.linkerd.io/skip-inbound-ports`
+      or `config.linkerd.io/skip-outbound-ports` must not be set.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: linkerd-prevent-linkerd-port-skipping-82350c-ag2-b
+spec:
+  policyName: linkerd-prevent-linkerd-port-skipping-82350c-ag2
+  validationActions:
+  - Deny

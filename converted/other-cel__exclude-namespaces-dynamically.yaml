@@ -1,0 +1,240 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-cel-exclude-namespaces-dynamically-544ef5-r0
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - daemonsets
+      - deployments
+      - statefulsets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+  validations:
+  - expression: has(object.spec.template.metadata) && has(object.spec.template.metadata.labels)
+      && 'foo' in object.spec.template.metadata.labels
+    messageExpression: '''Creating Pods in the '' + request.namespace + '' namespace,''
+      + '' which is not in the excluded list of namespaces'' + params.data.exclude
+      + '','' + '' is forbidden unless it carries the label `foo`.''
+
+      '
+  matchConditions:
+  - name: filter-namespaces
+    expression: '!(request.namespace in params.data[''exclude''].split('', ''))'
+  paramKind:
+    apiVersion: v1
+    kind: ConfigMap
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-cel-exclude-namespaces-dynamically-544ef5-r0-b
+spec:
+  policyName: other-cel-exclude-namespaces-dynamically-544ef5-r0
+  validationActions:
+  - Deny
+  paramRef:
+    name: namespace-filters
+    namespace: default
+    parameterNotFoundAction: Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-cel-exclude-namespaces-dynamically-544ef5-r1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: has(object.metadata.labels) && 'foo' in object.metadata.labels
+    messageExpression: '''Creating Pods in the '' + request.namespace + '' namespace,''
+      + '' which is not in the excluded list of namespaces '' + params.data.exclude
+      + '','' + '' is forbidden unless it carries the label `foo`.''
+
+      '
+  matchConditions:
+  - name: filter-namespaces
+    expression: '!(request.namespace in params.data[''exclude''].split('', ''))'
+  paramKind:
+    apiVersion: v1
+    kind: ConfigMap
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-cel-exclude-namespaces-dynamically-544ef5-r1-b
+spec:
+  policyName: other-cel-exclude-namespaces-dynamically-544ef5-r1
+  validationActions:
+  - Deny
+  paramRef:
+    name: namespace-filters
+    namespace: default
+    parameterNotFoundAction: Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-cel-exclude-namespaces-dynamically-544ef5-r2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: has(object.spec.jobTemplate.spec.template.metadata) && has(object.spec.jobTemplate.spec.template.metadata.labels)
+      && 'foo' in object.spec.jobTemplate.spec.template.metadata.labels
+    messageExpression: '''Creating Pods in the '' + request.namespace + '' namespace,''
+      + '' which is not in the excluded list of namespaces '' + params.data.exclude
+      + '','' + '' is forbidden unless it carries the label `foo`.''
+
+      '
+  matchConditions:
+  - name: filter-namespaces
+    expression: '!(request.namespace in params.data[''exclude''].split('', ''))'
+  paramKind:
+    apiVersion: v1
+    kind: ConfigMap
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-cel-exclude-namespaces-dynamically-544ef5-r2-b
+spec:
+  policyName: other-cel-exclude-namespaces-dynamically-544ef5-r2
+  validationActions:
+  - Deny
+  paramRef:
+    name: namespace-filters
+    namespace: default
+    parameterNotFoundAction: Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-cel-exclude-namespaces-dynamically-544ef5-r1-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: has(object.spec.template.metadata.labels) && 'foo' in object.spec.template.metadata.labels
+    messageExpression: '''Creating Pods in the '' + request.namespace + '' namespace,''
+      + '' which is not in the excluded list of namespaces '' + params.data.exclude
+      + '','' + '' is forbidden unless it carries the label `foo`.''
+
+      '
+  matchConditions:
+  - name: filter-namespaces
+    expression: '!(request.namespace in params.data[''exclude''].split('', ''))'
+  paramKind:
+    apiVersion: v1
+    kind: ConfigMap
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-cel-exclude-namespaces-dynamically-544ef5-r1-ag1-b
+spec:
+  policyName: other-cel-exclude-namespaces-dynamically-544ef5-r1-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-cel-exclude-namespaces-dynamically-544ef5-r1-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: has(object.spec.jobTemplate.spec.template.metadata.labels) && 'foo'
+      in object.spec.jobTemplate.spec.template.metadata.labels
+    messageExpression: '''Creating Pods in the '' + request.namespace + '' namespace,''
+      + '' which is not in the excluded list of namespaces '' + params.data.exclude
+      + '','' + '' is forbidden unless it carries the label `foo`.''
+
+      '
+  matchConditions:
+  - name: filter-namespaces
+    expression: '!(request.namespace in params.data[''exclude''].split('', ''))'
+  paramKind:
+    apiVersion: v1
+    kind: ConfigMap
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-cel-exclude-namespaces-dynamically-544ef5-r1-ag2-b
+spec:
+  policyName: other-cel-exclude-namespaces-dynamically-544ef5-r1-ag2
+  validationActions:
+  - Deny

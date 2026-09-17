@@ -1,0 +1,59 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: tekton-cel-require-tekton-bundle-3e877a-r0
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - tekton.dev
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pipelineruns
+  validations:
+  - expression: object.spec.?pipelineRef.?bundle.orValue('') != ''
+    message: A bundle is required.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: tekton-cel-require-tekton-bundle-3e877a-r0-b
+spec:
+  policyName: tekton-cel-require-tekton-bundle-3e877a-r0
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: tekton-cel-require-tekton-bundle-3e877a-r1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - tekton.dev
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - taskruns
+  validations:
+  - expression: object.spec.?taskRef.?bundle.orValue('') != ''
+    message: A bundle is required.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: tekton-cel-require-tekton-bundle-3e877a-r1-b
+spec:
+  policyName: tekton-cel-require-tekton-bundle-3e877a-r1
+  validationActions:
+  - Deny

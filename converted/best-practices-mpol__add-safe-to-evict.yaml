@@ -1,0 +1,134 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: best-practices-mpol-add-safe-to-evict-97ea1a
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  matchConditions:
+  - name: has-emptydir-or-hostpath
+    expression: "has(object.spec.volumes) && \nobject.spec.volumes.exists(v, has(v.emptyDir)\
+      \ || has(v.hostPath))\n"
+  - name: annotation-not-present
+    expression: "!has(object.metadata.annotations) || \n!object.metadata.annotations.exists(k,\
+      \ k == 'cluster-autoscaler.kubernetes.io/safe-to-evict')\n"
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: "Object{\n  metadata: Object.metadata{\n    annotations: {\n   \
+        \   \"cluster-autoscaler.kubernetes.io/safe-to-evict\": \"true\"\n    }\n\
+        \  }\n}"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-mpol-add-safe-to-evict-97ea1a-b
+spec:
+  policyName: best-practices-mpol-add-safe-to-evict-97ea1a
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: best-practices-mpol-add-safe-to-evict-97ea1a-ag1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  matchConditions:
+  - name: has-emptydir-or-hostpath
+    expression: "has(object.spec.template.spec.volumes) && \nobject.spec.template.spec.volumes.exists(v,\
+      \ has(v.emptyDir) || has(v.hostPath))\n"
+  - name: annotation-not-present
+    expression: "!has(object.spec.template.metadata.annotations) || \n!object.spec.template.metadata.annotations.exists(k,\
+      \ k == 'cluster-autoscaler.kubernetes.io/safe-to-evict')\n"
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: "Object{\n  metadata: Object.metadata{\n    annotations: {\n   \
+        \   \"cluster-autoscaler.kubernetes.io/safe-to-evict\": \"true\"\n    }\n\
+        \  }\n}"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-mpol-add-safe-to-evict-97ea1a-ag1-b
+spec:
+  policyName: best-practices-mpol-add-safe-to-evict-97ea1a-ag1
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: best-practices-mpol-add-safe-to-evict-97ea1a-ag2
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  matchConditions:
+  - name: has-emptydir-or-hostpath
+    expression: "has(object.spec.jobTemplate.spec.template.spec.volumes) && \nobject.spec.jobTemplate.spec.template.spec.volumes.exists(v,\
+      \ has(v.emptyDir) || has(v.hostPath))\n"
+  - name: annotation-not-present
+    expression: "!has(object.spec.jobTemplate.spec.template.metadata.annotations)\
+      \ || \n!object.spec.jobTemplate.spec.template.metadata.annotations.exists(k,\
+      \ k == 'cluster-autoscaler.kubernetes.io/safe-to-evict')\n"
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: "Object{\n  metadata: Object.metadata{\n    annotations: {\n   \
+        \   \"cluster-autoscaler.kubernetes.io/safe-to-evict\": \"true\"\n    }\n\
+        \  }\n}"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-mpol-add-safe-to-evict-97ea1a-ag2-b
+spec:
+  policyName: best-practices-mpol-add-safe-to-evict-97ea1a-ag2

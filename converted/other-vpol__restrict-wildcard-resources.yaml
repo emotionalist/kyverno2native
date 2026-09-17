@@ -1,0 +1,30 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-restrict-wildcard-resources-31d56b
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - rbac.authorization.k8s.io
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - roles
+      - clusterroles
+  validations:
+  - expression: object.rules == null || !object.rules.exists(rule, '*' in rule.resources)
+    message: Use of a wildcard ('*') in any resources is forbidden.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-restrict-wildcard-resources-31d56b-b
+spec:
+  policyName: other-vpol-restrict-wildcard-resources-31d56b
+  validationActions:
+  - Deny

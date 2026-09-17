@@ -1,0 +1,33 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: aws-cel-require-encryption-aws-loadbalancers-089b81
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - services
+  validations:
+  - expression: object.metadata.?annotations[?'service.beta.kubernetes.io/aws-load-balancer-ssl-cert'].orValue('')
+      != ''
+    message: Service of type LoadBalancer must carry the annotation service.beta.kubernetes.io/aws-load-balancer-ssl-cert.
+  matchConditions:
+  - name: type-should-be-load-balancer
+    expression: object.spec.type == 'LoadBalancer'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: aws-cel-require-encryption-aws-loadbalancers-089b81-b
+spec:
+  policyName: aws-cel-require-encryption-aws-loadbalancers-089b81
+  validationActions:
+  - Deny

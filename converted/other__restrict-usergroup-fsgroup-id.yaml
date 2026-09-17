@@ -1,0 +1,337 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-restrict-usergroup-fsgroup-id-6f9166-r0
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: (has(object.spec) && ((has(object.spec.securityContext) && ((has(object.spec.securityContext.runAsUser)
+      && (object.spec.securityContext.runAsUser == "1000"))))))
+    message: User ID should be 1000.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-restrict-usergroup-fsgroup-id-6f9166-r0-b
+spec:
+  policyName: other-restrict-usergroup-fsgroup-id-6f9166-r0
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-restrict-usergroup-fsgroup-id-6f9166-r1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: (has(object.spec) && ((has(object.spec.securityContext) && ((has(object.spec.securityContext.runAsGroup)
+      && (object.spec.securityContext.runAsGroup == "3000"))))))
+    message: Group ID should be 3000.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-restrict-usergroup-fsgroup-id-6f9166-r1-b
+spec:
+  policyName: other-restrict-usergroup-fsgroup-id-6f9166-r1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-restrict-usergroup-fsgroup-id-6f9166-r2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: (has(object.spec) && ((has(object.spec.securityContext) && ((has(object.spec.securityContext.fsGroup)
+      && (object.spec.securityContext.fsGroup == "2000"))))))
+    message: fsgroup should be 2000.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-restrict-usergroup-fsgroup-id-6f9166-r2-b
+spec:
+  policyName: other-restrict-usergroup-fsgroup-id-6f9166-r2
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-restrict-usergroup-fsgroup-id-6f9166-r0-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: (has(object.spec.template.spec) && ((has(object.spec.template.spec.securityContext)
+      && ((has(object.spec.template.spec.securityContext.runAsUser) && (object.spec.template.spec.securityContext.runAsUser
+      == "1000"))))))
+    message: User ID should be 1000.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-restrict-usergroup-fsgroup-id-6f9166-r0-ag1-b
+spec:
+  policyName: other-restrict-usergroup-fsgroup-id-6f9166-r0-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-restrict-usergroup-fsgroup-id-6f9166-r0-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: (has(object.spec.jobTemplate.spec.template.spec) && ((has(object.spec.jobTemplate.spec.template.spec.securityContext)
+      && ((has(object.spec.jobTemplate.spec.template.spec.securityContext.runAsUser)
+      && (object.spec.jobTemplate.spec.template.spec.securityContext.runAsUser ==
+      "1000"))))))
+    message: User ID should be 1000.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-restrict-usergroup-fsgroup-id-6f9166-r0-ag2-b
+spec:
+  policyName: other-restrict-usergroup-fsgroup-id-6f9166-r0-ag2
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-restrict-usergroup-fsgroup-id-6f9166-r1-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: (has(object.spec.template.spec) && ((has(object.spec.template.spec.securityContext)
+      && ((has(object.spec.template.spec.securityContext.runAsGroup) && (object.spec.template.spec.securityContext.runAsGroup
+      == "3000"))))))
+    message: Group ID should be 3000.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-restrict-usergroup-fsgroup-id-6f9166-r1-ag1-b
+spec:
+  policyName: other-restrict-usergroup-fsgroup-id-6f9166-r1-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-restrict-usergroup-fsgroup-id-6f9166-r1-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: (has(object.spec.jobTemplate.spec.template.spec) && ((has(object.spec.jobTemplate.spec.template.spec.securityContext)
+      && ((has(object.spec.jobTemplate.spec.template.spec.securityContext.runAsGroup)
+      && (object.spec.jobTemplate.spec.template.spec.securityContext.runAsGroup ==
+      "3000"))))))
+    message: Group ID should be 3000.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-restrict-usergroup-fsgroup-id-6f9166-r1-ag2-b
+spec:
+  policyName: other-restrict-usergroup-fsgroup-id-6f9166-r1-ag2
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-restrict-usergroup-fsgroup-id-6f9166-r2-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: (has(object.spec.template.spec) && ((has(object.spec.template.spec.securityContext)
+      && ((has(object.spec.template.spec.securityContext.fsGroup) && (object.spec.template.spec.securityContext.fsGroup
+      == "2000"))))))
+    message: fsgroup should be 2000.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-restrict-usergroup-fsgroup-id-6f9166-r2-ag1-b
+spec:
+  policyName: other-restrict-usergroup-fsgroup-id-6f9166-r2-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-restrict-usergroup-fsgroup-id-6f9166-r2-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: (has(object.spec.jobTemplate.spec.template.spec) && ((has(object.spec.jobTemplate.spec.template.spec.securityContext)
+      && ((has(object.spec.jobTemplate.spec.template.spec.securityContext.fsGroup)
+      && (object.spec.jobTemplate.spec.template.spec.securityContext.fsGroup == "2000"))))))
+    message: fsgroup should be 2000.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-restrict-usergroup-fsgroup-id-6f9166-r2-ag2-b
+spec:
+  policyName: other-restrict-usergroup-fsgroup-id-6f9166-r2-ag2
+  validationActions:
+  - Deny

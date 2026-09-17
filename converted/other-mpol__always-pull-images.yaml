@@ -1,0 +1,112 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-always-pull-images-8b07b1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: "Object{\n  spec: Object.spec{\n    containers: object.spec.containers.map(container,\
+        \ \n      Object.spec.containers{\n        name: container.name,\n       \
+        \ imagePullPolicy: \"Always\"\n      }\n    )\n  }\n}\n"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-always-pull-images-8b07b1-b
+spec:
+  policyName: other-mpol-always-pull-images-8b07b1
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-always-pull-images-8b07b1-ag1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: "Object{\n  spec: Object.spec{\n    containers: object.spec.template.spec.containers.map(container,\
+        \ \n      Object.spec.containers{\n        name: container.name,\n       \
+        \ imagePullPolicy: \"Always\"\n      }\n    )\n  }\n}\n"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-always-pull-images-8b07b1-ag1-b
+spec:
+  policyName: other-mpol-always-pull-images-8b07b1-ag1
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-always-pull-images-8b07b1-ag2
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: "Object{\n  spec: Object.spec{\n    containers: object.spec.jobTemplate.spec.template.spec.containers.map(container,\
+        \ \n      Object.spec.containers{\n        name: container.name,\n       \
+        \ imagePullPolicy: \"Always\"\n      }\n    )\n  }\n}\n"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-always-pull-images-8b07b1-ag2-b
+spec:
+  policyName: other-mpol-always-pull-images-8b07b1-ag2

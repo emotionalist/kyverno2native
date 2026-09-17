@@ -1,0 +1,73 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-add-nodeselector-1844c7
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - daemonsets
+      - statefulsets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - jobs
+      - cronjobs
+  mutations:
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "!has(object.spec.nodeSelector) ?\n[\n  JSONPatch{\n    op: \"add\"\
+        ,\n    path: \"/spec/nodeSelector\",\n    value: dyn({\"foo\": \"bar\", \"\
+        color\": \"orange\"})\n  }\n] : \n[\n  JSONPatch{\n    op: \"add\",\n    path:\
+        \ \"/spec/nodeSelector/foo\",\n    value: \"bar\"\n  },\n  JSONPatch{\n  \
+        \  op: \"add\",\n    path: \"/spec/nodeSelector/color\",\n    value: \"orange\"\
+        \n  }\n]\n"
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "has(object.spec.template) ?\n(!has(object.spec.template.spec.nodeSelector)\
+        \ ?\n  [\n    JSONPatch{\n      op: \"add\",\n      path: \"/spec/template/spec/nodeSelector\"\
+        ,\n      value: dyn({\"foo\": \"bar\", \"color\": \"orange\"})\n    }\n  ]\
+        \ : \n  [\n    JSONPatch{\n      op: \"add\",\n      path: \"/spec/template/spec/nodeSelector/foo\"\
+        ,\n      value: \"bar\"\n    },\n    JSONPatch{\n      op: \"add\",\n    \
+        \  path: \"/spec/template/spec/nodeSelector/color\",\n      value: \"orange\"\
+        \n    }\n  ]\n) : []\n"
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "has(object.spec.jobTemplate) ?\n(!has(object.spec.jobTemplate.spec.template.spec.nodeSelector)\
+        \ ?\n  [\n    JSONPatch{\n      op: \"add\",\n      path: \"/spec/jobTemplate/spec/template/spec/nodeSelector\"\
+        ,\n      value: dyn({\"foo\": \"bar\", \"color\": \"orange\"})\n    }\n  ]\
+        \ : \n  [\n    JSONPatch{\n      op: \"add\",\n      path: \"/spec/jobTemplate/spec/template/spec/nodeSelector/foo\"\
+        ,\n      value: \"bar\"\n    },\n    JSONPatch{\n      op: \"add\",\n    \
+        \  path: \"/spec/jobTemplate/spec/template/spec/nodeSelector/color\",\n  \
+        \    value: \"orange\"\n    }\n  ]\n) : []"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-add-nodeselector-1844c7-b
+spec:
+  policyName: other-mpol-add-nodeselector-1844c7

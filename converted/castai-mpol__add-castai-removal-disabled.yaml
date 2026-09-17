@@ -1,0 +1,39 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: castai-mpol-add-castai-removal-disabled-57029a
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - jobs
+      - cronjobs
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: "object.kind == \"Job\" ?\nObject{\n  spec: Object.spec{\n    template:\
+        \ Object.spec.template{\n      metadata: Object.spec.template.metadata{\n\
+        \        labels: {\n          \"autoscaling.cast.ai/removal-disabled\": \"\
+        true\"\n        }\n      }\n    }\n  }\n} :\nobject.kind == \"CronJob\" ?\n\
+        Object{\n  spec: Object.spec{\n    jobTemplate: Object.spec.jobTemplate{\n\
+        \      spec: Object.spec.jobTemplate.spec{\n        template: Object.spec.jobTemplate.spec.template{\n\
+        \          metadata: Object.spec.jobTemplate.spec.template.metadata{\n   \
+        \         labels: {\n              \"autoscaling.cast.ai/removal-disabled\"\
+        : \"true\"\n            }\n          }\n        }\n      }\n    }\n  }\n}\
+        \ : Object{}\n"
+  reinvocationPolicy: Never
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: castai-mpol-add-castai-removal-disabled-57029a-b
+spec:
+  policyName: castai-mpol-add-castai-removal-disabled-57029a

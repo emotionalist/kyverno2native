@@ -1,0 +1,31 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: psa-add-psa-namespace-reporting-227357
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - namespaces
+  validations:
+  - expression: (has(object.metadata) && ((has(object.metadata.labels) && ((has(object.metadata.labels)
+      && object.metadata.labels.exists(__k2, __k2.matches("^pod\\-security\\.kubernetes\\.io/.*$")
+      && (object.metadata.labels[__k2] != "")))))))
+    message: This Namespace is missing a PSA label.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: psa-add-psa-namespace-reporting-227357-b
+spec:
+  policyName: psa-add-psa-namespace-reporting-227357
+  validationActions:
+  - Deny

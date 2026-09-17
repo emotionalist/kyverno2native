@@ -1,0 +1,32 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: cert-manager-limit-dnsnames-5f611b
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - cert-manager.io
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - certificates
+  variables:
+  - name: dnsNames
+    expression: object.?spec.?dnsNames.orValue([])
+  validations:
+  - expression: size(variables.dnsNames) <= 1
+    message: Only one dnsNames entry allowed per certificate request.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: cert-manager-limit-dnsnames-5f611b-b
+spec:
+  policyName: cert-manager-limit-dnsnames-5f611b
+  validationActions:
+  - Deny

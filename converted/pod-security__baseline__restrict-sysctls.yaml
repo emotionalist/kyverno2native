@@ -1,0 +1,128 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-baseline-restrict-sysctls-7136eb
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: (has(object.spec) && ((!(has(object.spec.securityContext)) || (has(object.spec.securityContext)
+      && ((!(has(object.spec.securityContext.sysctls)) || (has(object.spec.securityContext.sysctls)
+      && (object.spec.securityContext.sysctls.all(__x, (!(has(__x.name)) || (has(__x.name)
+      && ((__x.name == "kernel.shm_rmid_forced" || __x.name == "net.ipv4.ip_local_port_range"
+      || __x.name == "net.ipv4.ip_unprivileged_port_start" || __x.name == "net.ipv4.tcp_syncookies"
+      || __x.name == "net.ipv4.ping_group_range")))))))))))))
+    message: Setting additional sysctls above the allowed type is disallowed. The
+      field spec.securityContext.sysctls must be unset or not use any other names
+      than kernel.shm_rmid_forced, net.ip
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-baseline-restrict-sysctls-7136eb-b
+spec:
+  policyName: pod-security-baseline-restrict-sysctls-7136eb
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-baseline-restrict-sysctls-7136eb-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: (has(object.spec.template.spec) && ((!(has(object.spec.template.spec.securityContext))
+      || (has(object.spec.template.spec.securityContext) && ((!(has(object.spec.template.spec.securityContext.sysctls))
+      || (has(object.spec.template.spec.securityContext.sysctls) && (object.spec.template.spec.securityContext.sysctls.all(__x,
+      (!(has(__x.name)) || (has(__x.name) && ((__x.name == "kernel.shm_rmid_forced"
+      || __x.name == "net.ipv4.ip_local_port_range" || __x.name == "net.ipv4.ip_unprivileged_port_start"
+      || __x.name == "net.ipv4.tcp_syncookies" || __x.name == "net.ipv4.ping_group_range")))))))))))))
+    message: Setting additional sysctls above the allowed type is disallowed. The
+      field spec.securityContext.sysctls must be unset or not use any other names
+      than kernel.shm_rmid_forced, net.ip
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-baseline-restrict-sysctls-7136eb-ag1-b
+spec:
+  policyName: pod-security-baseline-restrict-sysctls-7136eb-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-baseline-restrict-sysctls-7136eb-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: (has(object.spec.jobTemplate.spec.template.spec) && ((!(has(object.spec.jobTemplate.spec.template.spec.securityContext))
+      || (has(object.spec.jobTemplate.spec.template.spec.securityContext) && ((!(has(object.spec.jobTemplate.spec.template.spec.securityContext.sysctls))
+      || (has(object.spec.jobTemplate.spec.template.spec.securityContext.sysctls)
+      && (object.spec.jobTemplate.spec.template.spec.securityContext.sysctls.all(__x,
+      (!(has(__x.name)) || (has(__x.name) && ((__x.name == "kernel.shm_rmid_forced"
+      || __x.name == "net.ipv4.ip_local_port_range" || __x.name == "net.ipv4.ip_unprivileged_port_start"
+      || __x.name == "net.ipv4.tcp_syncookies" || __x.name == "net.ipv4.ping_group_range")))))))))))))
+    message: Setting additional sysctls above the allowed type is disallowed. The
+      field spec.securityContext.sysctls must be unset or not use any other names
+      than kernel.shm_rmid_forced, net.ip
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-baseline-restrict-sysctls-7136eb-ag2-b
+spec:
+  policyName: pod-security-baseline-restrict-sysctls-7136eb-ag2
+  validationActions:
+  - Deny

@@ -1,0 +1,35 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: psa-add-psa-labels-7d08ef
+spec:
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - namespaces
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: 'Object{metadata: Object.metadata{labels: {"pod-security.kubernetes.io/enforce":
+        "baseline", "pod-security.kubernetes.io/warn": "restricted"}}}'
+  matchConditions:
+  - name: addifabsent0
+    expression: '!("pod-security.kubernetes.io/enforce" in object.metadata.labels)'
+  - name: addifabsent1
+    expression: '!("pod-security.kubernetes.io/warn" in object.metadata.labels)'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: psa-add-psa-labels-7d08ef-b
+spec:
+  policyName: psa-add-psa-labels-7d08ef

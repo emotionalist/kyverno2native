@@ -1,0 +1,115 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: psp-migration-add-runtimeclassname-7f8dea
+spec:
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: 'Object{spec: Object.spec{runtimeClassName: "prodclass"}}'
+  matchConditions:
+  - name: preconditions
+    expression: ((request.operation == "CREATE" || request.operation == "UPDATE"))
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: psp-migration-add-runtimeclassname-7f8dea-b
+spec:
+  policyName: psp-migration-add-runtimeclassname-7f8dea
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: psp-migration-add-runtimeclassname-7f8dea-ag1
+spec:
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: 'Object{spec: Object.spec{runtimeClassName: "prodclass"}}'
+  matchConditions:
+  - name: preconditions
+    expression: ((request.operation == "CREATE" || request.operation == "UPDATE"))
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: psp-migration-add-runtimeclassname-7f8dea-ag1-b
+spec:
+  policyName: psp-migration-add-runtimeclassname-7f8dea-ag1
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: psp-migration-add-runtimeclassname-7f8dea-ag2
+spec:
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: 'Object{spec: Object.spec{runtimeClassName: "prodclass"}}'
+  matchConditions:
+  - name: preconditions
+    expression: ((request.operation == "CREATE" || request.operation == "UPDATE"))
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: psp-migration-add-runtimeclassname-7f8dea-ag2-b
+spec:
+  policyName: psp-migration-add-runtimeclassname-7f8dea-ag2

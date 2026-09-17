@@ -1,0 +1,65 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: argo-cel-application-field-validation-b282fe-r0
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - argoproj.io
+      apiVersions:
+      - v1alpha1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - applications
+  validations:
+  - expression: "has(object.spec.source) && (\n  (has(object.spec.source.path) &&\
+      \ !has(object.spec.source.chart)) ||\n  (!has(object.spec.source.path) && has(object.spec.source.chart))\n\
+      )"
+    message: '`spec.source.path` OR `spec.source.chart` should be specified but never
+      both.'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: argo-cel-application-field-validation-b282fe-r0-b
+spec:
+  policyName: argo-cel-application-field-validation-b282fe-r0
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: argo-cel-application-field-validation-b282fe-r1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - argoproj.io
+      apiVersions:
+      - v1alpha1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - applications
+  validations:
+  - expression: "has(object.spec.destination) && (\n  (has(object.spec.destination.server)\
+      \ && !has(object.spec.destination.name)) ||\n  (!has(object.spec.destination.server)\
+      \ && has(object.spec.destination.name))\n)"
+    message: '`spec.destination.server` OR `spec.destination.name` should be specified
+      but never both.'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: argo-cel-application-field-validation-b282fe-r1-b
+spec:
+  policyName: argo-cel-application-field-validation-b282fe-r1
+  validationActions:
+  - Deny

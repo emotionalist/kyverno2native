@@ -1,0 +1,184 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-replace-image-registry-3ea052
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: |
+        Object{
+          spec: Object.spec{
+            containers: object.spec.containers.map(c,
+              Object.spec.containers{
+                name: c.name,
+                image: 'myregistry.corp.com/' +
+                  (c.image.contains('/') && c.image.split('/')[0].contains('.') ?
+                    c.image.substring(c.image.indexOf('/') + 1) :
+                    c.image.replace('localhost/', ''))
+              }
+            ),
+            initContainers: object.spec.?initContainers.orValue([]).map(c,
+              Object.spec.initContainers{
+                name: c.name,
+                image: 'myregistry.corp.com/' +
+                  (c.image.contains('/') && c.image.split('/')[0].contains('.') ?
+                    c.image.substring(c.image.indexOf('/') + 1) :
+                    c.image.replace('localhost/', ''))
+              }
+            )
+          }
+        }
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-replace-image-registry-3ea052-b
+spec:
+  policyName: other-mpol-replace-image-registry-3ea052
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-replace-image-registry-3ea052-ag1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: |
+        Object{
+          spec: Object.spec{
+            template: Object.spec.template{
+              spec: Object.spec.template.spec{
+                containers: object.spec.template.spec.containers.map(c,
+                  Object.spec.template.spec.containers{
+                    name: c.name,
+                    image: 'myregistry.corp.com/' +
+                      (c.image.contains('/') && c.image.split('/')[0].contains('.') ?
+                        c.image.substring(c.image.indexOf('/') + 1) :
+                        c.image.replace('localhost/', ''))
+                  }
+                ),
+                initContainers: object.spec.template.spec.?initContainers.orValue([]).map(c,
+                  Object.spec.template.spec.initContainers{
+                    name: c.name,
+                    image: 'myregistry.corp.com/' +
+                      (c.image.contains('/') && c.image.split('/')[0].contains('.') ?
+                        c.image.substring(c.image.indexOf('/') + 1) :
+                        c.image.replace('localhost/', ''))
+                  }
+                )
+              }
+            }
+          }
+        }
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-replace-image-registry-3ea052-ag1-b
+spec:
+  policyName: other-mpol-replace-image-registry-3ea052-ag1
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-replace-image-registry-3ea052-ag2
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: |
+        Object{
+          spec: Object.spec{
+            jobTemplate: Object.spec.jobTemplate{
+              spec: Object.spec.jobTemplate.spec{
+                template: Object.spec.jobTemplate.spec.template{
+                  spec: Object.spec.jobTemplate.spec.template.spec{
+                    containers: object.spec.jobTemplate.spec.template.spec.containers.map(c,
+                      Object.spec.jobTemplate.spec.template.spec.containers{
+                        name: c.name,
+                        image: 'myregistry.corp.com/' +
+                          (c.image.contains('/') && c.image.split('/')[0].contains('.') ?
+                            c.image.substring(c.image.indexOf('/') + 1) :
+                            c.image.replace('localhost/', ''))
+                      }
+                    ),
+                    initContainers: object.spec.jobTemplate.spec.template.spec.?initContainers.orValue([]).map(c,
+                      Object.spec.jobTemplate.spec.template.spec.initContainers{
+                        name: c.name,
+                        image: 'myregistry.corp.com/' +
+                          (c.image.contains('/') && c.image.split('/')[0].contains('.') ?
+                            c.image.substring(c.image.indexOf('/') + 1) :
+                            c.image.replace('localhost/', ''))
+                      }
+                    )
+                  }
+                }
+              }
+            }
+          }
+        }
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-replace-image-registry-3ea052-ag2-b
+spec:
+  policyName: other-mpol-replace-image-registry-3ea052-ag2

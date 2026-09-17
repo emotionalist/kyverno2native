@@ -1,0 +1,36 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-limit-configmap-for-sa-b3f1d3
+spec:
+  failurePolicy: Fail
+  matchConditions:
+  - expression: request.namespace in ['any-namespace', 'another-namespace']
+    name: namespace-filter
+  - expression: request.name in ['any-configmap-name-good', 'another-configmap-name']
+    name: configmap-name-filter
+  - expression: request.userInfo.username == 'system:serviceaccount:another-namespace:another-developer'
+    name: serviceaccount-filter
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - configmaps
+  validations:
+  - expression: 'false'
+    messageExpression: request.namespace + '/' + request.kind.kind + '/' + request.name + ' resource is protected. Admin or allowed users can change the resource'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-limit-configmap-for-sa-b3f1d3-b
+spec:
+  policyName: other-vpol-limit-configmap-for-sa-b3f1d3
+  validationActions:
+  - Deny

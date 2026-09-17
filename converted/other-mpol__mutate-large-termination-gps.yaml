@@ -1,0 +1,122 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-mutate-large-termination-gps-8db541
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  matchConditions:
+  - name: tgps-greater-than-50
+    expression: has(object.spec.terminationGracePeriodSeconds) &&  object.spec.terminationGracePeriodSeconds
+      > 50
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: "Object{\n  spec: Object.spec{\n    terminationGracePeriodSeconds:\
+        \ 50\n  }\n}"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-mutate-large-termination-gps-8db541-b
+spec:
+  policyName: other-mpol-mutate-large-termination-gps-8db541
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-mutate-large-termination-gps-8db541-ag1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  matchConditions:
+  - name: tgps-greater-than-50
+    expression: has(object.spec.template.spec.terminationGracePeriodSeconds) &&  object.spec.template.spec.terminationGracePeriodSeconds
+      > 50
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: "Object{\n  spec: Object.spec{\n    terminationGracePeriodSeconds:\
+        \ 50\n  }\n}"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-mutate-large-termination-gps-8db541-ag1-b
+spec:
+  policyName: other-mpol-mutate-large-termination-gps-8db541-ag1
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-mutate-large-termination-gps-8db541-ag2
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  matchConditions:
+  - name: tgps-greater-than-50
+    expression: has(object.spec.jobTemplate.spec.template.spec.terminationGracePeriodSeconds)
+      &&  object.spec.jobTemplate.spec.template.spec.terminationGracePeriodSeconds
+      > 50
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: "Object{\n  spec: Object.spec{\n    terminationGracePeriodSeconds:\
+        \ 50\n  }\n}"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-mutate-large-termination-gps-8db541-ag2-b
+spec:
+  policyName: other-mpol-mutate-large-termination-gps-8db541-ag2

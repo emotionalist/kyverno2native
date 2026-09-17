@@ -1,0 +1,125 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-prepend-image-registry-b7399a
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: "Object{\n  spec: Object.spec{\n    containers: object.spec.containers.map(container,\
+        \ \n      Object.spec.containers{\n        name: container.name,\n       \
+        \ image: \"registry.io/\" + container.image\n      }\n    ),\n    initContainers:\
+        \ has(object.spec.initContainers) ?\n      object.spec.initContainers.map(container,\n\
+        \        Object.spec.initContainers{\n          name: container.name,\n  \
+        \        image: \"registry.io/\" + container.image\n        }\n      ) : []\n\
+        \  }\n}"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-prepend-image-registry-b7399a-b
+spec:
+  policyName: other-mpol-prepend-image-registry-b7399a
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-prepend-image-registry-b7399a-ag1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: "Object{\n  spec: Object.spec{\n    containers: object.spec.template.spec.containers.map(container,\
+        \ \n      Object.spec.containers{\n        name: container.name,\n       \
+        \ image: \"registry.io/\" + container.image\n      }\n    ),\n    initContainers:\
+        \ has(object.spec.template.spec.initContainers) ?\n      object.spec.template.spec.initContainers.map(container,\n\
+        \        Object.spec.initContainers{\n          name: container.name,\n  \
+        \        image: \"registry.io/\" + container.image\n        }\n      ) : []\n\
+        \  }\n}"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-prepend-image-registry-b7399a-ag1-b
+spec:
+  policyName: other-mpol-prepend-image-registry-b7399a-ag1
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-prepend-image-registry-b7399a-ag2
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: "Object{\n  spec: Object.spec{\n    containers: object.spec.jobTemplate.spec.template.spec.containers.map(container,\
+        \ \n      Object.spec.containers{\n        name: container.name,\n       \
+        \ image: \"registry.io/\" + container.image\n      }\n    ),\n    initContainers:\
+        \ has(object.spec.jobTemplate.spec.template.spec.initContainers) ?\n     \
+        \ object.spec.jobTemplate.spec.template.spec.initContainers.map(container,\n\
+        \        Object.spec.initContainers{\n          name: container.name,\n  \
+        \        image: \"registry.io/\" + container.image\n        }\n      ) : []\n\
+        \  }\n}"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-prepend-image-registry-b7399a-ag2-b
+spec:
+  policyName: other-mpol-prepend-image-registry-b7399a-ag2

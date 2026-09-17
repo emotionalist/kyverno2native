@@ -1,0 +1,151 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-baseline-disallow-privileged-co-edbf4b
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: '(has(object.spec) && ((!(has(object.spec.ephemeralContainers)) ||
+      (has(object.spec.ephemeralContainers) && (object.spec.ephemeralContainers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.privileged))
+      || (has(__x.securityContext.privileged) && ((type(__x.securityContext.privileged)
+      == bool ? __x.securityContext.privileged == false : __x.securityContext.privileged
+      == "false"))))))))))) && (!(has(object.spec.initContainers)) || (has(object.spec.initContainers)
+      && (object.spec.initContainers.all(__x, (!(has(__x.securityContext)) || (has(__x.securityContext)
+      && ((!(has(__x.securityContext.privileged)) || (has(__x.securityContext.privileged)
+      && ((type(__x.securityContext.privileged) == bool ? __x.securityContext.privileged
+      == false : __x.securityContext.privileged == "false"))))))))))) && (has(object.spec.containers)
+      && (object.spec.containers.all(__x, (!(has(__x.securityContext)) || (has(__x.securityContext)
+      && ((!(has(__x.securityContext.privileged)) || (has(__x.securityContext.privileged)
+      && ((type(__x.securityContext.privileged) == bool ? __x.securityContext.privileged
+      == false : __x.securityContext.privileged == "false"))))))))))))'
+    message: Privileged mode is disallowed. The fields spec.containers[*].securityContext.privileged,
+      spec.initContainers[*].securityContext.privileged, and spec.ephemeralContainers[*].security
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-baseline-disallow-privileged-co-edbf4b-b
+spec:
+  policyName: pod-security-baseline-disallow-privileged-co-edbf4b
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-baseline-disallow-privileged-co-edbf4b-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: '(has(object.spec.template.spec) && ((!(has(object.spec.template.spec.ephemeralContainers))
+      || (has(object.spec.template.spec.ephemeralContainers) && (object.spec.template.spec.ephemeralContainers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.privileged))
+      || (has(__x.securityContext.privileged) && ((type(__x.securityContext.privileged)
+      == bool ? __x.securityContext.privileged == false : __x.securityContext.privileged
+      == "false"))))))))))) && (!(has(object.spec.template.spec.initContainers)) ||
+      (has(object.spec.template.spec.initContainers) && (object.spec.template.spec.initContainers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.privileged))
+      || (has(__x.securityContext.privileged) && ((type(__x.securityContext.privileged)
+      == bool ? __x.securityContext.privileged == false : __x.securityContext.privileged
+      == "false"))))))))))) && (has(object.spec.template.spec.containers) && (object.spec.template.spec.containers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.privileged))
+      || (has(__x.securityContext.privileged) && ((type(__x.securityContext.privileged)
+      == bool ? __x.securityContext.privileged == false : __x.securityContext.privileged
+      == "false"))))))))))))'
+    message: Privileged mode is disallowed. The fields spec.containers[*].securityContext.privileged,
+      spec.initContainers[*].securityContext.privileged, and spec.ephemeralContainers[*].security
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-baseline-disallow-privileged-co-edbf4b-ag1-b
+spec:
+  policyName: pod-security-baseline-disallow-privileged-co-edbf4b-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-baseline-disallow-privileged-co-edbf4b-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: '(has(object.spec.jobTemplate.spec.template.spec) && ((!(has(object.spec.jobTemplate.spec.template.spec.ephemeralContainers))
+      || (has(object.spec.jobTemplate.spec.template.spec.ephemeralContainers) && (object.spec.jobTemplate.spec.template.spec.ephemeralContainers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.privileged))
+      || (has(__x.securityContext.privileged) && ((type(__x.securityContext.privileged)
+      == bool ? __x.securityContext.privileged == false : __x.securityContext.privileged
+      == "false"))))))))))) && (!(has(object.spec.jobTemplate.spec.template.spec.initContainers))
+      || (has(object.spec.jobTemplate.spec.template.spec.initContainers) && (object.spec.jobTemplate.spec.template.spec.initContainers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.privileged))
+      || (has(__x.securityContext.privileged) && ((type(__x.securityContext.privileged)
+      == bool ? __x.securityContext.privileged == false : __x.securityContext.privileged
+      == "false"))))))))))) && (has(object.spec.jobTemplate.spec.template.spec.containers)
+      && (object.spec.jobTemplate.spec.template.spec.containers.all(__x, (!(has(__x.securityContext))
+      || (has(__x.securityContext) && ((!(has(__x.securityContext.privileged)) ||
+      (has(__x.securityContext.privileged) && ((type(__x.securityContext.privileged)
+      == bool ? __x.securityContext.privileged == false : __x.securityContext.privileged
+      == "false"))))))))))))'
+    message: Privileged mode is disallowed. The fields spec.containers[*].securityContext.privileged,
+      spec.initContainers[*].securityContext.privileged, and spec.ephemeralContainers[*].security
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-baseline-disallow-privileged-co-edbf4b-ag2-b
+spec:
+  policyName: pod-security-baseline-disallow-privileged-co-edbf4b-ag2
+  validationActions:
+  - Deny

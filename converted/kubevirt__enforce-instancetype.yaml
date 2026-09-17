@@ -1,0 +1,31 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: kubevirt-enforce-instancetype-d65a47
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - kubevirt.io
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - virtualmachines
+  validations:
+  - expression: (has(object.spec) && ((has(object.spec.instancetype) && ((has(object.spec.instancetype.name)
+      && (object.spec.instancetype.name != "")))) && (has(object.spec.preference)
+      && ((has(object.spec.preference.name) && (object.spec.preference.name != ""))))))
+    message: VirtualMachines must use instance types and preferences
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: kubevirt-enforce-instancetype-d65a47-b
+spec:
+  policyName: kubevirt-enforce-instancetype-d65a47
+  validationActions:
+  - Deny

@@ -1,0 +1,30 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-cel-disallow-localhost-services-4911dc
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - services
+  validations:
+  - expression: object.spec.type != 'ExternalName' || object.spec.externalName !=
+      'localhost'
+    message: Service of type ExternalName cannot point to localhost.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-cel-disallow-localhost-services-4911dc-b
+spec:
+  policyName: other-cel-disallow-localhost-services-4911dc
+  validationActions:
+  - Deny

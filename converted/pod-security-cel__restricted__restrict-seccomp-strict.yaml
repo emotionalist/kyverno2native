@@ -1,0 +1,175 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-cel-restricted-restrict-seccomp-72e66c
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: '!object.spec.?securityContext.?seccompProfile.?type.hasValue() ||
+      object.spec.securityContext.seccompProfile.type == ''RuntimeDefault'' || object.spec.securityContext.seccompProfile.type
+      == ''Localhost'''
+    message: Use of custom Seccomp profiles is disallowed. The field spec.securityContext.seccompProfile.type
+      must be set to `RuntimeDefault` or `Localhost`.
+  - expression: "object.spec.containers.all(container,\n  (container.?securityContext.?seccompProfile.?type.orValue('')\
+      \ in ['RuntimeDefault', 'Localhost']) ||\n  (!container.?securityContext.?seccompProfile.?type.hasValue()\
+      \ && object.spec.?securityContext.?seccompProfile.?type.orValue('') in ['RuntimeDefault',\
+      \ 'Localhost'])\n)"
+    message: Use of custom Seccomp profiles is disallowed. The field spec.containers[*].securityContext.seccompProfile.type
+      must be set to `RuntimeDefault` or `Localhost`, or inherited from spec.securityContext.seccompProfile.type.
+  - expression: "object.spec.?initContainers.orValue([]).all(container,\n  (container.?securityContext.?seccompProfile.?type.orValue('')\
+      \ in ['RuntimeDefault', 'Localhost']) ||\n  (!container.?securityContext.?seccompProfile.?type.hasValue()\
+      \ && object.spec.?securityContext.?seccompProfile.?type.orValue('') in ['RuntimeDefault',\
+      \ 'Localhost'])\n)"
+    message: Use of custom Seccomp profiles is disallowed. The field spec.initContainers[*].securityContext.seccompProfile.type
+      must be set to `RuntimeDefault` or `Localhost`, or inherited from spec.securityContext.seccompProfile.type.
+  - expression: "object.spec.?ephemeralContainers.orValue([]).all(container,\n  (container.?securityContext.?seccompProfile.?type.orValue('')\
+      \ in ['RuntimeDefault', 'Localhost']) ||\n  (!container.?securityContext.?seccompProfile.?type.hasValue()\
+      \ && object.spec.?securityContext.?seccompProfile.?type.orValue('') in ['RuntimeDefault',\
+      \ 'Localhost'])\n)"
+    message: Use of custom Seccomp profiles is disallowed. The field spec.ephemeralContainers[*].securityContext.seccompProfile.type
+      must be set to `RuntimeDefault` or `Localhost`, or inherited from spec.securityContext.seccompProfile.type.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-cel-restricted-restrict-seccomp-72e66c-b
+spec:
+  policyName: pod-security-cel-restricted-restrict-seccomp-72e66c
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-cel-restricted-restrict-seccomp-72e66c-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: '!object.spec.template.spec.?securityContext.?seccompProfile.?type.hasValue()
+      || object.spec.template.spec.securityContext.seccompProfile.type == ''RuntimeDefault''
+      || object.spec.template.spec.securityContext.seccompProfile.type == ''Localhost'''
+    message: Use of custom Seccomp profiles is disallowed. The field spec.securityContext.seccompProfile.type
+      must be set to `RuntimeDefault` or `Localhost`.
+  - expression: "object.spec.template.spec.containers.all(container,\n  (container.?securityContext.?seccompProfile.?type.orValue('')\
+      \ in ['RuntimeDefault', 'Localhost']) ||\n  (!container.?securityContext.?seccompProfile.?type.hasValue()\
+      \ && object.spec.template.spec.?securityContext.?seccompProfile.?type.orValue('')\
+      \ in ['RuntimeDefault', 'Localhost'])\n)"
+    message: Use of custom Seccomp profiles is disallowed. The field spec.containers[*].securityContext.seccompProfile.type
+      must be set to `RuntimeDefault` or `Localhost`, or inherited from spec.securityContext.seccompProfile.type.
+  - expression: "object.spec.template.spec.?initContainers.orValue([]).all(container,\n\
+      \  (container.?securityContext.?seccompProfile.?type.orValue('') in ['RuntimeDefault',\
+      \ 'Localhost']) ||\n  (!container.?securityContext.?seccompProfile.?type.hasValue()\
+      \ && object.spec.template.spec.?securityContext.?seccompProfile.?type.orValue('')\
+      \ in ['RuntimeDefault', 'Localhost'])\n)"
+    message: Use of custom Seccomp profiles is disallowed. The field spec.initContainers[*].securityContext.seccompProfile.type
+      must be set to `RuntimeDefault` or `Localhost`, or inherited from spec.securityContext.seccompProfile.type.
+  - expression: "object.spec.template.spec.?ephemeralContainers.orValue([]).all(container,\n\
+      \  (container.?securityContext.?seccompProfile.?type.orValue('') in ['RuntimeDefault',\
+      \ 'Localhost']) ||\n  (!container.?securityContext.?seccompProfile.?type.hasValue()\
+      \ && object.spec.template.spec.?securityContext.?seccompProfile.?type.orValue('')\
+      \ in ['RuntimeDefault', 'Localhost'])\n)"
+    message: Use of custom Seccomp profiles is disallowed. The field spec.ephemeralContainers[*].securityContext.seccompProfile.type
+      must be set to `RuntimeDefault` or `Localhost`, or inherited from spec.securityContext.seccompProfile.type.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-cel-restricted-restrict-seccomp-72e66c-ag1-b
+spec:
+  policyName: pod-security-cel-restricted-restrict-seccomp-72e66c-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-cel-restricted-restrict-seccomp-72e66c-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: '!object.spec.jobTemplate.spec.template.spec.?securityContext.?seccompProfile.?type.hasValue()
+      || object.spec.jobTemplate.spec.template.spec.securityContext.seccompProfile.type
+      == ''RuntimeDefault'' || object.spec.jobTemplate.spec.template.spec.securityContext.seccompProfile.type
+      == ''Localhost'''
+    message: Use of custom Seccomp profiles is disallowed. The field spec.securityContext.seccompProfile.type
+      must be set to `RuntimeDefault` or `Localhost`.
+  - expression: "object.spec.jobTemplate.spec.template.spec.containers.all(container,\n\
+      \  (container.?securityContext.?seccompProfile.?type.orValue('') in ['RuntimeDefault',\
+      \ 'Localhost']) ||\n  (!container.?securityContext.?seccompProfile.?type.hasValue()\
+      \ && object.spec.jobTemplate.spec.template.spec.?securityContext.?seccompProfile.?type.orValue('')\
+      \ in ['RuntimeDefault', 'Localhost'])\n)"
+    message: Use of custom Seccomp profiles is disallowed. The field spec.containers[*].securityContext.seccompProfile.type
+      must be set to `RuntimeDefault` or `Localhost`, or inherited from spec.securityContext.seccompProfile.type.
+  - expression: "object.spec.jobTemplate.spec.template.spec.?initContainers.orValue([]).all(container,\n\
+      \  (container.?securityContext.?seccompProfile.?type.orValue('') in ['RuntimeDefault',\
+      \ 'Localhost']) ||\n  (!container.?securityContext.?seccompProfile.?type.hasValue()\
+      \ && object.spec.jobTemplate.spec.template.spec.?securityContext.?seccompProfile.?type.orValue('')\
+      \ in ['RuntimeDefault', 'Localhost'])\n)"
+    message: Use of custom Seccomp profiles is disallowed. The field spec.initContainers[*].securityContext.seccompProfile.type
+      must be set to `RuntimeDefault` or `Localhost`, or inherited from spec.securityContext.seccompProfile.type.
+  - expression: "object.spec.jobTemplate.spec.template.spec.?ephemeralContainers.orValue([]).all(container,\n\
+      \  (container.?securityContext.?seccompProfile.?type.orValue('') in ['RuntimeDefault',\
+      \ 'Localhost']) ||\n  (!container.?securityContext.?seccompProfile.?type.hasValue()\
+      \ && object.spec.jobTemplate.spec.template.spec.?securityContext.?seccompProfile.?type.orValue('')\
+      \ in ['RuntimeDefault', 'Localhost'])\n)"
+    message: Use of custom Seccomp profiles is disallowed. The field spec.ephemeralContainers[*].securityContext.seccompProfile.type
+      must be set to `RuntimeDefault` or `Localhost`, or inherited from spec.securityContext.seccompProfile.type.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-cel-restricted-restrict-seccomp-72e66c-ag2-b
+spec:
+  policyName: pod-security-cel-restricted-restrict-seccomp-72e66c-ag2
+  validationActions:
+  - Deny

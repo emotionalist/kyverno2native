@@ -1,0 +1,124 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-vpol-baseline-disallow-privileg-b39893
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  variables:
+  - name: allContainers
+    expression: object.spec.containers +  object.spec.?initContainers.orValue([])
+      +  object.spec.?ephemeralContainers.orValue([])
+  validations:
+  - expression: variables.allContainers.all(container, container.?securityContext.?privileged.orValue(false)
+      == false)
+    message: Privileged mode is disallowed. All containers must set the securityContext.privileged
+      field to `false` or unset the field.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-vpol-baseline-disallow-privileg-b39893-b
+spec:
+  policyName: pod-security-vpol-baseline-disallow-privileg-b39893
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-vpol-baseline-disallow-privileg-b39893-ag1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  variables:
+  - name: allContainers
+    expression: object.spec.template.spec.containers +  object.spec.template.spec.?initContainers.orValue([])
+      +  object.spec.template.spec.?ephemeralContainers.orValue([])
+  validations:
+  - expression: variables.allContainers.all(container, container.?securityContext.?privileged.orValue(false)
+      == false)
+    message: Privileged mode is disallowed. All containers must set the securityContext.privileged
+      field to `false` or unset the field.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-vpol-baseline-disallow-privileg-b39893-ag1-b
+spec:
+  policyName: pod-security-vpol-baseline-disallow-privileg-b39893-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-vpol-baseline-disallow-privileg-b39893-ag2
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  variables:
+  - name: allContainers
+    expression: object.spec.jobTemplate.spec.template.spec.containers +  object.spec.jobTemplate.spec.template.spec.?initContainers.orValue([])
+      +  object.spec.jobTemplate.spec.template.spec.?ephemeralContainers.orValue([])
+  validations:
+  - expression: variables.allContainers.all(container, container.?securityContext.?privileged.orValue(false)
+      == false)
+    message: Privileged mode is disallowed. All containers must set the securityContext.privileged
+      field to `false` or unset the field.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-vpol-baseline-disallow-privileg-b39893-ag2-b
+spec:
+  policyName: pod-security-vpol-baseline-disallow-privileg-b39893-ag2
+  validationActions:
+  - Deny

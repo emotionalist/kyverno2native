@@ -1,0 +1,33 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: psa-mpol-add-privileged-existing-namespaces-61ab41
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - namespaces
+  matchConditions:
+  - name: exclude-kube-system
+    expression: object.metadata.name != "kube-system"
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: "Object{\n  metadata: Object.metadata{\n    labels: {\"pod-security.kubernetes.io/enforce\"\
+        : \"privileged\"}\n  }\n}"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: psa-mpol-add-privileged-existing-namespaces-61ab41-b
+spec:
+  policyName: psa-mpol-add-privileged-existing-namespaces-61ab41

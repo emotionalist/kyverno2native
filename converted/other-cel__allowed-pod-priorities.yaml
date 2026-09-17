@@ -1,0 +1,145 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-cel-allowed-pod-priorities-8428fa
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: variables.priorities == [] || object.spec.priorityClassName in variables.priorities
+    messageExpression: '''The Pod PriorityClass '' + object.spec.priorityClassName
+      + '' is not in the list of the following PriorityClasses allowed in this Namespace:
+      '' + params.data[variables.namespaceName]'
+  variables:
+  - name: namespaceName
+    expression: namespaceObject.metadata.name
+  - name: priorities
+    expression: 'variables.namespaceName in params.data ? params.data[variables.namespaceName].split('',
+      '') : []'
+  paramKind:
+    apiVersion: v1
+    kind: ConfigMap
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-cel-allowed-pod-priorities-8428fa-b
+spec:
+  policyName: other-cel-allowed-pod-priorities-8428fa
+  validationActions:
+  - Deny
+  paramRef:
+    name: allowed-pod-priorities
+    namespace: default
+    parameterNotFoundAction: Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-cel-allowed-pod-priorities-8428fa-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: variables.priorities == [] || object.spec.template.spec.priorityClassName
+      in variables.priorities
+    messageExpression: '''The Pod PriorityClass '' + object.spec.template.spec.priorityClassName
+      + '' is not in the list of the following PriorityClasses allowed in this Namespace:
+      '' + params.data[variables.namespaceName]'
+  variables:
+  - name: namespaceName
+    expression: namespaceObject.metadata.name
+  - name: priorities
+    expression: 'variables.namespaceName in params.data ? params.data[variables.namespaceName].split('',
+      '') : []'
+  paramKind:
+    apiVersion: v1
+    kind: ConfigMap
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-cel-allowed-pod-priorities-8428fa-ag1-b
+spec:
+  policyName: other-cel-allowed-pod-priorities-8428fa-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-cel-allowed-pod-priorities-8428fa-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: variables.priorities == [] || object.spec.jobTemplate.spec.template.spec.priorityClassName
+      in variables.priorities
+    messageExpression: '''The Pod PriorityClass '' + object.spec.jobTemplate.spec.template.spec.priorityClassName
+      + '' is not in the list of the following PriorityClasses allowed in this Namespace:
+      '' + params.data[variables.namespaceName]'
+  variables:
+  - name: namespaceName
+    expression: namespaceObject.metadata.name
+  - name: priorities
+    expression: 'variables.namespaceName in params.data ? params.data[variables.namespaceName].split('',
+      '') : []'
+  paramKind:
+    apiVersion: v1
+    kind: ConfigMap
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-cel-allowed-pod-priorities-8428fa-ag2-b
+spec:
+  policyName: other-cel-allowed-pod-priorities-8428fa-ag2
+  validationActions:
+  - Deny

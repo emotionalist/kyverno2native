@@ -1,0 +1,60 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-cel-require-storageclass-352c2e-r0
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - persistentvolumeclaims
+  validations:
+  - expression: object.spec.?storageClassName.orValue('') != ''
+    message: PersistentVolumeClaims must define a storageClassName.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-cel-require-storageclass-352c2e-r0-b
+spec:
+  policyName: other-cel-require-storageclass-352c2e-r0
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-cel-require-storageclass-352c2e-r1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - statefulsets
+  validations:
+  - expression: '!has(object.spec.volumeClaimTemplates) ||  object.spec.volumeClaimTemplates.all(volumeClaimTemplate,  volumeClaimTemplate.spec.?storageClassName.orValue('''')  !=
+      '''')'
+    message: StatefulSets must define a storageClassName.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-cel-require-storageclass-352c2e-r1-b
+spec:
+  policyName: other-cel-require-storageclass-352c2e-r1
+  validationActions:
+  - Deny

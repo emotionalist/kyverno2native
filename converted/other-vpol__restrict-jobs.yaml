@@ -1,0 +1,33 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-restrict-jobs-a9cb8a
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - jobs
+  matchConditions:
+  - name: not-created-by-cronjob
+    expression: '!has(object.metadata.ownerReferences) || object.metadata.ownerReferences[0].kind
+      != ''CronJob'''
+  validations:
+  - expression: 'false'
+    message: Jobs are only allowed if spawned from CronJobs.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-restrict-jobs-a9cb8a-b
+spec:
+  policyName: other-vpol-restrict-jobs-a9cb8a
+  validationActions:
+  - Deny

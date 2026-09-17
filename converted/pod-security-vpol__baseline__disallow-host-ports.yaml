@@ -1,0 +1,124 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-vpol-baseline-disallow-host-por-827432
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  variables:
+  - name: allContainers
+    expression: "object.spec.containers + \n object.spec.?initContainers.orValue([])\
+      \ + \n object.spec.?ephemeralContainers.orValue([])"
+  validations:
+  - expression: "variables.allContainers.all(container, \n  container.?ports.orValue([]).all(port,\
+      \ port.?hostPort.orValue(0) == 0))"
+    message: Use of host ports is disallowed. The field spec.containers[*].ports[*].hostPort
+      must either be unset or set to `0`.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-vpol-baseline-disallow-host-por-827432-b
+spec:
+  policyName: pod-security-vpol-baseline-disallow-host-por-827432
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-vpol-baseline-disallow-host-por-827432-ag1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  variables:
+  - name: allContainers
+    expression: "object.spec.template.spec.containers + \n object.spec.template.spec.?initContainers.orValue([])\
+      \ + \n object.spec.template.spec.?ephemeralContainers.orValue([])"
+  validations:
+  - expression: "variables.allContainers.all(container, \n  container.?ports.orValue([]).all(port,\
+      \ port.?hostPort.orValue(0) == 0))"
+    message: Use of host ports is disallowed. The field spec.containers[*].ports[*].hostPort
+      must either be unset or set to `0`.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-vpol-baseline-disallow-host-por-827432-ag1-b
+spec:
+  policyName: pod-security-vpol-baseline-disallow-host-por-827432-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-vpol-baseline-disallow-host-por-827432-ag2
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  variables:
+  - name: allContainers
+    expression: "object.spec.jobTemplate.spec.template.spec.containers + \n object.spec.jobTemplate.spec.template.spec.?initContainers.orValue([])\
+      \ + \n object.spec.jobTemplate.spec.template.spec.?ephemeralContainers.orValue([])"
+  validations:
+  - expression: "variables.allContainers.all(container, \n  container.?ports.orValue([]).all(port,\
+      \ port.?hostPort.orValue(0) == 0))"
+    message: Use of host ports is disallowed. The field spec.containers[*].ports[*].hostPort
+      must either be unset or set to `0`.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-vpol-baseline-disallow-host-por-827432-ag2-b
+spec:
+  policyName: pod-security-vpol-baseline-disallow-host-por-827432-ag2
+  validationActions:
+  - Deny

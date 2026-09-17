@@ -1,0 +1,209 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-cel-check-deprecated-apis-5657cd-r0
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - '*'
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+    - apiGroups:
+      - discovery.k8s.io
+      apiVersions:
+      - '*'
+      operations: *id001
+      resources:
+      - endpointslices
+    - apiGroups:
+      - events.k8s.io
+      apiVersions:
+      - '*'
+      operations: *id001
+      resources:
+      - events
+    - apiGroups:
+      - node.k8s.io
+      apiVersions:
+      - '*'
+      operations: *id001
+      resources:
+      - runtimeclasses
+    - apiGroups:
+      - policy
+      apiVersions:
+      - '*'
+      operations: *id001
+      resources:
+      - poddisruptionbudgets
+      - podsecuritypolicies
+  validations:
+  - expression: 'false'
+    messageExpression: 'object.apiVersion + ''/'' + object.kind + '' is deprecated
+      and will be removed in v1.25. See: https://kubernetes.io/docs/reference/using-api/deprecation-guide/'''
+  matchConditions:
+  - name: allowed-api-versions
+    expression: object.apiVersion in ['batch/v1beta1', 'discovery.k8s.io/v1beta1',
+      'events.k8s.io/v1beta1', 'policy/v1beta1', 'node.k8s.io/v1beta1']
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-cel-check-deprecated-apis-5657cd-r0-b
+spec:
+  policyName: best-practices-cel-check-deprecated-apis-5657cd-r0
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-cel-check-deprecated-apis-5657cd-r1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - autoscaling
+      apiVersions:
+      - '*'
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - horizontalpodautoscalers
+    - apiGroups:
+      - flowcontrol.apiserver.k8s.io
+      apiVersions:
+      - '*'
+      operations: *id001
+      resources:
+      - flowschemas
+      - prioritylevelconfigurations
+  validations:
+  - expression: 'false'
+    messageExpression: 'object.apiVersion + ''/'' + object.kind + '' is deprecated
+      and will be removed in v1.26. See: https://kubernetes.io/docs/reference/using-api/deprecation-guide/'''
+  matchConditions:
+  - name: allowed-api-versions
+    expression: object.apiVersion in ['flowcontrol.apiserver.k8s.io/v1beta1', 'autoscaling/v2beta2']
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-cel-check-deprecated-apis-5657cd-r1-b
+spec:
+  policyName: best-practices-cel-check-deprecated-apis-5657cd-r1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-cel-check-deprecated-apis-5657cd-r2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - storage.k8s.io
+      apiVersions:
+      - '*'
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - csistoragecapacities
+  validations:
+  - expression: 'false'
+    messageExpression: 'object.apiVersion + ''/'' + object.kind + '' is deprecated
+      and will be removed in v1.27. See: https://kubernetes.io/docs/reference/using-api/deprecation-guide/'''
+  matchConditions:
+  - name: allowed-api-versions
+    expression: object.apiVersion in ['storage.k8s.io/v1beta1']
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-cel-check-deprecated-apis-5657cd-r2-b
+spec:
+  policyName: best-practices-cel-check-deprecated-apis-5657cd-r2
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-cel-check-deprecated-apis-5657cd-r3
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - flowcontrol.apiserver.k8s.io
+      apiVersions:
+      - '*'
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - flowschemas
+      - prioritylevelconfigurations
+  validations:
+  - expression: 'false'
+    messageExpression: 'object.apiVersion + ''/'' + object.kind + '' is deprecated
+      and will be removed in v1.29. See: https://kubernetes.io/docs/reference/using-api/deprecation-guide/'''
+  matchConditions:
+  - name: object.apiVersion
+    expression: object.apiVersion in ['flowcontrol.apiserver.k8s.io/v1beta2']
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-cel-check-deprecated-apis-5657cd-r3-b
+spec:
+  policyName: best-practices-cel-check-deprecated-apis-5657cd-r3
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-cel-check-deprecated-apis-5657cd-r4
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - flowcontrol.apiserver.k8s.io
+      apiVersions:
+      - '*'
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - flowschemas
+      - prioritylevelconfigurations
+  validations:
+  - expression: 'false'
+    messageExpression: 'object.apiVersion + ''/'' + object.kind + '' is deprecated
+      and will be removed in v1.32. See: https://kubernetes.io/docs/reference/using-api/deprecation-guide/'''
+  matchConditions:
+  - name: object.apiVersion
+    expression: object.apiVersion in ['flowcontrol.apiserver.k8s.io/v1beta3']
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-cel-check-deprecated-apis-5657cd-r4-b
+spec:
+  policyName: best-practices-cel-check-deprecated-apis-5657cd-r4
+  validationActions:
+  - Deny

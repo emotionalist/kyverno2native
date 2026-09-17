@@ -1,0 +1,114 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-cel-disallow-latest-tag-29a555
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: object.spec.containers.all(container, container.image.contains(':'))
+    message: An image tag is required.
+  - expression: object.spec.containers.all(container, !container.image.endsWith(':latest'))
+    message: Using a mutable image tag e.g. 'latest' is not allowed.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-cel-disallow-latest-tag-29a555-b
+spec:
+  policyName: best-practices-cel-disallow-latest-tag-29a555
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-cel-disallow-latest-tag-29a555-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: object.spec.template.spec.containers.all(container, container.image.contains(':'))
+    message: An image tag is required.
+  - expression: object.spec.template.spec.containers.all(container, !container.image.endsWith(':latest'))
+    message: Using a mutable image tag e.g. 'latest' is not allowed.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-cel-disallow-latest-tag-29a555-ag1-b
+spec:
+  policyName: best-practices-cel-disallow-latest-tag-29a555-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-cel-disallow-latest-tag-29a555-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: object.spec.jobTemplate.spec.template.spec.containers.all(container,
+      container.image.contains(':'))
+    message: An image tag is required.
+  - expression: object.spec.jobTemplate.spec.template.spec.containers.all(container,
+      !container.image.endsWith(':latest'))
+    message: Using a mutable image tag e.g. 'latest' is not allowed.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-cel-disallow-latest-tag-29a555-ag2-b
+spec:
+  policyName: best-practices-cel-disallow-latest-tag-29a555-ag2
+  validationActions:
+  - Deny

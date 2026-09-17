@@ -1,0 +1,121 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-cel-require-drop-all-bd7cbf
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: variables.allContainers.all(container,  container.?securityContext.?capabilities.?drop.orValue([]).exists(capability,
+      capability.upperAscii() == 'ALL'))
+    message: Containers must drop `ALL` capabilities.
+  variables:
+  - name: allContainers
+    expression: object.spec.containers + object.spec.?initContainers.orValue([]) +
+      object.spec.?ephemeralContainers.orValue([])
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-cel-require-drop-all-bd7cbf-b
+spec:
+  policyName: best-practices-cel-require-drop-all-bd7cbf
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-cel-require-drop-all-bd7cbf-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: variables.allContainers.all(container,  container.?securityContext.?capabilities.?drop.orValue([]).exists(capability,
+      capability.upperAscii() == 'ALL'))
+    message: Containers must drop `ALL` capabilities.
+  variables:
+  - name: allContainers
+    expression: object.spec.template.spec.containers + object.spec.template.spec.?initContainers.orValue([])
+      + object.spec.template.spec.?ephemeralContainers.orValue([])
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-cel-require-drop-all-bd7cbf-ag1-b
+spec:
+  policyName: best-practices-cel-require-drop-all-bd7cbf-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-cel-require-drop-all-bd7cbf-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: variables.allContainers.all(container,  container.?securityContext.?capabilities.?drop.orValue([]).exists(capability,
+      capability.upperAscii() == 'ALL'))
+    message: Containers must drop `ALL` capabilities.
+  variables:
+  - name: allContainers
+    expression: object.spec.jobTemplate.spec.template.spec.containers + object.spec.jobTemplate.spec.template.spec.?initContainers.orValue([])
+      + object.spec.jobTemplate.spec.template.spec.?ephemeralContainers.orValue([])
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-cel-require-drop-all-bd7cbf-ag2-b
+spec:
+  policyName: best-practices-cel-require-drop-all-bd7cbf-ag2
+  validationActions:
+  - Deny

@@ -1,0 +1,150 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-require-pod-requests-limits-0b0704
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: (has(object.spec) && ((has(object.spec.containers) && (object.spec.containers.all(__x,
+      (has(__x.resources) && ((has(__x.resources.requests) && ((has(__x.resources.requests.memory)
+      && (__x.resources.requests.memory != "")) && (has(__x.resources.requests.cpu)
+      && (__x.resources.requests.cpu != "")))) && (has(__x.resources.limits) && ((has(__x.resources.limits.memory)
+      && (__x.resources.limits.memory != ""))))))))) && (!(has(object.spec.initContainers))
+      || (has(object.spec.initContainers) && (object.spec.initContainers.all(__x,
+      (has(__x.resources) && ((has(__x.resources.requests) && ((has(__x.resources.requests.memory)
+      && (__x.resources.requests.memory != "")) && (has(__x.resources.requests.cpu)
+      && (__x.resources.requests.cpu != "")))) && (has(__x.resources.limits) && ((has(__x.resources.limits.memory)
+      && (__x.resources.limits.memory != "")))))))))) && (!(has(object.spec.ephemeralContainers))
+      || (has(object.spec.ephemeralContainers) && (object.spec.ephemeralContainers.all(__x,
+      (has(__x.resources) && ((has(__x.resources.requests) && ((has(__x.resources.requests.memory)
+      && (__x.resources.requests.memory != "")) && (has(__x.resources.requests.cpu)
+      && (__x.resources.requests.cpu != "")))) && (has(__x.resources.limits) && ((has(__x.resources.limits.memory)
+      && (__x.resources.limits.memory != ""))))))))))))
+    message: CPU and memory resource requests and memory limits are required for containers.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-require-pod-requests-limits-0b0704-b
+spec:
+  policyName: best-practices-require-pod-requests-limits-0b0704
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-require-pod-requests-limits-0b0704-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: (has(object.spec.template.spec) && ((has(object.spec.template.spec.containers)
+      && (object.spec.template.spec.containers.all(__x, (has(__x.resources) && ((has(__x.resources.requests)
+      && ((has(__x.resources.requests.memory) && (__x.resources.requests.memory !=
+      "")) && (has(__x.resources.requests.cpu) && (__x.resources.requests.cpu != ""))))
+      && (has(__x.resources.limits) && ((has(__x.resources.limits.memory) && (__x.resources.limits.memory
+      != ""))))))))) && (!(has(object.spec.template.spec.initContainers)) || (has(object.spec.template.spec.initContainers)
+      && (object.spec.template.spec.initContainers.all(__x, (has(__x.resources) &&
+      ((has(__x.resources.requests) && ((has(__x.resources.requests.memory) && (__x.resources.requests.memory
+      != "")) && (has(__x.resources.requests.cpu) && (__x.resources.requests.cpu !=
+      "")))) && (has(__x.resources.limits) && ((has(__x.resources.limits.memory) &&
+      (__x.resources.limits.memory != "")))))))))) && (!(has(object.spec.template.spec.ephemeralContainers))
+      || (has(object.spec.template.spec.ephemeralContainers) && (object.spec.template.spec.ephemeralContainers.all(__x,
+      (has(__x.resources) && ((has(__x.resources.requests) && ((has(__x.resources.requests.memory)
+      && (__x.resources.requests.memory != "")) && (has(__x.resources.requests.cpu)
+      && (__x.resources.requests.cpu != "")))) && (has(__x.resources.limits) && ((has(__x.resources.limits.memory)
+      && (__x.resources.limits.memory != ""))))))))))))
+    message: CPU and memory resource requests and memory limits are required for containers.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-require-pod-requests-limits-0b0704-ag1-b
+spec:
+  policyName: best-practices-require-pod-requests-limits-0b0704-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-require-pod-requests-limits-0b0704-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: (has(object.spec.jobTemplate.spec.template.spec) && ((has(object.spec.jobTemplate.spec.template.spec.containers)
+      && (object.spec.jobTemplate.spec.template.spec.containers.all(__x, (has(__x.resources)
+      && ((has(__x.resources.requests) && ((has(__x.resources.requests.memory) &&
+      (__x.resources.requests.memory != "")) && (has(__x.resources.requests.cpu) &&
+      (__x.resources.requests.cpu != "")))) && (has(__x.resources.limits) && ((has(__x.resources.limits.memory)
+      && (__x.resources.limits.memory != ""))))))))) && (!(has(object.spec.jobTemplate.spec.template.spec.initContainers))
+      || (has(object.spec.jobTemplate.spec.template.spec.initContainers) && (object.spec.jobTemplate.spec.template.spec.initContainers.all(__x,
+      (has(__x.resources) && ((has(__x.resources.requests) && ((has(__x.resources.requests.memory)
+      && (__x.resources.requests.memory != "")) && (has(__x.resources.requests.cpu)
+      && (__x.resources.requests.cpu != "")))) && (has(__x.resources.limits) && ((has(__x.resources.limits.memory)
+      && (__x.resources.limits.memory != "")))))))))) && (!(has(object.spec.jobTemplate.spec.template.spec.ephemeralContainers))
+      || (has(object.spec.jobTemplate.spec.template.spec.ephemeralContainers) && (object.spec.jobTemplate.spec.template.spec.ephemeralContainers.all(__x,
+      (has(__x.resources) && ((has(__x.resources.requests) && ((has(__x.resources.requests.memory)
+      && (__x.resources.requests.memory != "")) && (has(__x.resources.requests.cpu)
+      && (__x.resources.requests.cpu != "")))) && (has(__x.resources.limits) && ((has(__x.resources.limits.memory)
+      && (__x.resources.limits.memory != ""))))))))))))
+    message: CPU and memory resource requests and memory limits are required for containers.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-require-pod-requests-limits-0b0704-ag2-b
+spec:
+  policyName: best-practices-require-pod-requests-limits-0b0704-ag2
+  validationActions:
+  - Deny

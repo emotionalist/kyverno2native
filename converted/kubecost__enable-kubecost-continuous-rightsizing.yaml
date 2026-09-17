@@ -1,0 +1,36 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: kubecost-enable-kubecost-continuous-rightsiz-b565e7
+spec:
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+    objectSelector:
+      matchLabels:
+        env: test
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: 'Object{metadata: Object.metadata{annotations: {"request.autoscaling.kubecost.com/enabled":
+        "true"}}}'
+  matchConditions:
+  - name: addifabsent0
+    expression: '!("request.autoscaling.kubecost.com/enabled" in object.metadata.annotations)'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: kubecost-enable-kubecost-continuous-rightsiz-b565e7-b
+spec:
+  policyName: kubecost-enable-kubecost-continuous-rightsiz-b565e7

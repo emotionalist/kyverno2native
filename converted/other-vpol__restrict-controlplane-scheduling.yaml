@@ -1,0 +1,109 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-restrict-controlplane-scheduling-9fe253
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: '!has(object.spec.tolerations) ||  !object.spec.tolerations.exists(toleration,
+      toleration.?key.orValue('''') in [''node-role.kubernetes.io/master'', ''node-role.kubernetes.io/control-plane''])'
+    message: Pods may not use tolerations which schedule on control plane nodes.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-restrict-controlplane-scheduling-9fe253-b
+spec:
+  policyName: other-vpol-restrict-controlplane-scheduling-9fe253
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-restrict-controlplane-scheduling-9fe253-ag1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: '!has(object.spec.template.spec.tolerations) ||  !object.spec.template.spec.tolerations.exists(toleration,
+      toleration.?key.orValue('''') in [''node-role.kubernetes.io/master'', ''node-role.kubernetes.io/control-plane''])'
+    message: Pods may not use tolerations which schedule on control plane nodes.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-restrict-controlplane-scheduling-9fe253-ag1-b
+spec:
+  policyName: other-vpol-restrict-controlplane-scheduling-9fe253-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-restrict-controlplane-scheduling-9fe253-ag2
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: '!has(object.spec.jobTemplate.spec.template.spec.tolerations) ||  !object.spec.jobTemplate.spec.template.spec.tolerations.exists(toleration,
+      toleration.?key.orValue('''') in [''node-role.kubernetes.io/master'', ''node-role.kubernetes.io/control-plane''])'
+    message: Pods may not use tolerations which schedule on control plane nodes.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-restrict-controlplane-scheduling-9fe253-ag2-b
+spec:
+  policyName: other-vpol-restrict-controlplane-scheduling-9fe253-ag2
+  validationActions:
+  - Deny

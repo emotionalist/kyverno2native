@@ -1,0 +1,31 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: istio-enforce-ambient-mode-namespace-9d0f37
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - namespaces
+  validations:
+  - expression: (has(object.metadata) && ((has(object.metadata.labels) && (("istio.io/dataplane-mode"
+      in object.metadata.labels && (object.metadata.labels["istio.io/dataplane-mode"]
+      == "ambient"))))))
+    message: All new Namespaces must have Istio ambient mode enabled.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: istio-enforce-ambient-mode-namespace-9d0f37-b
+spec:
+  policyName: istio-enforce-ambient-mode-namespace-9d0f37
+  validationActions:
+  - Deny

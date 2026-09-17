@@ -1,0 +1,29 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-restrict-ingress-defaultbackend-7e63d0
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - networking.k8s.io
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - ingresses
+  validations:
+  - expression: (has(object.spec) && ((!(has(object.spec.defaultBackend)))))
+    message: Setting the defaultBackend field is prohibited.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-restrict-ingress-defaultbackend-7e63d0-b
+spec:
+  policyName: other-restrict-ingress-defaultbackend-7e63d0
+  validationActions:
+  - Deny

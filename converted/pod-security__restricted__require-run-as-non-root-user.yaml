@@ -1,0 +1,150 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-restricted-require-run-as-non-r-8c88cc
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: (has(object.spec) && ((!(has(object.spec.securityContext)) || (has(object.spec.securityContext)
+      && ((!(has(object.spec.securityContext.runAsUser)) || (has(object.spec.securityContext.runAsUser)
+      && (object.spec.securityContext.runAsUser > 0)))))) && (!(has(object.spec.ephemeralContainers))
+      || (has(object.spec.ephemeralContainers) && (object.spec.ephemeralContainers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.runAsUser))
+      || (has(__x.securityContext.runAsUser) && (__x.securityContext.runAsUser > 0))))))))))
+      && (!(has(object.spec.initContainers)) || (has(object.spec.initContainers) &&
+      (object.spec.initContainers.all(__x, (!(has(__x.securityContext)) || (has(__x.securityContext)
+      && ((!(has(__x.securityContext.runAsUser)) || (has(__x.securityContext.runAsUser)
+      && (__x.securityContext.runAsUser > 0)))))))))) && (has(object.spec.containers)
+      && (object.spec.containers.all(__x, (!(has(__x.securityContext)) || (has(__x.securityContext)
+      && ((!(has(__x.securityContext.runAsUser)) || (has(__x.securityContext.runAsUser)
+      && (__x.securityContext.runAsUser > 0)))))))))))
+    message: Running as root is not allowed. The fields spec.securityContext.runAsUser,
+      spec.containers[*].securityContext.runAsUser, spec.initContainers[*].securityContext.runAsUser,
+      and spec.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-restricted-require-run-as-non-r-8c88cc-b
+spec:
+  policyName: pod-security-restricted-require-run-as-non-r-8c88cc
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-restricted-require-run-as-non-r-8c88cc-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: (has(object.spec.template.spec) && ((!(has(object.spec.template.spec.securityContext))
+      || (has(object.spec.template.spec.securityContext) && ((!(has(object.spec.template.spec.securityContext.runAsUser))
+      || (has(object.spec.template.spec.securityContext.runAsUser) && (object.spec.template.spec.securityContext.runAsUser
+      > 0)))))) && (!(has(object.spec.template.spec.ephemeralContainers)) || (has(object.spec.template.spec.ephemeralContainers)
+      && (object.spec.template.spec.ephemeralContainers.all(__x, (!(has(__x.securityContext))
+      || (has(__x.securityContext) && ((!(has(__x.securityContext.runAsUser)) || (has(__x.securityContext.runAsUser)
+      && (__x.securityContext.runAsUser > 0)))))))))) && (!(has(object.spec.template.spec.initContainers))
+      || (has(object.spec.template.spec.initContainers) && (object.spec.template.spec.initContainers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.runAsUser))
+      || (has(__x.securityContext.runAsUser) && (__x.securityContext.runAsUser > 0))))))))))
+      && (has(object.spec.template.spec.containers) && (object.spec.template.spec.containers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.runAsUser))
+      || (has(__x.securityContext.runAsUser) && (__x.securityContext.runAsUser > 0)))))))))))
+    message: Running as root is not allowed. The fields spec.securityContext.runAsUser,
+      spec.containers[*].securityContext.runAsUser, spec.initContainers[*].securityContext.runAsUser,
+      and spec.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-restricted-require-run-as-non-r-8c88cc-ag1-b
+spec:
+  policyName: pod-security-restricted-require-run-as-non-r-8c88cc-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-restricted-require-run-as-non-r-8c88cc-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: (has(object.spec.jobTemplate.spec.template.spec) && ((!(has(object.spec.jobTemplate.spec.template.spec.securityContext))
+      || (has(object.spec.jobTemplate.spec.template.spec.securityContext) && ((!(has(object.spec.jobTemplate.spec.template.spec.securityContext.runAsUser))
+      || (has(object.spec.jobTemplate.spec.template.spec.securityContext.runAsUser)
+      && (object.spec.jobTemplate.spec.template.spec.securityContext.runAsUser > 0))))))
+      && (!(has(object.spec.jobTemplate.spec.template.spec.ephemeralContainers)) ||
+      (has(object.spec.jobTemplate.spec.template.spec.ephemeralContainers) && (object.spec.jobTemplate.spec.template.spec.ephemeralContainers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.runAsUser))
+      || (has(__x.securityContext.runAsUser) && (__x.securityContext.runAsUser > 0))))))))))
+      && (!(has(object.spec.jobTemplate.spec.template.spec.initContainers)) || (has(object.spec.jobTemplate.spec.template.spec.initContainers)
+      && (object.spec.jobTemplate.spec.template.spec.initContainers.all(__x, (!(has(__x.securityContext))
+      || (has(__x.securityContext) && ((!(has(__x.securityContext.runAsUser)) || (has(__x.securityContext.runAsUser)
+      && (__x.securityContext.runAsUser > 0)))))))))) && (has(object.spec.jobTemplate.spec.template.spec.containers)
+      && (object.spec.jobTemplate.spec.template.spec.containers.all(__x, (!(has(__x.securityContext))
+      || (has(__x.securityContext) && ((!(has(__x.securityContext.runAsUser)) || (has(__x.securityContext.runAsUser)
+      && (__x.securityContext.runAsUser > 0)))))))))))
+    message: Running as root is not allowed. The fields spec.securityContext.runAsUser,
+      spec.containers[*].securityContext.runAsUser, spec.initContainers[*].securityContext.runAsUser,
+      and spec.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-restricted-require-run-as-non-r-8c88cc-ag2-b
+spec:
+  policyName: pod-security-restricted-require-run-as-non-r-8c88cc-ag2
+  validationActions:
+  - Deny

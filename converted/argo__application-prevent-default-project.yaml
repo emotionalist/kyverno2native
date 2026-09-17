@@ -1,0 +1,33 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: argo-application-prevent-default-project-1dcb3b
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - argoproj.io
+      apiVersions:
+      - v1alpha1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - applications
+  validations:
+  - expression: (has(object.spec) && ((has(object.spec.project) && (object.spec.project
+      != "default"))))
+    message: The default project may not be used in an Application.
+  matchConditions:
+  - name: preconditions
+    expression: (request.operation != "DELETE")
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: argo-application-prevent-default-project-1dcb3b-b
+spec:
+  policyName: argo-application-prevent-default-project-1dcb3b
+  validationActions:
+  - Deny

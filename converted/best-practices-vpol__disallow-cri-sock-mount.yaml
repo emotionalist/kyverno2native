@@ -1,0 +1,157 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-vpol-disallow-cri-sock-mount-0de192
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  variables:
+  - name: hasVolumes
+    expression: '!has(object.spec.volumes)'
+  - name: volumes
+    expression: object.spec.volumes
+  - name: volumesWithHostPath
+    expression: variables.volumes.filter(volume, has(volume.hostPath))
+  validations:
+  - expression: variables.hasVolumes ||  variables.volumesWithHostPath.all(volume,
+      !volume.hostPath.path.matches('/var/run/docker.sock'))
+    message: Use of the Docker Unix socket is not allowed.
+  - expression: variables.hasVolumes ||  variables.volumesWithHostPath.all(volume,
+      !volume.hostPath.path.matches('/var/run/containerd/containerd.sock'))
+    message: Use of the Containerd Unix socket is not allowed.
+  - expression: variables.hasVolumes ||  variables.volumesWithHostPath.all(volume,
+      !volume.hostPath.path.matches('/var/run/crio/crio.sock'))
+    message: Use of the CRI-O Unix socket is not allowed.
+  - expression: variables.hasVolumes ||  variables.volumesWithHostPath.all(volume,
+      !volume.hostPath.path.matches('/var/run/cri-dockerd.sock'))
+    message: Use of the Docker CRI socket is not allowed.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-vpol-disallow-cri-sock-mount-0de192-b
+spec:
+  policyName: best-practices-vpol-disallow-cri-sock-mount-0de192
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-vpol-disallow-cri-sock-mount-0de192-ag1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  variables:
+  - name: hasVolumes
+    expression: '!has(object.spec.template.spec.volumes)'
+  - name: volumes
+    expression: object.spec.template.spec.volumes
+  - name: volumesWithHostPath
+    expression: variables.volumes.filter(volume, has(volume.hostPath))
+  validations:
+  - expression: variables.hasVolumes ||  variables.volumesWithHostPath.all(volume,
+      !volume.hostPath.path.matches('/var/run/docker.sock'))
+    message: Use of the Docker Unix socket is not allowed.
+  - expression: variables.hasVolumes ||  variables.volumesWithHostPath.all(volume,
+      !volume.hostPath.path.matches('/var/run/containerd/containerd.sock'))
+    message: Use of the Containerd Unix socket is not allowed.
+  - expression: variables.hasVolumes ||  variables.volumesWithHostPath.all(volume,
+      !volume.hostPath.path.matches('/var/run/crio/crio.sock'))
+    message: Use of the CRI-O Unix socket is not allowed.
+  - expression: variables.hasVolumes ||  variables.volumesWithHostPath.all(volume,
+      !volume.hostPath.path.matches('/var/run/cri-dockerd.sock'))
+    message: Use of the Docker CRI socket is not allowed.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-vpol-disallow-cri-sock-mount-0de192-ag1-b
+spec:
+  policyName: best-practices-vpol-disallow-cri-sock-mount-0de192-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-vpol-disallow-cri-sock-mount-0de192-ag2
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  variables:
+  - name: hasVolumes
+    expression: '!has(object.spec.jobTemplate.spec.template.spec.volumes)'
+  - name: volumes
+    expression: object.spec.jobTemplate.spec.template.spec.volumes
+  - name: volumesWithHostPath
+    expression: variables.volumes.filter(volume, has(volume.hostPath))
+  validations:
+  - expression: variables.hasVolumes ||  variables.volumesWithHostPath.all(volume,
+      !volume.hostPath.path.matches('/var/run/docker.sock'))
+    message: Use of the Docker Unix socket is not allowed.
+  - expression: variables.hasVolumes ||  variables.volumesWithHostPath.all(volume,
+      !volume.hostPath.path.matches('/var/run/containerd/containerd.sock'))
+    message: Use of the Containerd Unix socket is not allowed.
+  - expression: variables.hasVolumes ||  variables.volumesWithHostPath.all(volume,
+      !volume.hostPath.path.matches('/var/run/crio/crio.sock'))
+    message: Use of the CRI-O Unix socket is not allowed.
+  - expression: variables.hasVolumes ||  variables.volumesWithHostPath.all(volume,
+      !volume.hostPath.path.matches('/var/run/cri-dockerd.sock'))
+    message: Use of the Docker CRI socket is not allowed.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-vpol-disallow-cri-sock-mount-0de192-ag2-b
+spec:
+  policyName: best-practices-vpol-disallow-cri-sock-mount-0de192-ag2
+  validationActions:
+  - Deny

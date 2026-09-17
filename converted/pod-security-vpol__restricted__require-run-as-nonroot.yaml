@@ -1,0 +1,133 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-vpol-restricted-require-run-as-a2b75e
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  variables:
+  - name: ctnrs
+    expression: object.spec.containers +  object.spec.?initContainers.orValue([])
+      +  object.spec.?ephemeralContainers.orValue([])
+  validations:
+  - expression: "(object.spec.?securityContext.?runAsNonRoot.orValue(false) == true\n\
+      \  && variables.ctnrs.all(c, c.?securityContext.?runAsNonRoot.orValue(true)\
+      \ == true))\n  || variables.ctnrs.all(c, c.?securityContext.?runAsNonRoot.orValue(false)\
+      \ == true)"
+    message: Running as root is not allowed. Either spec.securityContext.runAsNonRoot  must
+      be set to true, or all containers (spec.containers[*], spec.initContainers[*],  spec.ephemeralContainers[*])
+      must have securityContext.runAsNonRoot set to true.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-vpol-restricted-require-run-as-a2b75e-b
+spec:
+  policyName: pod-security-vpol-restricted-require-run-as-a2b75e
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-vpol-restricted-require-run-as-a2b75e-ag1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  variables:
+  - name: ctnrs
+    expression: object.spec.template.spec.containers +  object.spec.template.spec.?initContainers.orValue([])
+      +  object.spec.template.spec.?ephemeralContainers.orValue([])
+  validations:
+  - expression: "(object.spec.template.spec.?securityContext.?runAsNonRoot.orValue(false)\
+      \ == true\n  && variables.ctnrs.all(c, c.?securityContext.?runAsNonRoot.orValue(true)\
+      \ == true))\n  || variables.ctnrs.all(c, c.?securityContext.?runAsNonRoot.orValue(false)\
+      \ == true)"
+    message: Running as root is not allowed. Either spec.securityContext.runAsNonRoot  must
+      be set to true, or all containers (spec.containers[*], spec.initContainers[*],  spec.ephemeralContainers[*])
+      must have securityContext.runAsNonRoot set to true.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-vpol-restricted-require-run-as-a2b75e-ag1-b
+spec:
+  policyName: pod-security-vpol-restricted-require-run-as-a2b75e-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-vpol-restricted-require-run-as-a2b75e-ag2
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  variables:
+  - name: ctnrs
+    expression: object.spec.jobTemplate.spec.template.spec.containers +  object.spec.jobTemplate.spec.template.spec.?initContainers.orValue([])
+      +  object.spec.jobTemplate.spec.template.spec.?ephemeralContainers.orValue([])
+  validations:
+  - expression: "(object.spec.jobTemplate.spec.template.spec.?securityContext.?runAsNonRoot.orValue(false)\
+      \ == true\n  && variables.ctnrs.all(c, c.?securityContext.?runAsNonRoot.orValue(true)\
+      \ == true))\n  || variables.ctnrs.all(c, c.?securityContext.?runAsNonRoot.orValue(false)\
+      \ == true)"
+    message: Running as root is not allowed. Either spec.securityContext.runAsNonRoot  must
+      be set to true, or all containers (spec.containers[*], spec.initContainers[*],  spec.ephemeralContainers[*])
+      must have securityContext.runAsNonRoot set to true.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-vpol-restricted-require-run-as-a2b75e-ag2-b
+spec:
+  policyName: pod-security-vpol-restricted-require-run-as-a2b75e-ag2
+  validationActions:
+  - Deny

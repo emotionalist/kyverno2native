@@ -1,0 +1,32 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-ensure-probes-different-aa673a
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      resources:
+      - deployments
+      - daemonsets
+      - statefulsets
+      operations:
+      - CREATE
+      - UPDATE
+  validations:
+  - expression: '!object.spec.template.spec.containers.exists(container,  has(container.readinessProbe)
+      && has(container.livenessProbe) && container.readinessProbe == container.livenessProbe)'
+    message: Liveness and readiness probes cannot be the same.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-ensure-probes-different-aa673a-b
+spec:
+  policyName: other-vpol-ensure-probes-different-aa673a
+  validationActions:
+  - Deny

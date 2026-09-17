@@ -1,0 +1,53 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-validate-initdata-configmap-e9be60
+spec:
+  matchConditions:
+  - expression: has(object.metadata.labels) && 'coco.io/type' in object.metadata.labels
+      && object.metadata.labels['coco.io/type'] == 'initdata'
+    name: has-initdata-label
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - configmaps
+  validations:
+  - expression: '''version'' in variables.configData && variables.configData[''version'']
+      != '''''
+    messageExpression: '''ConfigMap must contain a non-empty version field'''
+  - expression: '''algorithm'' in variables.configData && variables.configData[''algorithm'']
+      in variables.allowedAlgorithms'
+    messageExpression: '''ConfigMap must contain an algorithm field with value sha256,
+      sha384, or sha512, found: '' + (''algorithm'' in variables.configData ? variables.configData[''algorithm'']
+      : ''missing'')'
+  - expression: '''policy.rego'' in variables.configData && variables.configData[''policy.rego'']
+      != '''''
+    messageExpression: '''ConfigMap must contain a non-empty policy.rego field'''
+  - expression: '''aa.toml'' in variables.configData && variables.configData[''aa.toml'']
+      != '''''
+    messageExpression: '''ConfigMap must contain a non-empty aa.toml field'''
+  - expression: '''cdh.toml'' in variables.configData && variables.configData[''cdh.toml'']
+      != '''''
+    messageExpression: '''ConfigMap must contain a non-empty cdh.toml field'''
+  variables:
+  - expression: object.data.orValue({})
+    name: configData
+  - expression: '["sha256", "sha384", "sha512"]'
+    name: allowedAlgorithms
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-validate-initdata-configmap-e9be60-b
+spec:
+  policyName: other-vpol-validate-initdata-configmap-e9be60
+  validationActions:
+  - Deny

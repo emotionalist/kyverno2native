@@ -1,0 +1,127 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-add-default-resources-5a8dcf
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: "Object{\n  spec: Object.spec{\n    containers: object.spec.containers.map(c,\n\
+        \      Object.spec.containers{\n        name: c.name,\n        resources:\
+        \ Object.spec.containers.resources{\n          requests: Object.spec.containers.resources.requests{\n\
+        \            cpu: has(c.resources) && has(c.resources.requests) && has(c.resources.requests.cpu)\n\
+        \                 ? c.resources.requests.cpu\n                 : \"100m\"\
+        ,\n            memory: has(c.resources) && has(c.resources.requests) && has(c.resources.requests.memory)\n\
+        \                  ? c.resources.requests.memory\n                  : \"100Mi\"\
+        \n          }\n        }\n      }\n    )\n  }\n}"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-add-default-resources-5a8dcf-b
+spec:
+  policyName: other-mpol-add-default-resources-5a8dcf
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-add-default-resources-5a8dcf-ag1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: "Object{\n  spec: Object.spec{\n    containers: object.spec.template.spec.containers.map(c,\n\
+        \      Object.spec.containers{\n        name: c.name,\n        resources:\
+        \ Object.spec.containers.resources{\n          requests: Object.spec.containers.resources.requests{\n\
+        \            cpu: has(c.resources) && has(c.resources.requests) && has(c.resources.requests.cpu)\n\
+        \                 ? c.resources.requests.cpu\n                 : \"100m\"\
+        ,\n            memory: has(c.resources) && has(c.resources.requests) && has(c.resources.requests.memory)\n\
+        \                  ? c.resources.requests.memory\n                  : \"100Mi\"\
+        \n          }\n        }\n      }\n    )\n  }\n}"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-add-default-resources-5a8dcf-ag1-b
+spec:
+  policyName: other-mpol-add-default-resources-5a8dcf-ag1
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-add-default-resources-5a8dcf-ag2
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: "Object{\n  spec: Object.spec{\n    containers: object.spec.jobTemplate.spec.template.spec.containers.map(c,\n\
+        \      Object.spec.containers{\n        name: c.name,\n        resources:\
+        \ Object.spec.containers.resources{\n          requests: Object.spec.containers.resources.requests{\n\
+        \            cpu: has(c.resources) && has(c.resources.requests) && has(c.resources.requests.cpu)\n\
+        \                 ? c.resources.requests.cpu\n                 : \"100m\"\
+        ,\n            memory: has(c.resources) && has(c.resources.requests) && has(c.resources.requests.memory)\n\
+        \                  ? c.resources.requests.memory\n                  : \"100Mi\"\
+        \n          }\n        }\n      }\n    )\n  }\n}"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-add-default-resources-5a8dcf-ag2-b
+spec:
+  policyName: other-mpol-add-default-resources-5a8dcf-ag2

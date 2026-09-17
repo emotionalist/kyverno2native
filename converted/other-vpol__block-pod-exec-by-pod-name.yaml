@@ -1,0 +1,32 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-block-pod-exec-by-pod-name-ef1593
+spec:
+  matchConstraints:
+    resourceRules:
+    - resources:
+      - pods/exec
+      operations:
+      - CONNECT
+      apiGroups:
+      - ''
+      apiVersions:
+      - v1
+  validations:
+  - message: 'Exec''ing into Pods called "myapp-maintenance" is not allowed.
+
+      '
+    expression: '!request.name.startsWith("myapp-maintenance-")
+
+      '
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-block-pod-exec-by-pod-name-ef1593-b
+spec:
+  policyName: other-vpol-block-pod-exec-by-pod-name-ef1593
+  validationActions:
+  - Deny

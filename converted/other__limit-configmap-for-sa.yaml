@@ -1,0 +1,35 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-limit-configmap-for-sa-f1328c
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - configmaps
+  validations:
+  - expression: '!(((request.operation == "UPDATE" || request.operation == "CREATE")))'
+    message: '{{request.object.metadata.namespace}}/{{request.object.kind}}/{{request.object.metadata.name}}
+      resource is protected. Admin or allowed users can change the resource'
+  matchConditions:
+  - name: preconditions
+    expression: ((object.metadata.namespace == "any-namespace" || object.metadata.namespace
+      == "another-namespace")) && ((object.metadata.name == "any-configmap-name-good"
+      || object.metadata.name == "another-configmap-name"))
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-limit-configmap-for-sa-f1328c-b
+spec:
+  policyName: other-limit-configmap-for-sa-f1328c
+  validationActions:
+  - Deny

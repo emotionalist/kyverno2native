@@ -1,0 +1,29 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: openshift-cel-check-routes-c074fc
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - route.openshift.io
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - routes
+  validations:
+  - expression: has(object.spec.tls)
+    message: HTTP routes are not allowed. Configure TLS for secure routes.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: openshift-cel-check-routes-c074fc-b
+spec:
+  policyName: openshift-cel-check-routes-c074fc
+  validationActions:
+  - Deny

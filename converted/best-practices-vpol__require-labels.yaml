@@ -1,0 +1,119 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-vpol-require-labels-9e57ea
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: has(object.metadata.labels) && 'app.kubernetes.io/name' in object.metadata.labels
+      && object.metadata.labels['app.kubernetes.io/name'] != ''
+    messageExpression: '''Pod '' + object.metadata.name + '' must have the label app.kubernetes.io/name
+      with a non-empty value. Found labels: '' + (has(object.metadata.labels) ? string(object.metadata.labels)
+      : ''none'')'
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-vpol-require-labels-9e57ea-b
+spec:
+  policyName: best-practices-vpol-require-labels-9e57ea
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-vpol-require-labels-9e57ea-ag1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: has(object.spec.template.metadata.labels) && 'app.kubernetes.io/name'
+      in object.spec.template.metadata.labels && object.spec.template.metadata.labels['app.kubernetes.io/name']
+      != ''
+    messageExpression: '''Pod '' + object.spec.template.metadata.name + '' must have
+      the label app.kubernetes.io/name with a non-empty value. Found labels: '' +
+      (has(object.spec.template.metadata.labels) ? string(object.spec.template.metadata.labels)
+      : ''none'')'
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-vpol-require-labels-9e57ea-ag1-b
+spec:
+  policyName: best-practices-vpol-require-labels-9e57ea-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-vpol-require-labels-9e57ea-ag2
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: has(object.spec.jobTemplate.spec.template.metadata.labels) && 'app.kubernetes.io/name'
+      in object.spec.jobTemplate.spec.template.metadata.labels && object.spec.jobTemplate.spec.template.metadata.labels['app.kubernetes.io/name']
+      != ''
+    messageExpression: '''Pod '' + object.spec.jobTemplate.spec.template.metadata.name
+      + '' must have the label app.kubernetes.io/name with a non-empty value. Found
+      labels: '' + (has(object.spec.jobTemplate.spec.template.metadata.labels) ? string(object.spec.jobTemplate.spec.template.metadata.labels)
+      : ''none'')'
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-vpol-require-labels-9e57ea-ag2-b
+spec:
+  policyName: best-practices-vpol-require-labels-9e57ea-ag2
+  validationActions:
+  - Deny

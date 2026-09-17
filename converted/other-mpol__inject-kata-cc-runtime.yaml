@@ -1,0 +1,122 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-inject-kata-cc-runtime-3a0476
+spec:
+  matchConditions:
+  - expression: has(object.metadata.labels) && 'coco' in object.metadata.labels &&
+      object.metadata.labels['coco'] == 'enabled'
+    name: has-coco-enabled-label
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  mutations:
+  - applyConfiguration:
+      expression: "Object{\n  spec: Object.spec{\n    runtimeClassName: \"kata-cc\"\
+        \n  }\n}\n"
+    patchType: ApplyConfiguration
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-inject-kata-cc-runtime-3a0476-b
+spec:
+  policyName: other-mpol-inject-kata-cc-runtime-3a0476
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-inject-kata-cc-runtime-3a0476-ag1
+spec:
+  matchConditions:
+  - expression: has(object.spec.template.metadata.labels) && 'coco' in object.spec.template.metadata.labels
+      && object.spec.template.metadata.labels['coco'] == 'enabled'
+    name: has-coco-enabled-label
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  mutations:
+  - applyConfiguration:
+      expression: "Object{\n  spec: Object.spec{\n    runtimeClassName: \"kata-cc\"\
+        \n  }\n}\n"
+    patchType: ApplyConfiguration
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-inject-kata-cc-runtime-3a0476-ag1-b
+spec:
+  policyName: other-mpol-inject-kata-cc-runtime-3a0476-ag1
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-inject-kata-cc-runtime-3a0476-ag2
+spec:
+  matchConditions:
+  - expression: has(object.spec.jobTemplate.spec.template.metadata.labels) && 'coco'
+      in object.spec.jobTemplate.spec.template.metadata.labels && object.spec.jobTemplate.spec.template.metadata.labels['coco']
+      == 'enabled'
+    name: has-coco-enabled-label
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  mutations:
+  - applyConfiguration:
+      expression: "Object{\n  spec: Object.spec{\n    runtimeClassName: \"kata-cc\"\
+        \n  }\n}\n"
+    patchType: ApplyConfiguration
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-inject-kata-cc-runtime-3a0476-ag2-b
+spec:
+  policyName: other-mpol-inject-kata-cc-runtime-3a0476-ag2

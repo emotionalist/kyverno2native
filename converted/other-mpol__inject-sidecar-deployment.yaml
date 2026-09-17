@@ -1,0 +1,50 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-inject-sidecar-deployment-4f4754
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+  matchConditions:
+  - name: check-annotation
+    expression: has(object.spec.template.metadata.annotations) &&  "vault.hashicorp.com/agent-inject"
+      in object.spec.template.metadata.annotations && object.spec.template.metadata.annotations["vault.hashicorp.com/agent-inject"]
+      == "true"
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: "Object{\n  spec: Object.spec{\n    template: Object.spec.template{\n\
+        \      spec: Object.spec.template.spec{\n        containers: [\n         \
+        \ Object.spec.template.spec.containers{\n            name: \"vault-agent\"\
+        ,\n            image: \"vault:1.5.4\",\n            imagePullPolicy: \"IfNotPresent\"\
+        ,\n            volumeMounts: [\n              Object.spec.template.spec.containers.volumeMounts{\n\
+        \                mountPath: \"/vault/secrets\",\n                name: \"\
+        vault-secret\"\n              }\n            ]\n          }\n        ],\n\
+        \        initContainers: [\n          Object.spec.template.spec.initContainers{\n\
+        \            name: \"vault-agent-init\",\n            image: \"vault:1.5.4\"\
+        ,\n            imagePullPolicy: \"IfNotPresent\",\n            volumeMounts:\
+        \ [\n              Object.spec.template.spec.initContainers.volumeMounts{\n\
+        \                mountPath: \"/vault/secrets\",\n                name: \"\
+        vault-secret\"\n              }\n            ]\n          }\n        ],\n\
+        \        volumes: [\n          Object.spec.template.spec.volumes{\n      \
+        \      name: \"vault-secret\",\n            emptyDir: Object.spec.template.spec.volumes.emptyDir{\n\
+        \              medium: \"Memory\"\n            }\n          }\n        ]\n\
+        \      }\n    }\n  }\n}"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-inject-sidecar-deployment-4f4754-b
+spec:
+  policyName: other-mpol-inject-sidecar-deployment-4f4754

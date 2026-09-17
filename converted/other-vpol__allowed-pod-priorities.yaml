@@ -1,0 +1,154 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-allowed-pod-priorities-0538da
+spec:
+  failurePolicy: Fail
+  paramKind:
+    apiVersion: v1
+    kind: ConfigMap
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  variables:
+  - name: namespaceName
+    expression: namespaceObject.metadata.name
+  - name: priorities
+    expression: 'variables.namespaceName in params.data ? params.data[variables.namespaceName].split('', '')
+      : []'
+  validations:
+  - expression: 'variables.priorities == [] || object.spec.?priorityClassName.orValue('''')
+      in variables.priorities'
+    messageExpression: '''The Pod PriorityClass '' + object.spec.?priorityClassName.orValue('''')
+      + '' is not in the list of the following PriorityClasses allowed in this Namespace: ''
+      + params.data[variables.namespaceName]'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-allowed-pod-priorities-0538da-b
+spec:
+  policyName: other-vpol-allowed-pod-priorities-0538da
+  paramRef:
+    name: allowed-pod-priorities
+    namespace: default
+    parameterNotFoundAction: Allow
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-allowed-pod-priorities-0538da-ag1
+spec:
+  failurePolicy: Fail
+  paramKind:
+    apiVersion: v1
+    kind: ConfigMap
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  variables:
+  - name: namespaceName
+    expression: namespaceObject.metadata.name
+  - name: priorities
+    expression: 'variables.namespaceName in params.data ? params.data[variables.namespaceName].split('', '')
+      : []'
+  validations:
+  - expression: 'variables.priorities == [] || object.spec.template.spec.?priorityClassName.orValue('''')
+      in variables.priorities'
+    messageExpression: '''The Pod PriorityClass '' + object.spec.template.spec.?priorityClassName.orValue('''')
+      + '' is not in the list of the following PriorityClasses allowed in this Namespace: ''
+      + params.data[variables.namespaceName]'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-allowed-pod-priorities-0538da-ag1-b
+spec:
+  policyName: other-vpol-allowed-pod-priorities-0538da-ag1
+  paramRef:
+    name: allowed-pod-priorities
+    namespace: default
+    parameterNotFoundAction: Allow
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-allowed-pod-priorities-0538da-ag2
+spec:
+  failurePolicy: Fail
+  paramKind:
+    apiVersion: v1
+    kind: ConfigMap
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  variables:
+  - name: namespaceName
+    expression: namespaceObject.metadata.name
+  - name: priorities
+    expression: 'variables.namespaceName in params.data ? params.data[variables.namespaceName].split('', '')
+      : []'
+  validations:
+  - expression: 'variables.priorities == [] || object.spec.jobTemplate.spec.template.spec.?priorityClassName.orValue('''')
+      in variables.priorities'
+    messageExpression: '''The Pod PriorityClass '' + object.spec.jobTemplate.spec.template.spec.?priorityClassName.orValue('''')
+      + '' is not in the list of the following PriorityClasses allowed in this Namespace: ''
+      + params.data[variables.namespaceName]'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-allowed-pod-priorities-0538da-ag2-b
+spec:
+  policyName: other-vpol-allowed-pod-priorities-0538da-ag2
+  paramRef:
+    name: allowed-pod-priorities
+    namespace: default
+    parameterNotFoundAction: Allow
+  validationActions:
+  - Deny

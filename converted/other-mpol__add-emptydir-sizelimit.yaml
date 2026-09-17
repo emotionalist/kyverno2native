@@ -1,0 +1,123 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-add-emptydir-sizelimit-32b0db
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: "Object{\n  spec: Object.spec{\n    volumes: (\n      has(object.spec.volumes)\n\
+        \      ? object.spec.volumes.map(v,\n          has(v.emptyDir)\n         \
+        \ ? Object.spec.volumes{\n              name: v.name,\n              emptyDir:\
+        \ Object.spec.volumes.emptyDir{\n                sizeLimit: has(v.emptyDir.sizeLimit)\
+        \ ? v.emptyDir.sizeLimit : \"100Mi\"\n              }\n            }\n   \
+        \       : v\n        )\n      : object.spec.volumes\n    )\n  }\n}"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-add-emptydir-sizelimit-32b0db-b
+spec:
+  policyName: other-mpol-add-emptydir-sizelimit-32b0db
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-add-emptydir-sizelimit-32b0db-ag1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: "Object{\n  spec: Object.spec{\n    volumes: (\n      has(object.spec.template.spec.volumes)\n\
+        \      ? object.spec.template.spec.volumes.map(v,\n          has(v.emptyDir)\n\
+        \          ? Object.spec.volumes{\n              name: v.name,\n         \
+        \     emptyDir: Object.spec.volumes.emptyDir{\n                sizeLimit:\
+        \ has(v.emptyDir.sizeLimit) ? v.emptyDir.sizeLimit : \"100Mi\"\n         \
+        \     }\n            }\n          : v\n        )\n      : object.spec.template.spec.volumes\n\
+        \    )\n  }\n}"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-add-emptydir-sizelimit-32b0db-ag1-b
+spec:
+  policyName: other-mpol-add-emptydir-sizelimit-32b0db-ag1
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-add-emptydir-sizelimit-32b0db-ag2
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: "Object{\n  spec: Object.spec{\n    volumes: (\n      has(object.spec.jobTemplate.spec.template.spec.volumes)\n\
+        \      ? object.spec.jobTemplate.spec.template.spec.volumes.map(v,\n     \
+        \     has(v.emptyDir)\n          ? Object.spec.volumes{\n              name:\
+        \ v.name,\n              emptyDir: Object.spec.volumes.emptyDir{\n       \
+        \         sizeLimit: has(v.emptyDir.sizeLimit) ? v.emptyDir.sizeLimit : \"\
+        100Mi\"\n              }\n            }\n          : v\n        )\n      :\
+        \ object.spec.jobTemplate.spec.template.spec.volumes\n    )\n  }\n}"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-add-emptydir-sizelimit-32b0db-ag2-b
+spec:
+  policyName: other-mpol-add-emptydir-sizelimit-32b0db-ag2

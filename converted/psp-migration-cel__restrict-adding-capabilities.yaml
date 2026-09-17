@@ -1,0 +1,127 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: psp-migration-cel-restrict-adding-capabiliti-fd7fcb
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: variables.allContainers.all(container,  container.?securityContext.?capabilities.?add.orValue([]).all(capability,
+      capability in variables.allowedCapabilities))
+    message: Any capabilities added other than NET_BIND_SERVICE or CAP_CHOWN are disallowed.
+  variables:
+  - name: allContainers
+    expression: object.spec.containers + object.spec.?initContainers.orValue([]) +
+      object.spec.?ephemeralContainers.orValue([])
+  - name: allowedCapabilities
+    expression: '[''NET_BIND_SERVICE'', ''CAP_CHOWN'']'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: psp-migration-cel-restrict-adding-capabiliti-fd7fcb-b
+spec:
+  policyName: psp-migration-cel-restrict-adding-capabiliti-fd7fcb
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: psp-migration-cel-restrict-adding-capabiliti-fd7fcb-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: variables.allContainers.all(container,  container.?securityContext.?capabilities.?add.orValue([]).all(capability,
+      capability in variables.allowedCapabilities))
+    message: Any capabilities added other than NET_BIND_SERVICE or CAP_CHOWN are disallowed.
+  variables:
+  - name: allContainers
+    expression: object.spec.template.spec.containers + object.spec.template.spec.?initContainers.orValue([])
+      + object.spec.template.spec.?ephemeralContainers.orValue([])
+  - name: allowedCapabilities
+    expression: '[''NET_BIND_SERVICE'', ''CAP_CHOWN'']'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: psp-migration-cel-restrict-adding-capabiliti-fd7fcb-ag1-b
+spec:
+  policyName: psp-migration-cel-restrict-adding-capabiliti-fd7fcb-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: psp-migration-cel-restrict-adding-capabiliti-fd7fcb-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: variables.allContainers.all(container,  container.?securityContext.?capabilities.?add.orValue([]).all(capability,
+      capability in variables.allowedCapabilities))
+    message: Any capabilities added other than NET_BIND_SERVICE or CAP_CHOWN are disallowed.
+  variables:
+  - name: allContainers
+    expression: object.spec.jobTemplate.spec.template.spec.containers + object.spec.jobTemplate.spec.template.spec.?initContainers.orValue([])
+      + object.spec.jobTemplate.spec.template.spec.?ephemeralContainers.orValue([])
+  - name: allowedCapabilities
+    expression: '[''NET_BIND_SERVICE'', ''CAP_CHOWN'']'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: psp-migration-cel-restrict-adding-capabiliti-fd7fcb-ag2-b
+spec:
+  policyName: psp-migration-cel-restrict-adding-capabiliti-fd7fcb-ag2
+  validationActions:
+  - Deny

@@ -1,0 +1,341 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-baseline-disallow-selinux-c9de28-r0
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: (has(object.spec) && ((!(has(object.spec.securityContext)) || (has(object.spec.securityContext)
+      && ((!(has(object.spec.securityContext.seLinuxOptions)) || (has(object.spec.securityContext.seLinuxOptions)
+      && ((!(has(object.spec.securityContext.seLinuxOptions.type)) || (has(object.spec.securityContext.seLinuxOptions.type)
+      && ((object.spec.securityContext.seLinuxOptions.type == "container_t" || object.spec.securityContext.seLinuxOptions.type
+      == "container_init_t" || object.spec.securityContext.seLinuxOptions.type ==
+      "container_kvm_t")))))))))) && (!(has(object.spec.ephemeralContainers)) || (has(object.spec.ephemeralContainers)
+      && (object.spec.ephemeralContainers.all(__x, (!(has(__x.securityContext)) ||
+      (has(__x.securityContext) && ((!(has(__x.securityContext.seLinuxOptions)) ||
+      (has(__x.securityContext.seLinuxOptions) && ((!(has(__x.securityContext.seLinuxOptions.type))
+      || (has(__x.securityContext.seLinuxOptions.type) && ((__x.securityContext.seLinuxOptions.type
+      == "container_t" || __x.securityContext.seLinuxOptions.type == "container_init_t"
+      || __x.securityContext.seLinuxOptions.type == "container_kvm_t"))))))))))))))
+      && (!(has(object.spec.initContainers)) || (has(object.spec.initContainers) &&
+      (object.spec.initContainers.all(__x, (!(has(__x.securityContext)) || (has(__x.securityContext)
+      && ((!(has(__x.securityContext.seLinuxOptions)) || (has(__x.securityContext.seLinuxOptions)
+      && ((!(has(__x.securityContext.seLinuxOptions.type)) || (has(__x.securityContext.seLinuxOptions.type)
+      && ((__x.securityContext.seLinuxOptions.type == "container_t" || __x.securityContext.seLinuxOptions.type
+      == "container_init_t" || __x.securityContext.seLinuxOptions.type == "container_kvm_t"))))))))))))))
+      && (has(object.spec.containers) && (object.spec.containers.all(__x, (!(has(__x.securityContext))
+      || (has(__x.securityContext) && ((!(has(__x.securityContext.seLinuxOptions))
+      || (has(__x.securityContext.seLinuxOptions) && ((!(has(__x.securityContext.seLinuxOptions.type))
+      || (has(__x.securityContext.seLinuxOptions.type) && ((__x.securityContext.seLinuxOptions.type
+      == "container_t" || __x.securityContext.seLinuxOptions.type == "container_init_t"
+      || __x.securityContext.seLinuxOptions.type == "container_kvm_t")))))))))))))))
+    message: Setting the SELinux type is restricted. The fields spec.securityContext.seLinuxOptions.type,
+      spec.containers[*].securityContext.seLinuxOptions.type, , spec.initContainers[*].securi
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-baseline-disallow-selinux-c9de28-r0-b
+spec:
+  policyName: pod-security-baseline-disallow-selinux-c9de28-r0
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-baseline-disallow-selinux-c9de28-r1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: (has(object.spec) && ((!(has(object.spec.securityContext)) || (has(object.spec.securityContext)
+      && ((!(has(object.spec.securityContext.seLinuxOptions)) || (has(object.spec.securityContext.seLinuxOptions)
+      && ((!(has(object.spec.securityContext.seLinuxOptions.user))) && (!(has(object.spec.securityContext.seLinuxOptions.role)))))))))
+      && (!(has(object.spec.ephemeralContainers)) || (has(object.spec.ephemeralContainers)
+      && (object.spec.ephemeralContainers.all(__x, (!(has(__x.securityContext)) ||
+      (has(__x.securityContext) && ((!(has(__x.securityContext.seLinuxOptions)) ||
+      (has(__x.securityContext.seLinuxOptions) && ((!(has(__x.securityContext.seLinuxOptions.user)))
+      && (!(has(__x.securityContext.seLinuxOptions.role))))))))))))) && (!(has(object.spec.initContainers))
+      || (has(object.spec.initContainers) && (object.spec.initContainers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.seLinuxOptions))
+      || (has(__x.securityContext.seLinuxOptions) && ((!(has(__x.securityContext.seLinuxOptions.user)))
+      && (!(has(__x.securityContext.seLinuxOptions.role))))))))))))) && (has(object.spec.containers)
+      && (object.spec.containers.all(__x, (!(has(__x.securityContext)) || (has(__x.securityContext)
+      && ((!(has(__x.securityContext.seLinuxOptions)) || (has(__x.securityContext.seLinuxOptions)
+      && ((!(has(__x.securityContext.seLinuxOptions.user))) && (!(has(__x.securityContext.seLinuxOptions.role))))))))))))))
+    message: Setting the SELinux user or role is forbidden. The fields spec.securityContext.seLinuxOptions.user,
+      spec.securityContext.seLinuxOptions.role, spec.containers[*].securityContext.seL
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-baseline-disallow-selinux-c9de28-r1-b
+spec:
+  policyName: pod-security-baseline-disallow-selinux-c9de28-r1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-baseline-disallow-selinux-c9de28-r0-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: (has(object.spec.template.spec) && ((!(has(object.spec.template.spec.securityContext))
+      || (has(object.spec.template.spec.securityContext) && ((!(has(object.spec.template.spec.securityContext.seLinuxOptions))
+      || (has(object.spec.template.spec.securityContext.seLinuxOptions) && ((!(has(object.spec.template.spec.securityContext.seLinuxOptions.type))
+      || (has(object.spec.template.spec.securityContext.seLinuxOptions.type) && ((object.spec.template.spec.securityContext.seLinuxOptions.type
+      == "container_t" || object.spec.template.spec.securityContext.seLinuxOptions.type
+      == "container_init_t" || object.spec.template.spec.securityContext.seLinuxOptions.type
+      == "container_kvm_t")))))))))) && (!(has(object.spec.template.spec.ephemeralContainers))
+      || (has(object.spec.template.spec.ephemeralContainers) && (object.spec.template.spec.ephemeralContainers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.seLinuxOptions))
+      || (has(__x.securityContext.seLinuxOptions) && ((!(has(__x.securityContext.seLinuxOptions.type))
+      || (has(__x.securityContext.seLinuxOptions.type) && ((__x.securityContext.seLinuxOptions.type
+      == "container_t" || __x.securityContext.seLinuxOptions.type == "container_init_t"
+      || __x.securityContext.seLinuxOptions.type == "container_kvm_t"))))))))))))))
+      && (!(has(object.spec.template.spec.initContainers)) || (has(object.spec.template.spec.initContainers)
+      && (object.spec.template.spec.initContainers.all(__x, (!(has(__x.securityContext))
+      || (has(__x.securityContext) && ((!(has(__x.securityContext.seLinuxOptions))
+      || (has(__x.securityContext.seLinuxOptions) && ((!(has(__x.securityContext.seLinuxOptions.type))
+      || (has(__x.securityContext.seLinuxOptions.type) && ((__x.securityContext.seLinuxOptions.type
+      == "container_t" || __x.securityContext.seLinuxOptions.type == "container_init_t"
+      || __x.securityContext.seLinuxOptions.type == "container_kvm_t"))))))))))))))
+      && (has(object.spec.template.spec.containers) && (object.spec.template.spec.containers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.seLinuxOptions))
+      || (has(__x.securityContext.seLinuxOptions) && ((!(has(__x.securityContext.seLinuxOptions.type))
+      || (has(__x.securityContext.seLinuxOptions.type) && ((__x.securityContext.seLinuxOptions.type
+      == "container_t" || __x.securityContext.seLinuxOptions.type == "container_init_t"
+      || __x.securityContext.seLinuxOptions.type == "container_kvm_t")))))))))))))))
+    message: Setting the SELinux type is restricted. The fields spec.securityContext.seLinuxOptions.type,
+      spec.containers[*].securityContext.seLinuxOptions.type, , spec.initContainers[*].securi
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-baseline-disallow-selinux-c9de28-r0-ag1-b
+spec:
+  policyName: pod-security-baseline-disallow-selinux-c9de28-r0-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-baseline-disallow-selinux-c9de28-r0-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: (has(object.spec.jobTemplate.spec.template.spec) && ((!(has(object.spec.jobTemplate.spec.template.spec.securityContext))
+      || (has(object.spec.jobTemplate.spec.template.spec.securityContext) && ((!(has(object.spec.jobTemplate.spec.template.spec.securityContext.seLinuxOptions))
+      || (has(object.spec.jobTemplate.spec.template.spec.securityContext.seLinuxOptions)
+      && ((!(has(object.spec.jobTemplate.spec.template.spec.securityContext.seLinuxOptions.type))
+      || (has(object.spec.jobTemplate.spec.template.spec.securityContext.seLinuxOptions.type)
+      && ((object.spec.jobTemplate.spec.template.spec.securityContext.seLinuxOptions.type
+      == "container_t" || object.spec.jobTemplate.spec.template.spec.securityContext.seLinuxOptions.type
+      == "container_init_t" || object.spec.jobTemplate.spec.template.spec.securityContext.seLinuxOptions.type
+      == "container_kvm_t")))))))))) && (!(has(object.spec.jobTemplate.spec.template.spec.ephemeralContainers))
+      || (has(object.spec.jobTemplate.spec.template.spec.ephemeralContainers) && (object.spec.jobTemplate.spec.template.spec.ephemeralContainers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.seLinuxOptions))
+      || (has(__x.securityContext.seLinuxOptions) && ((!(has(__x.securityContext.seLinuxOptions.type))
+      || (has(__x.securityContext.seLinuxOptions.type) && ((__x.securityContext.seLinuxOptions.type
+      == "container_t" || __x.securityContext.seLinuxOptions.type == "container_init_t"
+      || __x.securityContext.seLinuxOptions.type == "container_kvm_t"))))))))))))))
+      && (!(has(object.spec.jobTemplate.spec.template.spec.initContainers)) || (has(object.spec.jobTemplate.spec.template.spec.initContainers)
+      && (object.spec.jobTemplate.spec.template.spec.initContainers.all(__x, (!(has(__x.securityContext))
+      || (has(__x.securityContext) && ((!(has(__x.securityContext.seLinuxOptions))
+      || (has(__x.securityContext.seLinuxOptions) && ((!(has(__x.securityContext.seLinuxOptions.type))
+      || (has(__x.securityContext.seLinuxOptions.type) && ((__x.securityContext.seLinuxOptions.type
+      == "container_t" || __x.securityContext.seLinuxOptions.type == "container_init_t"
+      || __x.securityContext.seLinuxOptions.type == "container_kvm_t"))))))))))))))
+      && (has(object.spec.jobTemplate.spec.template.spec.containers) && (object.spec.jobTemplate.spec.template.spec.containers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.seLinuxOptions))
+      || (has(__x.securityContext.seLinuxOptions) && ((!(has(__x.securityContext.seLinuxOptions.type))
+      || (has(__x.securityContext.seLinuxOptions.type) && ((__x.securityContext.seLinuxOptions.type
+      == "container_t" || __x.securityContext.seLinuxOptions.type == "container_init_t"
+      || __x.securityContext.seLinuxOptions.type == "container_kvm_t")))))))))))))))
+    message: Setting the SELinux type is restricted. The fields spec.securityContext.seLinuxOptions.type,
+      spec.containers[*].securityContext.seLinuxOptions.type, , spec.initContainers[*].securi
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-baseline-disallow-selinux-c9de28-r0-ag2-b
+spec:
+  policyName: pod-security-baseline-disallow-selinux-c9de28-r0-ag2
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-baseline-disallow-selinux-c9de28-r1-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: (has(object.spec.template.spec) && ((!(has(object.spec.template.spec.securityContext))
+      || (has(object.spec.template.spec.securityContext) && ((!(has(object.spec.template.spec.securityContext.seLinuxOptions))
+      || (has(object.spec.template.spec.securityContext.seLinuxOptions) && ((!(has(object.spec.template.spec.securityContext.seLinuxOptions.user)))
+      && (!(has(object.spec.template.spec.securityContext.seLinuxOptions.role)))))))))
+      && (!(has(object.spec.template.spec.ephemeralContainers)) || (has(object.spec.template.spec.ephemeralContainers)
+      && (object.spec.template.spec.ephemeralContainers.all(__x, (!(has(__x.securityContext))
+      || (has(__x.securityContext) && ((!(has(__x.securityContext.seLinuxOptions))
+      || (has(__x.securityContext.seLinuxOptions) && ((!(has(__x.securityContext.seLinuxOptions.user)))
+      && (!(has(__x.securityContext.seLinuxOptions.role))))))))))))) && (!(has(object.spec.template.spec.initContainers))
+      || (has(object.spec.template.spec.initContainers) && (object.spec.template.spec.initContainers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.seLinuxOptions))
+      || (has(__x.securityContext.seLinuxOptions) && ((!(has(__x.securityContext.seLinuxOptions.user)))
+      && (!(has(__x.securityContext.seLinuxOptions.role))))))))))))) && (has(object.spec.template.spec.containers)
+      && (object.spec.template.spec.containers.all(__x, (!(has(__x.securityContext))
+      || (has(__x.securityContext) && ((!(has(__x.securityContext.seLinuxOptions))
+      || (has(__x.securityContext.seLinuxOptions) && ((!(has(__x.securityContext.seLinuxOptions.user)))
+      && (!(has(__x.securityContext.seLinuxOptions.role))))))))))))))
+    message: Setting the SELinux user or role is forbidden. The fields spec.securityContext.seLinuxOptions.user,
+      spec.securityContext.seLinuxOptions.role, spec.containers[*].securityContext.seL
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-baseline-disallow-selinux-c9de28-r1-ag1-b
+spec:
+  policyName: pod-security-baseline-disallow-selinux-c9de28-r1-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-baseline-disallow-selinux-c9de28-r1-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: (has(object.spec.jobTemplate.spec.template.spec) && ((!(has(object.spec.jobTemplate.spec.template.spec.securityContext))
+      || (has(object.spec.jobTemplate.spec.template.spec.securityContext) && ((!(has(object.spec.jobTemplate.spec.template.spec.securityContext.seLinuxOptions))
+      || (has(object.spec.jobTemplate.spec.template.spec.securityContext.seLinuxOptions)
+      && ((!(has(object.spec.jobTemplate.spec.template.spec.securityContext.seLinuxOptions.user)))
+      && (!(has(object.spec.jobTemplate.spec.template.spec.securityContext.seLinuxOptions.role)))))))))
+      && (!(has(object.spec.jobTemplate.spec.template.spec.ephemeralContainers)) ||
+      (has(object.spec.jobTemplate.spec.template.spec.ephemeralContainers) && (object.spec.jobTemplate.spec.template.spec.ephemeralContainers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.seLinuxOptions))
+      || (has(__x.securityContext.seLinuxOptions) && ((!(has(__x.securityContext.seLinuxOptions.user)))
+      && (!(has(__x.securityContext.seLinuxOptions.role))))))))))))) && (!(has(object.spec.jobTemplate.spec.template.spec.initContainers))
+      || (has(object.spec.jobTemplate.spec.template.spec.initContainers) && (object.spec.jobTemplate.spec.template.spec.initContainers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.seLinuxOptions))
+      || (has(__x.securityContext.seLinuxOptions) && ((!(has(__x.securityContext.seLinuxOptions.user)))
+      && (!(has(__x.securityContext.seLinuxOptions.role))))))))))))) && (has(object.spec.jobTemplate.spec.template.spec.containers)
+      && (object.spec.jobTemplate.spec.template.spec.containers.all(__x, (!(has(__x.securityContext))
+      || (has(__x.securityContext) && ((!(has(__x.securityContext.seLinuxOptions))
+      || (has(__x.securityContext.seLinuxOptions) && ((!(has(__x.securityContext.seLinuxOptions.user)))
+      && (!(has(__x.securityContext.seLinuxOptions.role))))))))))))))
+    message: Setting the SELinux user or role is forbidden. The fields spec.securityContext.seLinuxOptions.user,
+      spec.securityContext.seLinuxOptions.role, spec.containers[*].securityContext.seL
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-baseline-disallow-selinux-c9de28-r1-ag2-b
+spec:
+  policyName: pod-security-baseline-disallow-selinux-c9de28-r1-ag2
+  validationActions:
+  - Deny

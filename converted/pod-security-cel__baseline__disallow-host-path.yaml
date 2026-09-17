@@ -1,0 +1,112 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-cel-baseline-disallow-host-path-ec705a
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: object.spec.?volumes.orValue([]).all(volume, size(volume) == 0 ||
+      !has(volume.hostPath))
+    message: HostPath volumes are forbidden. The field spec.volumes[*].hostPath must
+      be unset
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-cel-baseline-disallow-host-path-ec705a-b
+spec:
+  policyName: pod-security-cel-baseline-disallow-host-path-ec705a
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-cel-baseline-disallow-host-path-ec705a-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: object.spec.template.spec.?volumes.orValue([]).all(volume, size(volume)
+      == 0 || !has(volume.hostPath))
+    message: HostPath volumes are forbidden. The field spec.volumes[*].hostPath must
+      be unset
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-cel-baseline-disallow-host-path-ec705a-ag1-b
+spec:
+  policyName: pod-security-cel-baseline-disallow-host-path-ec705a-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-cel-baseline-disallow-host-path-ec705a-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: object.spec.jobTemplate.spec.template.spec.?volumes.orValue([]).all(volume,
+      size(volume) == 0 || !has(volume.hostPath))
+    message: HostPath volumes are forbidden. The field spec.volumes[*].hostPath must
+      be unset
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-cel-baseline-disallow-host-path-ec705a-ag2-b
+spec:
+  policyName: pod-security-cel-baseline-disallow-host-path-ec705a-ag2
+  validationActions:
+  - Deny

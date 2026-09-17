@@ -1,0 +1,127 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-vpol-require-pod-requests-lim-122384
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: variables.allContainers.all(c, has(c.resources) && has(c.resources.requests)
+      && has(c.resources.requests.memory) && c.resources.requests.memory != '' &&
+      has(c.resources.requests.cpu) && c.resources.requests.cpu != '' && has(c.resources.limits)
+      && has(c.resources.limits.memory) && c.resources.limits.memory != '')
+    message: CPU and memory resource requests and memory limits are required for containers.
+  variables:
+  - expression: object.spec.containers + object.spec.?initContainers.orValue([]) +
+      object.spec.?ephemeralContainers.orValue([])
+    name: allContainers
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-vpol-require-pod-requests-lim-122384-b
+spec:
+  policyName: best-practices-vpol-require-pod-requests-lim-122384
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-vpol-require-pod-requests-lim-122384-ag1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: variables.allContainers.all(c, has(c.resources) && has(c.resources.requests)
+      && has(c.resources.requests.memory) && c.resources.requests.memory != '' &&
+      has(c.resources.requests.cpu) && c.resources.requests.cpu != '' && has(c.resources.limits)
+      && has(c.resources.limits.memory) && c.resources.limits.memory != '')
+    message: CPU and memory resource requests and memory limits are required for containers.
+  variables:
+  - expression: object.spec.template.spec.containers + object.spec.template.spec.?initContainers.orValue([])
+      + object.spec.template.spec.?ephemeralContainers.orValue([])
+    name: allContainers
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-vpol-require-pod-requests-lim-122384-ag1-b
+spec:
+  policyName: best-practices-vpol-require-pod-requests-lim-122384-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-vpol-require-pod-requests-lim-122384-ag2
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: variables.allContainers.all(c, has(c.resources) && has(c.resources.requests)
+      && has(c.resources.requests.memory) && c.resources.requests.memory != '' &&
+      has(c.resources.requests.cpu) && c.resources.requests.cpu != '' && has(c.resources.limits)
+      && has(c.resources.limits.memory) && c.resources.limits.memory != '')
+    message: CPU and memory resource requests and memory limits are required for containers.
+  variables:
+  - expression: object.spec.jobTemplate.spec.template.spec.containers + object.spec.jobTemplate.spec.template.spec.?initContainers.orValue([])
+      + object.spec.jobTemplate.spec.template.spec.?ephemeralContainers.orValue([])
+    name: allContainers
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-vpol-require-pod-requests-lim-122384-ag2-b
+spec:
+  policyName: best-practices-vpol-require-pod-requests-lim-122384-ag2
+  validationActions:
+  - Deny

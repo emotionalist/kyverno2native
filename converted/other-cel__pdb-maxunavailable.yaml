@@ -1,0 +1,29 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-cel-pdb-maxunavailable-f7c9ab
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - policy
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - poddisruptionbudgets
+  validations:
+  - expression: int(object.spec.?maxUnavailable.orValue(1)) > 0
+    message: The value of maxUnavailable must be greater than zero.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-cel-pdb-maxunavailable-f7c9ab-b
+spec:
+  policyName: other-cel-pdb-maxunavailable-f7c9ab
+  validationActions:
+  - Deny

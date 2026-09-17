@@ -1,0 +1,58 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-replace-ingress-hosts-dedea9
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - networking.k8s.io
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - ingresses
+  mutations:
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "object.spec.?rules.orValue([]).map(rule, \n  has(rule.host) &&\
+        \ rule.host.endsWith('.old.com') ?\n  JSONPatch{\n    op: \"replace\",\n \
+        \   path: \"/spec/rules/\" + string(object.spec.rules.indexOf(rule)) + \"\
+        /host\",\n    value: rule.host.replace('.old.com', '.new.com')\n  } : null\n\
+        ).filter(patch, patch != null)\n"
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "object.spec.?tls.orValue([]).size() > 0 && \nobject.spec.tls[0].?hosts.orValue([]).size()\
+        \ > 0 &&\nobject.spec.tls[0].hosts[0].endsWith('.old.com') ?\n[JSONPatch{\n\
+        \  op: \"replace\",\n  path: \"/spec/tls/0/hosts/0\",\n  value: object.spec.tls[0].hosts[0].replace('.old.com',\
+        \ '.new.com')\n}] : []\n"
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "object.spec.?tls.orValue([]).size() > 0 && \nobject.spec.tls[0].?hosts.orValue([]).size()\
+        \ > 1 &&\nobject.spec.tls[0].hosts[1].endsWith('.old.com') ?\n[JSONPatch{\n\
+        \  op: \"replace\",\n  path: \"/spec/tls/0/hosts/1\",\n  value: object.spec.tls[0].hosts[1].replace('.old.com',\
+        \ '.new.com')\n}] : []\n"
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "object.spec.?tls.orValue([]).size() > 1 && \nobject.spec.tls[1].?hosts.orValue([]).size()\
+        \ > 0 &&\nobject.spec.tls[1].hosts[0].endsWith('.old.com') ?\n[JSONPatch{\n\
+        \  op: \"replace\",\n  path: \"/spec/tls/1/hosts/0\",\n  value: object.spec.tls[1].hosts[0].replace('.old.com',\
+        \ '.new.com')\n}] : []\n"
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "object.spec.?tls.orValue([]).map(tlsEntry,\n  has(tlsEntry.secretName)\
+        \ && tlsEntry.secretName.contains('.old.com') ?\n  JSONPatch{\n    op: \"\
+        replace\",\n    path: \"/spec/tls/\" + string(object.spec.tls.indexOf(tlsEntry))\
+        \ + \"/secretName\",\n    value: tlsEntry.secretName.replace('.old.com', '.new.com')\n\
+        \  } : null\n).filter(patch, patch != null)\n"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-replace-ingress-hosts-dedea9-b
+spec:
+  policyName: other-mpol-replace-ingress-hosts-dedea9

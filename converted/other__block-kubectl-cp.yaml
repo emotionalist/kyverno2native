@@ -1,0 +1,32 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-block-kubectl-cp-3b202e
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods/exec
+  validations:
+  - expression: '!((object.command[0] == "tar") && (object.command[1] == "cf"))'
+    message: Cannot use `kubectl cp` on pods
+  matchConditions:
+  - name: preconditions
+    expression: (request.operation == "CONNECT")
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-block-kubectl-cp-3b202e-b
+spec:
+  policyName: other-block-kubectl-cp-3b202e
+  validationActions:
+  - Deny

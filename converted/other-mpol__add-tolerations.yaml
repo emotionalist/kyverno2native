@@ -1,0 +1,142 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-add-tolerations-19ab48
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  matchConditions:
+  - name: skip-if-toleration-exists
+    expression: "!has(object.spec.tolerations) || \nobject.spec.tolerations == null\
+      \ || \n!object.spec.tolerations.exists(t, t.key == \"org.com/role\")\n"
+  mutations:
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "(!has(object.spec.tolerations) || object.spec.tolerations == null)\
+        \ ?\n  [\n    JSONPatch{\n      op: \"add\",\n      path: \"/spec/tolerations\"\
+        ,\n      value: [dyn({\n        \"key\": \"org.com/role\",\n        \"operator\"\
+        : \"Equal\",\n        \"value\": \"service\",\n        \"effect\": \"NoSchedule\"\
+        \n      })]\n    }\n  ] :\n  [\n    JSONPatch{\n      op: \"add\",\n     \
+        \ path: \"/spec/tolerations/-\",\n      value: dyn({\n        \"key\": \"\
+        org.com/role\",\n        \"operator\": \"Equal\",\n        \"value\": \"service\"\
+        ,\n        \"effect\": \"NoSchedule\"\n      })\n    }\n  ]\n"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-add-tolerations-19ab48-b
+spec:
+  policyName: other-mpol-add-tolerations-19ab48
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-add-tolerations-19ab48-ag1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  matchConditions:
+  - name: skip-if-toleration-exists
+    expression: "!has(object.spec.template.spec.tolerations) || \nobject.spec.template.spec.tolerations\
+      \ == null || \n!object.spec.template.spec.tolerations.exists(t, t.key == \"\
+      org.com/role\")\n"
+  mutations:
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "(!has(object.spec.template.spec.tolerations) || object.spec.template.spec.tolerations\
+        \ == null) ?\n  [\n    JSONPatch{\n      op: \"add\",\n      path: \"/spec/tolerations\"\
+        ,\n      value: [dyn({\n        \"key\": \"org.com/role\",\n        \"operator\"\
+        : \"Equal\",\n        \"value\": \"service\",\n        \"effect\": \"NoSchedule\"\
+        \n      })]\n    }\n  ] :\n  [\n    JSONPatch{\n      op: \"add\",\n     \
+        \ path: \"/spec/tolerations/-\",\n      value: dyn({\n        \"key\": \"\
+        org.com/role\",\n        \"operator\": \"Equal\",\n        \"value\": \"service\"\
+        ,\n        \"effect\": \"NoSchedule\"\n      })\n    }\n  ]\n"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-add-tolerations-19ab48-ag1-b
+spec:
+  policyName: other-mpol-add-tolerations-19ab48-ag1
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-add-tolerations-19ab48-ag2
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  matchConditions:
+  - name: skip-if-toleration-exists
+    expression: "!has(object.spec.jobTemplate.spec.template.spec.tolerations) || \n\
+      object.spec.jobTemplate.spec.template.spec.tolerations == null || \n!object.spec.jobTemplate.spec.template.spec.tolerations.exists(t,\
+      \ t.key == \"org.com/role\")\n"
+  mutations:
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: "(!has(object.spec.jobTemplate.spec.template.spec.tolerations) ||\
+        \ object.spec.jobTemplate.spec.template.spec.tolerations == null) ?\n  [\n\
+        \    JSONPatch{\n      op: \"add\",\n      path: \"/spec/tolerations\",\n\
+        \      value: [dyn({\n        \"key\": \"org.com/role\",\n        \"operator\"\
+        : \"Equal\",\n        \"value\": \"service\",\n        \"effect\": \"NoSchedule\"\
+        \n      })]\n    }\n  ] :\n  [\n    JSONPatch{\n      op: \"add\",\n     \
+        \ path: \"/spec/tolerations/-\",\n      value: dyn({\n        \"key\": \"\
+        org.com/role\",\n        \"operator\": \"Equal\",\n        \"value\": \"service\"\
+        ,\n        \"effect\": \"NoSchedule\"\n      })\n    }\n  ]\n"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-add-tolerations-19ab48-ag2-b
+spec:
+  policyName: other-mpol-add-tolerations-19ab48-ag2

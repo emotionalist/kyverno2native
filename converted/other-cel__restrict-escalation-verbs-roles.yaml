@@ -1,0 +1,39 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-cel-restrict-escalation-verbs-roles-5c943a
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - rbac.authorization.k8s.io
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - clusterroles
+      - roles
+  validations:
+  - expression: object.rules == null ||  !object.rules.exists(rule, rule.apiGroups.exists(apiGroup,
+      apiGroup in variables.apiGroups) && rule.resources.exists(resource, resource
+      in variables.resources) && rule.verbs.exists(verb, verb in variables.verbs))
+    message: Use of verbs `escalate`, `bind`, and `impersonate` are forbidden.
+  variables:
+  - name: apiGroups
+    expression: '[''*'', ''rbac.authorization.k8s.io'']'
+  - name: resources
+    expression: '[''*'', ''clusterroles'', ''roles'']'
+  - name: verbs
+    expression: '[''*'', ''bind'', ''escalate'', ''impersonate'']'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-cel-restrict-escalation-verbs-roles-5c943a-b
+spec:
+  policyName: other-cel-restrict-escalation-verbs-roles-5c943a
+  validationActions:
+  - Deny

@@ -1,0 +1,33 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: aws-require-encryption-aws-loadbalancers-87bfe3
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - services
+  validations:
+  - expression: '!((has(object.spec) && (!((has(object.spec.type) && (object.spec.type
+      == "LoadBalancer"))) || (true)))) || ((has(object.metadata) && ((has(object.metadata.annotations)
+      && (("service.beta.kubernetes.io/aws-load-balancer-ssl-cert" in object.metadata.annotations
+      && (object.metadata.annotations["service.beta.kubernetes.io/aws-load-balancer-ssl-cert"]
+      != "")))))))'
+    message: Service of type LoadBalancer must carry the annotation service.beta.kubernetes.io/aws-load-balancer-ssl-cert.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: aws-require-encryption-aws-loadbalancers-87bfe3-b
+spec:
+  policyName: aws-require-encryption-aws-loadbalancers-87bfe3
+  validationActions:
+  - Deny

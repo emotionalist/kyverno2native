@@ -1,0 +1,119 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-limit-hostpath-vols-f3f01c
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  matchConditions:
+  - name: has-host-path-volume
+    expression: object.spec.?volumes.orValue([]).exists(volume, has(volume.hostPath))
+  validations:
+  - expression: object.spec.volumes.all(volume, !has(volume.hostPath) || volume.hostPath.path.split('/')[1]
+      == 'data')
+    message: hostPath volumes are confined to /data.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-limit-hostpath-vols-f3f01c-b
+spec:
+  policyName: other-vpol-limit-hostpath-vols-f3f01c
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-limit-hostpath-vols-f3f01c-ag1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  matchConditions:
+  - name: has-host-path-volume
+    expression: object.spec.template.spec.?volumes.orValue([]).exists(volume, has(volume.hostPath))
+  validations:
+  - expression: object.spec.template.spec.volumes.all(volume, !has(volume.hostPath)
+      || volume.hostPath.path.split('/')[1] == 'data')
+    message: hostPath volumes are confined to /data.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-limit-hostpath-vols-f3f01c-ag1-b
+spec:
+  policyName: other-vpol-limit-hostpath-vols-f3f01c-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-limit-hostpath-vols-f3f01c-ag2
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  matchConditions:
+  - name: has-host-path-volume
+    expression: object.spec.jobTemplate.spec.template.spec.?volumes.orValue([]).exists(volume,
+      has(volume.hostPath))
+  validations:
+  - expression: object.spec.jobTemplate.spec.template.spec.volumes.all(volume, !has(volume.hostPath)
+      || volume.hostPath.path.split('/')[1] == 'data')
+    message: hostPath volumes are confined to /data.
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-limit-hostpath-vols-f3f01c-ag2-b
+spec:
+  policyName: other-vpol-limit-hostpath-vols-f3f01c-ag2
+  validationActions:
+  - Deny

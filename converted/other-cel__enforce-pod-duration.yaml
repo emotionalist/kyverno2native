@@ -1,0 +1,124 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-cel-enforce-pod-duration-f94748
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: '!(duration(variables.lifetimeAnnotationValue) > duration(''8h''))'
+    message: Pod lifetime exceeds limit of 8h
+  variables:
+  - name: hasLifetimeAnnotation
+    expression: object.metadata.?annotations[?'pod.kubernetes.io/lifetime'].hasValue()
+  - name: lifetimeAnnotationValue
+    expression: 'variables.hasLifetimeAnnotation ? object.metadata.annotations[''pod.kubernetes.io/lifetime'']
+      : ''0s'''
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-cel-enforce-pod-duration-f94748-b
+spec:
+  policyName: other-cel-enforce-pod-duration-f94748
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-cel-enforce-pod-duration-f94748-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: '!(duration(variables.lifetimeAnnotationValue) > duration(''8h''))'
+    message: Pod lifetime exceeds limit of 8h
+  variables:
+  - name: hasLifetimeAnnotation
+    expression: object.spec.template.metadata.?annotations[?'pod.kubernetes.io/lifetime'].hasValue()
+  - name: lifetimeAnnotationValue
+    expression: 'variables.hasLifetimeAnnotation ? object.spec.template.metadata.annotations[''pod.kubernetes.io/lifetime'']
+      : ''0s'''
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-cel-enforce-pod-duration-f94748-ag1-b
+spec:
+  policyName: other-cel-enforce-pod-duration-f94748-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-cel-enforce-pod-duration-f94748-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: '!(duration(variables.lifetimeAnnotationValue) > duration(''8h''))'
+    message: Pod lifetime exceeds limit of 8h
+  variables:
+  - name: hasLifetimeAnnotation
+    expression: object.spec.jobTemplate.spec.template.metadata.?annotations[?'pod.kubernetes.io/lifetime'].hasValue()
+  - name: lifetimeAnnotationValue
+    expression: 'variables.hasLifetimeAnnotation ? object.spec.jobTemplate.spec.template.metadata.annotations[''pod.kubernetes.io/lifetime'']
+      : ''0s'''
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-cel-enforce-pod-duration-f94748-ag2-b
+spec:
+  policyName: other-cel-enforce-pod-duration-f94748-ag2
+  validationActions:
+  - Deny

@@ -1,0 +1,135 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-require-cpu-limits-17280e
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: (has(object.spec) && ((has(object.spec.containers) && (object.spec.containers.all(__x,
+      !((has(__x.name))) || ((has(__x.resources) && ((has(__x.resources.limits) &&
+      ((has(__x.resources.limits.cpu) && (__x.resources.limits.cpu != ""))))))))))
+      && (!(has(object.spec.ephemeralContainers)) || (has(object.spec.ephemeralContainers)
+      && (object.spec.ephemeralContainers.all(__x, (!(has(__x.name)) || (has(__x.name)))
+      && (has(__x.resources) && ((has(__x.resources.limits) && ((has(__x.resources.limits.cpu)
+      && (__x.resources.limits.cpu != "")))))))))) && (!(has(object.spec.initContainers))
+      || (has(object.spec.initContainers) && (object.spec.initContainers.all(__x,
+      (!(has(__x.name)) || (has(__x.name))) && (has(__x.resources) && ((has(__x.resources.limits)
+      && ((has(__x.resources.limits.cpu) && (__x.resources.limits.cpu != ""))))))))))))
+    message: CPU limits are required for all containers.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-require-cpu-limits-17280e-b
+spec:
+  policyName: other-require-cpu-limits-17280e
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-require-cpu-limits-17280e-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: (has(object.spec.template.spec) && ((has(object.spec.template.spec.containers)
+      && (object.spec.template.spec.containers.all(__x, !((has(__x.name))) || ((has(__x.resources)
+      && ((has(__x.resources.limits) && ((has(__x.resources.limits.cpu) && (__x.resources.limits.cpu
+      != "")))))))))) && (!(has(object.spec.template.spec.ephemeralContainers)) ||
+      (has(object.spec.template.spec.ephemeralContainers) && (object.spec.template.spec.ephemeralContainers.all(__x,
+      (!(has(__x.name)) || (has(__x.name))) && (has(__x.resources) && ((has(__x.resources.limits)
+      && ((has(__x.resources.limits.cpu) && (__x.resources.limits.cpu != ""))))))))))
+      && (!(has(object.spec.template.spec.initContainers)) || (has(object.spec.template.spec.initContainers)
+      && (object.spec.template.spec.initContainers.all(__x, (!(has(__x.name)) || (has(__x.name)))
+      && (has(__x.resources) && ((has(__x.resources.limits) && ((has(__x.resources.limits.cpu)
+      && (__x.resources.limits.cpu != ""))))))))))))
+    message: CPU limits are required for all containers.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-require-cpu-limits-17280e-ag1-b
+spec:
+  policyName: other-require-cpu-limits-17280e-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-require-cpu-limits-17280e-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: (has(object.spec.jobTemplate.spec.template.spec) && ((has(object.spec.jobTemplate.spec.template.spec.containers)
+      && (object.spec.jobTemplate.spec.template.spec.containers.all(__x, !((has(__x.name)))
+      || ((has(__x.resources) && ((has(__x.resources.limits) && ((has(__x.resources.limits.cpu)
+      && (__x.resources.limits.cpu != "")))))))))) && (!(has(object.spec.jobTemplate.spec.template.spec.ephemeralContainers))
+      || (has(object.spec.jobTemplate.spec.template.spec.ephemeralContainers) && (object.spec.jobTemplate.spec.template.spec.ephemeralContainers.all(__x,
+      (!(has(__x.name)) || (has(__x.name))) && (has(__x.resources) && ((has(__x.resources.limits)
+      && ((has(__x.resources.limits.cpu) && (__x.resources.limits.cpu != ""))))))))))
+      && (!(has(object.spec.jobTemplate.spec.template.spec.initContainers)) || (has(object.spec.jobTemplate.spec.template.spec.initContainers)
+      && (object.spec.jobTemplate.spec.template.spec.initContainers.all(__x, (!(has(__x.name))
+      || (has(__x.name))) && (has(__x.resources) && ((has(__x.resources.limits) &&
+      ((has(__x.resources.limits.cpu) && (__x.resources.limits.cpu != ""))))))))))))
+    message: CPU limits are required for all containers.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-require-cpu-limits-17280e-ag2-b
+spec:
+  policyName: other-require-cpu-limits-17280e-ag2
+  validationActions:
+  - Deny

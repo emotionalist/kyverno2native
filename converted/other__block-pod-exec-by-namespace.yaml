@@ -1,0 +1,32 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-block-pod-exec-by-namespace-a9c0fb
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods/exec
+  validations:
+  - expression: '!(((request.namespace == "pci")))'
+    message: Pods in this namespace may not be exec'd into.
+  matchConditions:
+  - name: preconditions
+    expression: (request.operation == "CONNECT")
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-block-pod-exec-by-namespace-a9c0fb-b
+spec:
+  policyName: other-block-pod-exec-by-namespace-a9c0fb
+  validationActions:
+  - Deny

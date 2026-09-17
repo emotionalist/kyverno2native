@@ -1,0 +1,237 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: karpenter-add-karpenter-nodeselector-1723f7-r0
+spec:
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+    namespaceSelector:
+      matchLabels:
+        type: medium
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: 'Object{spec: Object.spec{nodeSelector: {"kubernetes.io/arch": "amd64",
+        "karpenter.sh/capacity-type": "spot"}}}'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: karpenter-add-karpenter-nodeselector-1723f7-r0-b
+spec:
+  policyName: karpenter-add-karpenter-nodeselector-1723f7-r0
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: karpenter-add-karpenter-nodeselector-1723f7-r1
+spec:
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+    namespaceSelector:
+      matchLabels:
+        type: large
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: 'Object{spec: Object.spec{nodeSelector: {"kubernetes.io/arch": "amd64",
+        "karpenter.sh/capacity-type": "on-demand"}}}'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: karpenter-add-karpenter-nodeselector-1723f7-r1-b
+spec:
+  policyName: karpenter-add-karpenter-nodeselector-1723f7-r1
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: karpenter-add-karpenter-nodeselector-1723f7-r0-ag1
+spec:
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+    namespaceSelector:
+      matchLabels:
+        type: medium
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: 'Object{spec: Object.spec{nodeSelector: {"kubernetes.io/arch": "amd64",
+        "karpenter.sh/capacity-type": "spot"}}}'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: karpenter-add-karpenter-nodeselector-1723f7-r0-ag1-b
+spec:
+  policyName: karpenter-add-karpenter-nodeselector-1723f7-r0-ag1
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: karpenter-add-karpenter-nodeselector-1723f7-r0-ag2
+spec:
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+    namespaceSelector:
+      matchLabels:
+        type: medium
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: 'Object{spec: Object.spec{nodeSelector: {"kubernetes.io/arch": "amd64",
+        "karpenter.sh/capacity-type": "spot"}}}'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: karpenter-add-karpenter-nodeselector-1723f7-r0-ag2-b
+spec:
+  policyName: karpenter-add-karpenter-nodeselector-1723f7-r0-ag2
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: karpenter-add-karpenter-nodeselector-1723f7-r1-ag1
+spec:
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+    namespaceSelector:
+      matchLabels:
+        type: large
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: 'Object{spec: Object.spec{nodeSelector: {"kubernetes.io/arch": "amd64",
+        "karpenter.sh/capacity-type": "on-demand"}}}'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: karpenter-add-karpenter-nodeselector-1723f7-r1-ag1-b
+spec:
+  policyName: karpenter-add-karpenter-nodeselector-1723f7-r1-ag1
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: karpenter-add-karpenter-nodeselector-1723f7-r1-ag2
+spec:
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+    namespaceSelector:
+      matchLabels:
+        type: large
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: 'Object{spec: Object.spec{nodeSelector: {"kubernetes.io/arch": "amd64",
+        "karpenter.sh/capacity-type": "on-demand"}}}'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: karpenter-add-karpenter-nodeselector-1723f7-r1-ag2-b
+spec:
+  policyName: karpenter-add-karpenter-nodeselector-1723f7-r1-ag2

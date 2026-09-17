@@ -1,0 +1,286 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-remove-hostpath-volumes-175ab4
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  variables:
+  - name: hostpathVolumes
+    expression: "has(object.spec.volumes) ? \n  object.spec.volumes.filter(v, has(v.hostPath)).map(v, v.name) : \n  []\n"
+  - name: hasHostPath
+    expression: |
+      variables.hostpathVolumes.size() > 0
+  matchConditions:
+  - name: has-hostpath-volumes
+    expression: has(object.spec.volumes) && object.spec.volumes.exists(v, has(v.hostPath))
+  mutations:
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: |-
+        [
+          JSONPatch{
+            op: "replace",
+            path: "/spec/volumes",
+            value: object.spec.volumes.filter(v, !has(v.hostPath))
+          }
+        ] +
+        object.spec.containers.map(c,
+          has(c.volumeMounts) ?
+            (c.volumeMounts.filter(vm, !variables.hostpathVolumes.exists(hpv, hpv == vm.name)).size() > 0 ?
+              JSONPatch{
+                op: "replace",
+                path: "/spec/containers/" + string(object.spec.containers.indexOf(c)) + "/volumeMounts",
+                value: c.volumeMounts.filter(vm, !variables.hostpathVolumes.exists(hpv, hpv == vm.name))
+              } :
+              JSONPatch{
+                op: "remove",
+                path: "/spec/containers/" + string(object.spec.containers.indexOf(c)) + "/volumeMounts"
+              })
+          : JSONPatch{op: "test", path: "/", value: null}
+        ).filter(p, p.op != "test") +
+        (has(object.spec.initContainers) ?
+          object.spec.initContainers.map(c,
+            has(c.volumeMounts) ?
+              (c.volumeMounts.filter(vm, !variables.hostpathVolumes.exists(hpv, hpv == vm.name)).size() > 0 ?
+                JSONPatch{
+                  op: "replace",
+                  path: "/spec/initContainers/" + string(object.spec.initContainers.indexOf(c)) + "/volumeMounts",
+                  value: c.volumeMounts.filter(vm, !variables.hostpathVolumes.exists(hpv, hpv == vm.name))
+                } :
+                JSONPatch{
+                  op: "remove",
+                  path: "/spec/initContainers/" + string(object.spec.initContainers.indexOf(c)) + "/volumeMounts"
+                })
+            : JSONPatch{op: "test", path: "/", value: null}
+          ).filter(p, p.op != "test") : []) +
+        (has(object.spec.ephemeralContainers) ?
+          object.spec.ephemeralContainers.map(c,
+            has(c.volumeMounts) ?
+              (c.volumeMounts.filter(vm, !variables.hostpathVolumes.exists(hpv, hpv == vm.name)).size() > 0 ?
+                JSONPatch{
+                  op: "replace",
+                  path: "/spec/ephemeralContainers/" + string(object.spec.ephemeralContainers.indexOf(c)) + "/volumeMounts",
+                  value: c.volumeMounts.filter(vm, !variables.hostpathVolumes.exists(hpv, hpv == vm.name))
+                } :
+                JSONPatch{
+                  op: "remove",
+                  path: "/spec/ephemeralContainers/" + string(object.spec.ephemeralContainers.indexOf(c)) + "/volumeMounts"
+                })
+            : JSONPatch{op: "test", path: "/", value: null}
+          ).filter(p, p.op != "test") : [])
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-remove-hostpath-volumes-175ab4-b
+spec:
+  policyName: other-mpol-remove-hostpath-volumes-175ab4
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-remove-hostpath-volumes-175ab4-ag1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  variables:
+  - name: hostpathVolumes
+    expression: "has(object.spec.template.spec.volumes) ? \n  object.spec.template.spec.volumes.filter(v, has(v.hostPath)).map(v, v.name) : \n  []\n"
+  - name: hasHostPath
+    expression: |
+      variables.hostpathVolumes.size() > 0
+  matchConditions:
+  - name: has-hostpath-volumes
+    expression: has(object.spec.template) && has(object.spec.template.spec) && has(object.spec.template.spec.volumes) && object.spec.template.spec.volumes.exists(v, has(v.hostPath))
+  mutations:
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: |-
+        [
+          JSONPatch{
+            op: "replace",
+            path: "/spec/template/spec/volumes",
+            value: object.spec.template.spec.volumes.filter(v, !has(v.hostPath))
+          }
+        ] +
+        object.spec.template.spec.containers.map(c,
+          has(c.volumeMounts) ?
+            (c.volumeMounts.filter(vm, !variables.hostpathVolumes.exists(hpv, hpv == vm.name)).size() > 0 ?
+              JSONPatch{
+                op: "replace",
+                path: "/spec/template/spec/containers/" + string(object.spec.template.spec.containers.indexOf(c)) + "/volumeMounts",
+                value: c.volumeMounts.filter(vm, !variables.hostpathVolumes.exists(hpv, hpv == vm.name))
+              } :
+              JSONPatch{
+                op: "remove",
+                path: "/spec/template/spec/containers/" + string(object.spec.template.spec.containers.indexOf(c)) + "/volumeMounts"
+              })
+          : JSONPatch{op: "test", path: "/", value: null}
+        ).filter(p, p.op != "test") +
+        (has(object.spec.template.spec.initContainers) ?
+          object.spec.template.spec.initContainers.map(c,
+            has(c.volumeMounts) ?
+              (c.volumeMounts.filter(vm, !variables.hostpathVolumes.exists(hpv, hpv == vm.name)).size() > 0 ?
+                JSONPatch{
+                  op: "replace",
+                  path: "/spec/template/spec/initContainers/" + string(object.spec.template.spec.initContainers.indexOf(c)) + "/volumeMounts",
+                  value: c.volumeMounts.filter(vm, !variables.hostpathVolumes.exists(hpv, hpv == vm.name))
+                } :
+                JSONPatch{
+                  op: "remove",
+                  path: "/spec/template/spec/initContainers/" + string(object.spec.template.spec.initContainers.indexOf(c)) + "/volumeMounts"
+                })
+            : JSONPatch{op: "test", path: "/", value: null}
+          ).filter(p, p.op != "test") : []) +
+        (has(object.spec.template.spec.ephemeralContainers) ?
+          object.spec.template.spec.ephemeralContainers.map(c,
+            has(c.volumeMounts) ?
+              (c.volumeMounts.filter(vm, !variables.hostpathVolumes.exists(hpv, hpv == vm.name)).size() > 0 ?
+                JSONPatch{
+                  op: "replace",
+                  path: "/spec/template/spec/ephemeralContainers/" + string(object.spec.template.spec.ephemeralContainers.indexOf(c)) + "/volumeMounts",
+                  value: c.volumeMounts.filter(vm, !variables.hostpathVolumes.exists(hpv, hpv == vm.name))
+                } :
+                JSONPatch{
+                  op: "remove",
+                  path: "/spec/template/spec/ephemeralContainers/" + string(object.spec.template.spec.ephemeralContainers.indexOf(c)) + "/volumeMounts"
+                })
+            : JSONPatch{op: "test", path: "/", value: null}
+          ).filter(p, p.op != "test") : [])
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-remove-hostpath-volumes-175ab4-ag1-b
+spec:
+  policyName: other-mpol-remove-hostpath-volumes-175ab4-ag1
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-remove-hostpath-volumes-175ab4-ag2
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  variables:
+  - name: hostpathVolumes
+    expression: "has(object.spec.jobTemplate.spec.template.spec.volumes) ? \n  object.spec.jobTemplate.spec.template.spec.volumes.filter(v, has(v.hostPath)).map(v, v.name) : \n  []\n"
+  - name: hasHostPath
+    expression: |
+      variables.hostpathVolumes.size() > 0
+  matchConditions:
+  - name: has-hostpath-volumes
+    expression: has(object.spec.jobTemplate) && has(object.spec.jobTemplate.spec) && has(object.spec.jobTemplate.spec.template) && has(object.spec.jobTemplate.spec.template.spec) && has(object.spec.jobTemplate.spec.template.spec.volumes) && object.spec.jobTemplate.spec.template.spec.volumes.exists(v, has(v.hostPath))
+  mutations:
+  - patchType: JSONPatch
+    jsonPatch:
+      expression: |-
+        [
+          JSONPatch{
+            op: "replace",
+            path: "/spec/jobTemplate/spec/template/spec/volumes",
+            value: object.spec.jobTemplate.spec.template.spec.volumes.filter(v, !has(v.hostPath))
+          }
+        ] +
+        object.spec.jobTemplate.spec.template.spec.containers.map(c,
+          has(c.volumeMounts) ?
+            (c.volumeMounts.filter(vm, !variables.hostpathVolumes.exists(hpv, hpv == vm.name)).size() > 0 ?
+              JSONPatch{
+                op: "replace",
+                path: "/spec/jobTemplate/spec/template/spec/containers/" + string(object.spec.jobTemplate.spec.template.spec.containers.indexOf(c)) + "/volumeMounts",
+                value: c.volumeMounts.filter(vm, !variables.hostpathVolumes.exists(hpv, hpv == vm.name))
+              } :
+              JSONPatch{
+                op: "remove",
+                path: "/spec/jobTemplate/spec/template/spec/containers/" + string(object.spec.jobTemplate.spec.template.spec.containers.indexOf(c)) + "/volumeMounts"
+              })
+          : JSONPatch{op: "test", path: "/", value: null}
+        ).filter(p, p.op != "test") +
+        (has(object.spec.jobTemplate.spec.template.spec.initContainers) ?
+          object.spec.jobTemplate.spec.template.spec.initContainers.map(c,
+            has(c.volumeMounts) ?
+              (c.volumeMounts.filter(vm, !variables.hostpathVolumes.exists(hpv, hpv == vm.name)).size() > 0 ?
+                JSONPatch{
+                  op: "replace",
+                  path: "/spec/jobTemplate/spec/template/spec/initContainers/" + string(object.spec.jobTemplate.spec.template.spec.initContainers.indexOf(c)) + "/volumeMounts",
+                  value: c.volumeMounts.filter(vm, !variables.hostpathVolumes.exists(hpv, hpv == vm.name))
+                } :
+                JSONPatch{
+                  op: "remove",
+                  path: "/spec/jobTemplate/spec/template/spec/initContainers/" + string(object.spec.jobTemplate.spec.template.spec.initContainers.indexOf(c)) + "/volumeMounts"
+                })
+            : JSONPatch{op: "test", path: "/", value: null}
+          ).filter(p, p.op != "test") : []) +
+        (has(object.spec.jobTemplate.spec.template.spec.ephemeralContainers) ?
+          object.spec.jobTemplate.spec.template.spec.ephemeralContainers.map(c,
+            has(c.volumeMounts) ?
+              (c.volumeMounts.filter(vm, !variables.hostpathVolumes.exists(hpv, hpv == vm.name)).size() > 0 ?
+                JSONPatch{
+                  op: "replace",
+                  path: "/spec/jobTemplate/spec/template/spec/ephemeralContainers/" + string(object.spec.jobTemplate.spec.template.spec.ephemeralContainers.indexOf(c)) + "/volumeMounts",
+                  value: c.volumeMounts.filter(vm, !variables.hostpathVolumes.exists(hpv, hpv == vm.name))
+                } :
+                JSONPatch{
+                  op: "remove",
+                  path: "/spec/jobTemplate/spec/template/spec/ephemeralContainers/" + string(object.spec.jobTemplate.spec.template.spec.ephemeralContainers.indexOf(c)) + "/volumeMounts"
+                })
+            : JSONPatch{op: "test", path: "/", value: null}
+          ).filter(p, p.op != "test") : [])
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-remove-hostpath-volumes-175ab4-ag2-b
+spec:
+  policyName: other-mpol-remove-hostpath-volumes-175ab4-ag2

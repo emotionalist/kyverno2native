@@ -1,0 +1,286 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-cel-baseline-disallow-selinux-1575cb-r0
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: (!has(object.spec.securityContext) || !has(object.spec.securityContext.seLinuxOptions)
+      || !has(object.spec.securityContext.seLinuxOptions.type) || variables.seLinuxTypes.exists(type,
+      type == object.spec.securityContext.seLinuxOptions.type)) && variables.allContainerTypes.all(container,  !has(container.securityContext)
+      || !has(container.securityContext.seLinuxOptions) || !has(container.securityContext.seLinuxOptions.type)
+      || variables.seLinuxTypes.exists(type, type == container.securityContext.seLinuxOptions.type))
+    message: Setting the SELinux type is restricted. The field securityContext.seLinuxOptions.type
+      must either be unset or set to one of the allowed values (container_t, container_init_t,
+      or container_kvm_t).
+  variables:
+  - name: allContainerTypes
+    expression: '(object.spec.containers + (has(object.spec.initContainers) ? object.spec.initContainers
+      : []) + (has(object.spec.ephemeralContainers) ? object.spec.ephemeralContainers
+      : []))'
+  - name: seLinuxTypes
+    expression: '[''container_t'', ''container_init_t'', ''container_kvm_t'']'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-cel-baseline-disallow-selinux-1575cb-r0-b
+spec:
+  policyName: pod-security-cel-baseline-disallow-selinux-1575cb-r0
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-cel-baseline-disallow-selinux-1575cb-r1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: (!has(object.spec.securityContext) || !has(object.spec.securityContext.seLinuxOptions)
+      || (!has(object.spec.securityContext.seLinuxOptions.user) && !has(object.spec.securityContext.seLinuxOptions.role)))
+      && variables.allContainerTypes.all(container, !has(container.securityContext)
+      || !has(container.securityContext.seLinuxOptions) || (!has(container.securityContext.seLinuxOptions.user)
+      && !has(container.securityContext.seLinuxOptions.role)))
+    message: Setting the SELinux user or role is forbidden. The fields seLinuxOptions.user
+      and seLinuxOptions.role must be unset.
+  variables:
+  - name: allContainerTypes
+    expression: '(object.spec.containers + (has(object.spec.initContainers) ? object.spec.initContainers
+      : []) + (has(object.spec.ephemeralContainers) ? object.spec.ephemeralContainers
+      : []))'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-cel-baseline-disallow-selinux-1575cb-r1-b
+spec:
+  policyName: pod-security-cel-baseline-disallow-selinux-1575cb-r1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-cel-baseline-disallow-selinux-1575cb-r0-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: (!has(object.spec.template.spec.securityContext) || !has(object.spec.template.spec.securityContext.seLinuxOptions)
+      || !has(object.spec.template.spec.securityContext.seLinuxOptions.type) || variables.seLinuxTypes.exists(type,
+      type == object.spec.template.spec.securityContext.seLinuxOptions.type)) && variables.allContainerTypes.all(container,  !has(container.securityContext)
+      || !has(container.securityContext.seLinuxOptions) || !has(container.securityContext.seLinuxOptions.type)
+      || variables.seLinuxTypes.exists(type, type == container.securityContext.seLinuxOptions.type))
+    message: Setting the SELinux type is restricted. The field securityContext.seLinuxOptions.type
+      must either be unset or set to one of the allowed values (container_t, container_init_t,
+      or container_kvm_t).
+  variables:
+  - name: allContainerTypes
+    expression: '(object.spec.template.spec.containers + (has(object.spec.template.spec.initContainers)
+      ? object.spec.template.spec.initContainers : []) + (has(object.spec.template.spec.ephemeralContainers)
+      ? object.spec.template.spec.ephemeralContainers : []))'
+  - name: seLinuxTypes
+    expression: '[''container_t'', ''container_init_t'', ''container_kvm_t'']'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-cel-baseline-disallow-selinux-1575cb-r0-ag1-b
+spec:
+  policyName: pod-security-cel-baseline-disallow-selinux-1575cb-r0-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-cel-baseline-disallow-selinux-1575cb-r0-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: (!has(object.spec.jobTemplate.spec.template.spec.securityContext)
+      || !has(object.spec.jobTemplate.spec.template.spec.securityContext.seLinuxOptions)
+      || !has(object.spec.jobTemplate.spec.template.spec.securityContext.seLinuxOptions.type)
+      || variables.seLinuxTypes.exists(type, type == object.spec.jobTemplate.spec.template.spec.securityContext.seLinuxOptions.type))
+      && variables.allContainerTypes.all(container,  !has(container.securityContext)
+      || !has(container.securityContext.seLinuxOptions) || !has(container.securityContext.seLinuxOptions.type)
+      || variables.seLinuxTypes.exists(type, type == container.securityContext.seLinuxOptions.type))
+    message: Setting the SELinux type is restricted. The field securityContext.seLinuxOptions.type
+      must either be unset or set to one of the allowed values (container_t, container_init_t,
+      or container_kvm_t).
+  variables:
+  - name: allContainerTypes
+    expression: '(object.spec.jobTemplate.spec.template.spec.containers + (has(object.spec.jobTemplate.spec.template.spec.initContainers)
+      ? object.spec.jobTemplate.spec.template.spec.initContainers : []) + (has(object.spec.jobTemplate.spec.template.spec.ephemeralContainers)
+      ? object.spec.jobTemplate.spec.template.spec.ephemeralContainers : []))'
+  - name: seLinuxTypes
+    expression: '[''container_t'', ''container_init_t'', ''container_kvm_t'']'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-cel-baseline-disallow-selinux-1575cb-r0-ag2-b
+spec:
+  policyName: pod-security-cel-baseline-disallow-selinux-1575cb-r0-ag2
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-cel-baseline-disallow-selinux-1575cb-r1-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: (!has(object.spec.template.spec.securityContext) || !has(object.spec.template.spec.securityContext.seLinuxOptions)
+      || (!has(object.spec.template.spec.securityContext.seLinuxOptions.user) && !has(object.spec.template.spec.securityContext.seLinuxOptions.role)))
+      && variables.allContainerTypes.all(container, !has(container.securityContext)
+      || !has(container.securityContext.seLinuxOptions) || (!has(container.securityContext.seLinuxOptions.user)
+      && !has(container.securityContext.seLinuxOptions.role)))
+    message: Setting the SELinux user or role is forbidden. The fields seLinuxOptions.user
+      and seLinuxOptions.role must be unset.
+  variables:
+  - name: allContainerTypes
+    expression: '(object.spec.template.spec.containers + (has(object.spec.template.spec.initContainers)
+      ? object.spec.template.spec.initContainers : []) + (has(object.spec.template.spec.ephemeralContainers)
+      ? object.spec.template.spec.ephemeralContainers : []))'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-cel-baseline-disallow-selinux-1575cb-r1-ag1-b
+spec:
+  policyName: pod-security-cel-baseline-disallow-selinux-1575cb-r1-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-cel-baseline-disallow-selinux-1575cb-r1-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: (!has(object.spec.jobTemplate.spec.template.spec.securityContext)
+      || !has(object.spec.jobTemplate.spec.template.spec.securityContext.seLinuxOptions)
+      || (!has(object.spec.jobTemplate.spec.template.spec.securityContext.seLinuxOptions.user)
+      && !has(object.spec.jobTemplate.spec.template.spec.securityContext.seLinuxOptions.role)))
+      && variables.allContainerTypes.all(container, !has(container.securityContext)
+      || !has(container.securityContext.seLinuxOptions) || (!has(container.securityContext.seLinuxOptions.user)
+      && !has(container.securityContext.seLinuxOptions.role)))
+    message: Setting the SELinux user or role is forbidden. The fields seLinuxOptions.user
+      and seLinuxOptions.role must be unset.
+  variables:
+  - name: allContainerTypes
+    expression: '(object.spec.jobTemplate.spec.template.spec.containers + (has(object.spec.jobTemplate.spec.template.spec.initContainers)
+      ? object.spec.jobTemplate.spec.template.spec.initContainers : []) + (has(object.spec.jobTemplate.spec.template.spec.ephemeralContainers)
+      ? object.spec.jobTemplate.spec.template.spec.ephemeralContainers : []))'
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-cel-baseline-disallow-selinux-1575cb-r1-ag2-b
+spec:
+  policyName: pod-security-cel-baseline-disallow-selinux-1575cb-r1-ag2
+  validationActions:
+  - Deny

@@ -1,0 +1,34 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-cel-restrict-binding-system-groups-0c912c
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - rbac.authorization.k8s.io
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - clusterrolebindings
+      - rolebindings
+  validations:
+  - expression: object.subjects.all(subject, subject.name != 'system:anonymous')
+    message: Binding to system:anonymous is not allowed.
+  - expression: object.subjects.all(subject, subject.name != 'system:unauthenticated')
+    message: Binding to system:unauthenticated is not allowed.
+  - expression: object.subjects.all(subject, subject.name != 'system:masters')
+    message: Binding to system:masters is not allowed.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-cel-restrict-binding-system-groups-0c912c-b
+spec:
+  policyName: other-cel-restrict-binding-system-groups-0c912c
+  validationActions:
+  - Deny

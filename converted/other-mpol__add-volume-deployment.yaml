@@ -1,0 +1,58 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicy
+metadata:
+  name: other-mpol-add-volume-deployment-c8b2bb
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+  matchConditions:
+  - name: has-vault-inject-annotation
+    expression: 'has(object.spec.template.metadata.annotations) &&
+
+      ''vault.k8s.corp.net/inject'' in object.spec.template.metadata.annotations &&
+
+      object.spec.template.metadata.annotations[''vault.k8s.corp.net/inject''] ==
+      ''enabled''
+
+      '
+  - name: does-not-have-vault-volume
+    expression: '!has(object.spec.template.spec.volumes) ||
+
+      !object.spec.template.spec.volumes.exists(v, v.name == ''vault-secret'')
+
+      '
+  mutations:
+  - patchType: ApplyConfiguration
+    applyConfiguration:
+      expression: "Object{\n  spec: Object.spec{\n    template: Object.spec.template{\n\
+        \      spec: Object.spec.template.spec{\n        volumes: has(object.spec.template.spec.volumes)\
+        \ ?\n          object.spec.template.spec.volumes + [Object.spec.template.spec.volumes{name:\
+        \ \"vault-secret\", emptyDir: Object.spec.template.spec.volumes.emptyDir{medium:\
+        \ \"Memory\"}}] :\n          [Object.spec.template.spec.volumes{name: \"vault-secret\"\
+        , emptyDir: Object.spec.template.spec.volumes.emptyDir{medium: \"Memory\"\
+        }}],\n        containers: [\n          Object.spec.template.spec.containers{\n\
+        \            name: object.spec.template.spec.containers[0].name,\n       \
+        \     volumeMounts: has(object.spec.template.spec.containers[0].volumeMounts)\
+        \ ?\n              object.spec.template.spec.containers[0].volumeMounts +\
+        \ [Object.spec.template.spec.containers.volumeMounts{mountPath: \"/secret\"\
+        , name: \"vault-secret\"}] :\n              [Object.spec.template.spec.containers.volumeMounts{mountPath:\
+        \ \"/secret\", name: \"vault-secret\"}]\n          }\n        ]\n      }\n\
+        \    }\n  }\n}\n"
+  failurePolicy: Fail
+  reinvocationPolicy: Never
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingAdmissionPolicyBinding
+metadata:
+  name: other-mpol-add-volume-deployment-c8b2bb-b
+spec:
+  policyName: other-mpol-add-volume-deployment-c8b2bb

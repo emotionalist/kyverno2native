@@ -1,0 +1,109 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-prevent-cr8escape-1d73cc
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: 'object.spec.?securityContext.?sysctls.orValue([]).all(sysctl,  !has(sysctl.value)
+      || (!sysctl.value.contains(''+'') && !sysctl.value.contains(''=''))) '
+    message: characters '+' or '=' are not allowed in sysctls values
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-prevent-cr8escape-1d73cc-b
+spec:
+  policyName: other-vpol-prevent-cr8escape-1d73cc
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-prevent-cr8escape-1d73cc-ag1
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: 'object.spec.template.spec.?securityContext.?sysctls.orValue([]).all(sysctl,  !has(sysctl.value)
+      || (!sysctl.value.contains(''+'') && !sysctl.value.contains(''=''))) '
+    message: characters '+' or '=' are not allowed in sysctls values
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-prevent-cr8escape-1d73cc-ag1-b
+spec:
+  policyName: other-vpol-prevent-cr8escape-1d73cc-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: other-vpol-prevent-cr8escape-1d73cc-ag2
+spec:
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: 'object.spec.jobTemplate.spec.template.spec.?securityContext.?sysctls.orValue([]).all(sysctl,  !has(sysctl.value)
+      || (!sysctl.value.contains(''+'') && !sysctl.value.contains(''=''))) '
+    message: characters '+' or '=' are not allowed in sysctls values
+  failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: other-vpol-prevent-cr8escape-1d73cc-ag2-b
+spec:
+  policyName: other-vpol-prevent-cr8escape-1d73cc-ag2
+  validationActions:
+  - Deny

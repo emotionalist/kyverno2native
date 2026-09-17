@@ -1,0 +1,61 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: tekton-require-tekton-bundle-8daf79-r0
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - tekton.dev
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pipelineruns
+  validations:
+  - expression: (has(object.spec) && ((has(object.spec.pipelineRef) && ((has(object.spec.pipelineRef.bundle)
+      && (object.spec.pipelineRef.bundle != ""))))))
+    message: A bundle is required.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: tekton-require-tekton-bundle-8daf79-r0-b
+spec:
+  policyName: tekton-require-tekton-bundle-8daf79-r0
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: tekton-require-tekton-bundle-8daf79-r1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - tekton.dev
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - taskruns
+  validations:
+  - expression: (has(object.spec) && ((has(object.spec.taskRef) && ((has(object.spec.taskRef.bundle)
+      && (object.spec.taskRef.bundle != ""))))))
+    message: A bundle is required.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: tekton-require-tekton-bundle-8daf79-r1-b
+spec:
+  policyName: tekton-require-tekton-bundle-8daf79-r1
+  validationActions:
+  - Deny

@@ -1,0 +1,199 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-restricted-require-run-as-nonro-bee9ea
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: '((has(object.spec) && ((has(object.spec.securityContext) && ((has(object.spec.securityContext.runAsNonRoot)
+      && ((type(object.spec.securityContext.runAsNonRoot) == bool ? object.spec.securityContext.runAsNonRoot
+      == true : object.spec.securityContext.runAsNonRoot == "true"))))) && (!(has(object.spec.ephemeralContainers))
+      || (has(object.spec.ephemeralContainers) && (object.spec.ephemeralContainers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.runAsNonRoot))
+      || (has(__x.securityContext.runAsNonRoot) && ((type(__x.securityContext.runAsNonRoot)
+      == bool ? __x.securityContext.runAsNonRoot == true : __x.securityContext.runAsNonRoot
+      == "true"))))))))))) && (!(has(object.spec.initContainers)) || (has(object.spec.initContainers)
+      && (object.spec.initContainers.all(__x, (!(has(__x.securityContext)) || (has(__x.securityContext)
+      && ((!(has(__x.securityContext.runAsNonRoot)) || (has(__x.securityContext.runAsNonRoot)
+      && ((type(__x.securityContext.runAsNonRoot) == bool ? __x.securityContext.runAsNonRoot
+      == true : __x.securityContext.runAsNonRoot == "true"))))))))))) && (has(object.spec.containers)
+      && (object.spec.containers.all(__x, (!(has(__x.securityContext)) || (has(__x.securityContext)
+      && ((!(has(__x.securityContext.runAsNonRoot)) || (has(__x.securityContext.runAsNonRoot)
+      && ((type(__x.securityContext.runAsNonRoot) == bool ? __x.securityContext.runAsNonRoot
+      == true : __x.securityContext.runAsNonRoot == "true"))))))))))))) || ((has(object.spec)
+      && ((!(has(object.spec.ephemeralContainers)) || (has(object.spec.ephemeralContainers)
+      && (object.spec.ephemeralContainers.all(__x, (has(__x.securityContext) && ((has(__x.securityContext.runAsNonRoot)
+      && ((type(__x.securityContext.runAsNonRoot) == bool ? __x.securityContext.runAsNonRoot
+      == true : __x.securityContext.runAsNonRoot == "true"))))))))) && (!(has(object.spec.initContainers))
+      || (has(object.spec.initContainers) && (object.spec.initContainers.all(__x,
+      (has(__x.securityContext) && ((has(__x.securityContext.runAsNonRoot) && ((type(__x.securityContext.runAsNonRoot)
+      == bool ? __x.securityContext.runAsNonRoot == true : __x.securityContext.runAsNonRoot
+      == "true"))))))))) && (has(object.spec.containers) && (object.spec.containers.all(__x,
+      (has(__x.securityContext) && ((has(__x.securityContext.runAsNonRoot) && ((type(__x.securityContext.runAsNonRoot)
+      == bool ? __x.securityContext.runAsNonRoot == true : __x.securityContext.runAsNonRoot
+      == "true")))))))))))'
+    message: Running as root is not allowed. Either the field spec.securityContext.runAsNonRoot
+      must be set to `true`, or the fields spec.containers[*].securityContext.runAsNonRoot,
+      spec.initCo
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-restricted-require-run-as-nonro-bee9ea-b
+spec:
+  policyName: pod-security-restricted-require-run-as-nonro-bee9ea
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-restricted-require-run-as-nonro-bee9ea-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: '((has(object.spec.template.spec) && ((has(object.spec.template.spec.securityContext)
+      && ((has(object.spec.template.spec.securityContext.runAsNonRoot) && ((type(object.spec.template.spec.securityContext.runAsNonRoot)
+      == bool ? object.spec.template.spec.securityContext.runAsNonRoot == true : object.spec.template.spec.securityContext.runAsNonRoot
+      == "true"))))) && (!(has(object.spec.template.spec.ephemeralContainers)) ||
+      (has(object.spec.template.spec.ephemeralContainers) && (object.spec.template.spec.ephemeralContainers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.runAsNonRoot))
+      || (has(__x.securityContext.runAsNonRoot) && ((type(__x.securityContext.runAsNonRoot)
+      == bool ? __x.securityContext.runAsNonRoot == true : __x.securityContext.runAsNonRoot
+      == "true"))))))))))) && (!(has(object.spec.template.spec.initContainers)) ||
+      (has(object.spec.template.spec.initContainers) && (object.spec.template.spec.initContainers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.runAsNonRoot))
+      || (has(__x.securityContext.runAsNonRoot) && ((type(__x.securityContext.runAsNonRoot)
+      == bool ? __x.securityContext.runAsNonRoot == true : __x.securityContext.runAsNonRoot
+      == "true"))))))))))) && (has(object.spec.template.spec.containers) && (object.spec.template.spec.containers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.runAsNonRoot))
+      || (has(__x.securityContext.runAsNonRoot) && ((type(__x.securityContext.runAsNonRoot)
+      == bool ? __x.securityContext.runAsNonRoot == true : __x.securityContext.runAsNonRoot
+      == "true"))))))))))))) || ((has(object.spec.template.spec) && ((!(has(object.spec.template.spec.ephemeralContainers))
+      || (has(object.spec.template.spec.ephemeralContainers) && (object.spec.template.spec.ephemeralContainers.all(__x,
+      (has(__x.securityContext) && ((has(__x.securityContext.runAsNonRoot) && ((type(__x.securityContext.runAsNonRoot)
+      == bool ? __x.securityContext.runAsNonRoot == true : __x.securityContext.runAsNonRoot
+      == "true"))))))))) && (!(has(object.spec.template.spec.initContainers)) || (has(object.spec.template.spec.initContainers)
+      && (object.spec.template.spec.initContainers.all(__x, (has(__x.securityContext)
+      && ((has(__x.securityContext.runAsNonRoot) && ((type(__x.securityContext.runAsNonRoot)
+      == bool ? __x.securityContext.runAsNonRoot == true : __x.securityContext.runAsNonRoot
+      == "true"))))))))) && (has(object.spec.template.spec.containers) && (object.spec.template.spec.containers.all(__x,
+      (has(__x.securityContext) && ((has(__x.securityContext.runAsNonRoot) && ((type(__x.securityContext.runAsNonRoot)
+      == bool ? __x.securityContext.runAsNonRoot == true : __x.securityContext.runAsNonRoot
+      == "true")))))))))))'
+    message: Running as root is not allowed. Either the field spec.securityContext.runAsNonRoot
+      must be set to `true`, or the fields spec.containers[*].securityContext.runAsNonRoot,
+      spec.initCo
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-restricted-require-run-as-nonro-bee9ea-ag1-b
+spec:
+  policyName: pod-security-restricted-require-run-as-nonro-bee9ea-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: pod-security-restricted-require-run-as-nonro-bee9ea-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: '((has(object.spec.jobTemplate.spec.template.spec) && ((has(object.spec.jobTemplate.spec.template.spec.securityContext)
+      && ((has(object.spec.jobTemplate.spec.template.spec.securityContext.runAsNonRoot)
+      && ((type(object.spec.jobTemplate.spec.template.spec.securityContext.runAsNonRoot)
+      == bool ? object.spec.jobTemplate.spec.template.spec.securityContext.runAsNonRoot
+      == true : object.spec.jobTemplate.spec.template.spec.securityContext.runAsNonRoot
+      == "true"))))) && (!(has(object.spec.jobTemplate.spec.template.spec.ephemeralContainers))
+      || (has(object.spec.jobTemplate.spec.template.spec.ephemeralContainers) && (object.spec.jobTemplate.spec.template.spec.ephemeralContainers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.runAsNonRoot))
+      || (has(__x.securityContext.runAsNonRoot) && ((type(__x.securityContext.runAsNonRoot)
+      == bool ? __x.securityContext.runAsNonRoot == true : __x.securityContext.runAsNonRoot
+      == "true"))))))))))) && (!(has(object.spec.jobTemplate.spec.template.spec.initContainers))
+      || (has(object.spec.jobTemplate.spec.template.spec.initContainers) && (object.spec.jobTemplate.spec.template.spec.initContainers.all(__x,
+      (!(has(__x.securityContext)) || (has(__x.securityContext) && ((!(has(__x.securityContext.runAsNonRoot))
+      || (has(__x.securityContext.runAsNonRoot) && ((type(__x.securityContext.runAsNonRoot)
+      == bool ? __x.securityContext.runAsNonRoot == true : __x.securityContext.runAsNonRoot
+      == "true"))))))))))) && (has(object.spec.jobTemplate.spec.template.spec.containers)
+      && (object.spec.jobTemplate.spec.template.spec.containers.all(__x, (!(has(__x.securityContext))
+      || (has(__x.securityContext) && ((!(has(__x.securityContext.runAsNonRoot)) ||
+      (has(__x.securityContext.runAsNonRoot) && ((type(__x.securityContext.runAsNonRoot)
+      == bool ? __x.securityContext.runAsNonRoot == true : __x.securityContext.runAsNonRoot
+      == "true"))))))))))))) || ((has(object.spec.jobTemplate.spec.template.spec)
+      && ((!(has(object.spec.jobTemplate.spec.template.spec.ephemeralContainers))
+      || (has(object.spec.jobTemplate.spec.template.spec.ephemeralContainers) && (object.spec.jobTemplate.spec.template.spec.ephemeralContainers.all(__x,
+      (has(__x.securityContext) && ((has(__x.securityContext.runAsNonRoot) && ((type(__x.securityContext.runAsNonRoot)
+      == bool ? __x.securityContext.runAsNonRoot == true : __x.securityContext.runAsNonRoot
+      == "true"))))))))) && (!(has(object.spec.jobTemplate.spec.template.spec.initContainers))
+      || (has(object.spec.jobTemplate.spec.template.spec.initContainers) && (object.spec.jobTemplate.spec.template.spec.initContainers.all(__x,
+      (has(__x.securityContext) && ((has(__x.securityContext.runAsNonRoot) && ((type(__x.securityContext.runAsNonRoot)
+      == bool ? __x.securityContext.runAsNonRoot == true : __x.securityContext.runAsNonRoot
+      == "true"))))))))) && (has(object.spec.jobTemplate.spec.template.spec.containers)
+      && (object.spec.jobTemplate.spec.template.spec.containers.all(__x, (has(__x.securityContext)
+      && ((has(__x.securityContext.runAsNonRoot) && ((type(__x.securityContext.runAsNonRoot)
+      == bool ? __x.securityContext.runAsNonRoot == true : __x.securityContext.runAsNonRoot
+      == "true")))))))))))'
+    message: Running as root is not allowed. Either the field spec.securityContext.runAsNonRoot
+      must be set to `true`, or the fields spec.containers[*].securityContext.runAsNonRoot,
+      spec.initCo
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: pod-security-restricted-require-run-as-nonro-bee9ea-ag2-b
+spec:
+  policyName: pod-security-restricted-require-run-as-nonro-bee9ea-ag2
+  validationActions:
+  - Deny
