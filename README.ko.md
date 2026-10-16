@@ -81,7 +81,7 @@ CronJob(`-ag2`)에도 적용되도록 정책 객체를 함께 생성합니다.
 Python 3.8 이상과 PyYAML만 있으면 됩니다.
 
 ```bash
-git clone https://github.com/<본인계정>/kyverno2native
+git clone https://github.com/emotionalist/kyverno2native
 cd kyverno2native
 pip install -r requirements.txt
 ```

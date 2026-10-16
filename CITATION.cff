@@ -7,6 +7,7 @@ abstract: >-
   MutatingAdmissionPolicy, covering constructs that Kyverno's own autogen
   cannot: traditional pattern syntax, CEL policy CRDs, multi-rule policies,
   and mutation policies.
+repository-code: 'https://github.com/emotionalist/kyverno2native'
 license: Apache-2.0
 keywords:
   - kubernetes

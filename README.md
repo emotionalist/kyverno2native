@@ -80,7 +80,7 @@ also applies to Deployment / StatefulSet / DaemonSet / ReplicaSet / ReplicationC
 Python 3.8+ and PyYAML. No other dependencies.
 
 ```bash
-git clone https://github.com/<you>/kyverno2native
+git clone https://github.com/emotionalist/kyverno2native
 cd kyverno2native
 pip install -r requirements.txt
 ```
