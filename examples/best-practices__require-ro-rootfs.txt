@@ -1,0 +1,156 @@
+###############################################################################
+# 리스트 순회 패턴 -> CEL all() (컴파일러)
+# slug: best-practices__require-ro-rootfs
+###############################################################################
+
+#============ BEFORE — Kyverno ============
+
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-ro-rootfs
+  annotations:
+    policies.kyverno.io/title: Require Read-Only Root Filesystem
+    policies.kyverno.io/category: Best Practices, EKS Best Practices, PSP Migration
+    policies.kyverno.io/severity: medium
+    policies.kyverno.io/subject: Pod
+    policies.kyverno.io/minversion: 1.6.0
+    policies.kyverno.io/description: 'A read-only root file system helps to enforce
+      an immutable infrastructure strategy; the container only needs to write on the
+      mounted volume that persists the state. An immutable root filesystem can also
+      prevent malicious binaries from writing to the host system. This policy validates
+      that containers define a securityContext with `readOnlyRootFilesystem: true`.'
+spec:
+  validationFailureAction: Enforce
+  background: false
+  rules:
+  - name: validate-readOnlyRootFilesystem
+    match:
+      any:
+      - resources:
+          kinds:
+          - Pod
+    validate:
+      message: Root filesystem must be read-only.
+      pattern:
+        spec:
+          containers:
+          - securityContext:
+              readOnlyRootFilesystem: true
+
+#============ AFTER — native VAP/MAP ============
+
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-require-ro-rootfs-ee8545
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - pods
+  validations:
+  - expression: (has(object.spec) && ((has(object.spec.containers) && (object.spec.containers.all(__x,
+      (has(__x.securityContext) && ((has(__x.securityContext.readOnlyRootFilesystem)
+      && (__x.securityContext.readOnlyRootFilesystem == true)))))))))
+    message: Root filesystem must be read-only.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-require-ro-rootfs-ee8545-b
+spec:
+  policyName: best-practices-require-ro-rootfs-ee8545
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-require-ro-rootfs-ee8545-ag1
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      operations: &id001
+      - CREATE
+      - UPDATE
+      resources:
+      - deployments
+      - statefulsets
+      - daemonsets
+      - replicasets
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - jobs
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      operations: *id001
+      resources:
+      - replicationcontrollers
+  validations:
+  - expression: (has(object.spec.template.spec) && ((has(object.spec.template.spec.containers)
+      && (object.spec.template.spec.containers.all(__x, (has(__x.securityContext)
+      && ((has(__x.securityContext.readOnlyRootFilesystem) && (__x.securityContext.readOnlyRootFilesystem
+      == true)))))))))
+    message: Root filesystem must be read-only.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-require-ro-rootfs-ee8545-ag1-b
+spec:
+  policyName: best-practices-require-ro-rootfs-ee8545-ag1
+  validationActions:
+  - Deny
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: best-practices-require-ro-rootfs-ee8545-ag2
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      operations:
+      - CREATE
+      - UPDATE
+      resources:
+      - cronjobs
+  validations:
+  - expression: (has(object.spec.jobTemplate.spec.template.spec) && ((has(object.spec.jobTemplate.spec.template.spec.containers)
+      && (object.spec.jobTemplate.spec.template.spec.containers.all(__x, (has(__x.securityContext)
+      && ((has(__x.securityContext.readOnlyRootFilesystem) && (__x.securityContext.readOnlyRootFilesystem
+      == true)))))))))
+    message: Root filesystem must be read-only.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: best-practices-require-ro-rootfs-ee8545-ag2-b
+spec:
+  policyName: best-practices-require-ro-rootfs-ee8545-ag2
+  validationActions:
+  - Deny

@@ -28,7 +28,8 @@ def kind_matches(fixture_kind, match_kinds):
     if not ms or "*" in {str(m).strip() for m in (match_kinds or [])}: return True
     return norm_kind(fixture_kind) in ms
 BASE = _DATA
-TARGETS = json.load(open(os.path.join(BASE, "targets.json")))
+_tf = os.path.join(BASE, "targets.json")
+TARGETS = json.load(open(_tf)) if os.path.exists(_tf) else []
 
 # ---------- kind -> GVR ----------
 GVR = {}

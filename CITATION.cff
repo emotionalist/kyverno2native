@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+title: kyverno2native
+message: If you use this tool in academic work, please cite it.
+type: software
+abstract: >-
+  Converts Kyverno policies into Kubernetes ValidatingAdmissionPolicy and
+  MutatingAdmissionPolicy, covering constructs that Kyverno's own autogen
+  cannot: traditional pattern syntax, CEL policy CRDs, multi-rule policies,
+  and mutation policies.
+license: Apache-2.0
+keywords:
+  - kubernetes
+  - admission-control
+  - kyverno
+  - cel
+  - policy-as-code
