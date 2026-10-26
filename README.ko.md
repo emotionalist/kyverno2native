@@ -65,16 +65,26 @@ CronJob(`-ag2`)에도 적용되도록 정책 객체를 함께 생성합니다.
 |---|---|
 | 평문 키 | 경로가 존재하고 **또한** 일치해야 함 |
 | `=(key)` | 있으면 검사, 없으면 통과 |
-| `X(key)` | 없어야 함 |
-| `(key)` | 조건부 앵커 → `.filter()` 술어 또는 함의 |
-| `+(key)` | 없을 때만 추가, **키별로** |
+| `X(key)` | 값이 없으면 `!has(key)`. 값이 있으면 `!has(key) \|\| !(값 일치)` — 즉 없거나 값이 다르면 통과 |
+| `(key)` | 조건부 앵커 → 함의식 `!(조건) \|\| (본문)`의 전제로 모음 |
 | `^(key)` | 리스트 원소 중 하나 이상 만족 |
-| `<(key)` | 글로벌 앵커 → `matchConditions`로 올림 |
 | 와일드카드 맵 키 | 존재 검사(`.exists()`). `.all()`은 매치가 없을 때 공허참이 되어 통과시킴 |
-| 패턴 아래의 리스트 | 리스트 전체에 `.all()` |
+| 패턴 아래의 리스트 | 리스트 전체에 `.all()` (패턴 쪽 원소는 1개만 허용) |
 | `deny.conditions` | 부정해서 `validations` 식으로. deny는 존재 한정, validations는 전칭 |
-| `patchStrategicMerge`, 키 있는 리스트 | `ApplyConfiguration` |
-| `patchStrategicMerge`, atomic 리스트 | `JSONPatch` — ApplyConfiguration은 atomic 리스트를 건드릴 수 없음 |
+| `patchStrategicMerge`의 스칼라·맵 필드 | `ApplyConfiguration` |
+
+변이 경로는 검증 경로와 앵커 허용 목록이 다릅니다. `psm_to_apply`는 평문 키와 `+(key)`만
+받고 나머지 앵커는 전부 거부합니다.
+
+### 이 버전에 구현되지 않은 것
+
+| Kyverno | 상태 |
+|---|---|
+| `+(key)` | "없을 때만"이라는 검사가 `matchCondition`으로 올라가므로 **패치 전체**를 게이트합니다. 한 패치에 `+()`가 둘 이상이면 해당 필드가 *모두* 없을 때만 변이가 적용됩니다. |
+| `<(key)` | 거부 — `ConvertError: anchor < unsupported`. `matchConditions`로 올리는 처리는 없습니다. |
+| `>(key)` | 앵커 정규식에는 들어 있으나 처리 분기가 없어 같은 방식으로 거부됩니다. |
+| `patchStrategicMerge`에 리스트가 있는 경우 | 종류를 가리지 않고 거부 — `ConvertError: PSM list merge`. 컴파일러는 `ApplyConfiguration`만 생성하며 `JSONPatch`를 만들지 않습니다. (산출물의 `JSONPatch`는 원본 `MutatingPolicy`가 이미 쓰던 것이 그대로 복사된 것입니다.) |
+| 수치 범위·수량 패턴 값(`32000-33000`, `>1Gi`) | 비교 정규식 `^(>=\|<=\|>\|<)\s*(-?\d+(?:\.\d+)?)$`에 걸리지 않고 **거부되지도 않아** 문자열 등호 비교로 떨어집니다. 범위·변이 패턴은 산출물을 확인하세요. |
 
 ## 설치
 
@@ -169,32 +179,63 @@ spec:
 
 ## Kyverno 정책 라이브러리 적용 결과
 
-[kyverno/policies](https://github.com/kyverno/policies) `ef9843f` 커밋 기준, 네이티브 표현
-가능으로 분류한 523개를 대상으로 실행했습니다.
+[kyverno/policies](https://github.com/kyverno/policies) `ef9843f` 커밋 기준으로 실행했습니다.
+
+"네이티브 표현 가능"의 분류가 1차 실행 이후 수정되어 **수치를 두 가지로 적습니다.
+뒤의 것이 현재 기준입니다.**
+
+**1차 측정 당시 — 523개**
 
 ```
 변환 성공    400
 미지원       123
 ```
 
-전체 코퍼스의 변환 결과는 [`converted/`](converted/)에 있습니다(401개 — 변환기 산출 400개와
-이전 실험에서 남은 수작업 정책 1개).
+그 실행의 산출물이 [`converted/`](converted/)에 있습니다(401개 — 변환기 산출 400개와
+이전 실험에서 남은 수작업 정책 1개). 변환된 각 정책을 원본 Kyverno 정책과 같은 클러스터에
+올리고 동일한 업스트림 테스트 입력을 주어 비교했습니다.
+**직접 비교가 가능했던 경우 167건이 일치했고 불일치는 0건이었습니다.**
 
-변환된 각 정책을 원본 Kyverno 정책과 같은 클러스터에 올리고 동일한 업스트림 테스트 입력을
-주어 비교했습니다. **직접 비교가 가능했던 경우 167건이 일치했고 불일치는 0건이었습니다.**
+**수정된 분류 기준 재집계 — 541개**
+
+```
+변환 성공    407
+미지원       134
+```
+
+모집단이 −4 +21 +1로 바뀌었습니다.
+
+| 변화 | 이유 |
+|---|---|
+| **−4** | "네이티브 표현 가능"에서 **빠진** 것. 3건은 `N-PARTIAL-TIME`(CEL에 시계가 없어 시간 조건은 CREATE에서만 재현됨), 1건은 `K-ONLY`(`validate.manifests`는 cosign 서명을 검증하는데 CEL에 암호 연산이 없음). 4건 모두 원래 미지원이라 `변환 성공`은 그대로입니다. |
+| **+21** | 최종 분류에는 있는데 1차 실행에서 변환기를 돌리지 않은 것. 5건 변환, 16건 미변환. |
+| **+1** | `inject-coco-initdata`. 클러스터 실측 후 `W-DYNAMIC` → `N-PARAM`으로 재분류. 변환됨. |
+
+집계 기준: 407에는 수작업 정책 1건이 포함됩니다. 변환기 산출물만 세면 406 변환 / 135 미지원입니다.
+
+407에 대한 주의: **그중 6건은 변환은 되지만 API 서버가 거부합니다.** 원본이 Kyverno 전용 CEL
+확장(`resource.Get`, `resource.Post`)을 쓰는데 그것이 그대로 복사되기 때문입니다. 이 6건은
+`converted/`에 없습니다(그 디렉터리는 523개 기준 1차 실행 결과입니다).
 
 ### 아직 변환하지 못하는 것
 
+134건을 사유별로 나누면 다음과 같습니다.
+
 | 사유 | 건수 |
 |---|---:|
-| `foreach` (반복 검사) | 30 |
-| 지원 범위를 넘는 복잡한 JMESPath / `deny.conditions` | 50 |
-| `patchStrategicMerge` 리스트 병합 | 9 |
+| `rule.context` → `paramRef` 매핑 | 25 |
+| 지원 범위를 넘는 복잡한 JMESPath / `deny.conditions` | 48 |
+| `foreach` (반복 검사) | 31 |
 | 매치 범위: 리소스 이름, kind/필드 단위 `exclude`, 와일드카드 kind | 10 |
+| `patchStrategicMerge` 리스트 병합 | 9 |
 | `patchesJson6902` | 5 |
-| `rule.context` → `paramRef` 매핑 | 11 |
+| `validate.podSecurity`, `validate.manifests` | 4 |
 | 앵커: PSM 맵 앵커, 글로벌 `<(key)` | 2 |
-| `validate.podSecurity`, `validate.manifests` | 5 |
+
+`rule.context` 항목이 11에서 25로 늘어난 것은, 새로 포함된 21건 중 15건이 어드미션 시점에
+ConfigMap을 읽거나 API를 호출하기(`context.apiCall`) 때문입니다. 이 부류는 VAP의
+`namespaceObject` / `authorizer` / `paramRef`로 옮겨야 하는데 이 변환기에는 그 매핑이 없습니다.
+따라서 CEL의 한계가 아니라 여전히 프런트엔드의 미구현 부분입니다.
 
 이들은 CEL의 한계가 아니라 컴파일러 프런트엔드의 미구현 부분입니다. 후속 연구에서 각 유형의
 대표를 손으로 변환해 클러스터에서 확인한 결과, 대표 14건 중 7건은 의미 손실 없이 변환되었고
@@ -203,7 +244,9 @@ spec:
 
 ## 알려진 한계
 
-- **`foreach` 미지원** — 가장 큰 공백입니다.
+- **`foreach` 미지원** (31건). 가장 많은 사유는 JMESPath 지원 범위(48건)입니다.
+  `jmes_to_cel`이 괄호가 들어간 식을 전부 거부하기 때문에 JMESPath 함수 호출과 필터가
+  모두 탈락합니다.
 - Kyverno 엔진이 제공하는 부가 기능은 CEL에 대응물이 없어 근사하거나 잃습니다: OCI 이미지
   레퍼런스 파서(`images` 변수), JSON 인코딩·디코딩, JSON6902 `/-` append(SSA 키 병합과 의미가
   다름), 내장 Pod Security Standards 엔진의 `version: latest` 추종.

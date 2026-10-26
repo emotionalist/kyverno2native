@@ -64,16 +64,26 @@ also applies to Deployment / StatefulSet / DaemonSet / ReplicaSet / ReplicationC
 |---|---|
 | plain key | path must exist **and** match |
 | `=(key)` | if present, must match; absent passes |
-| `X(key)` | must be absent |
-| `(key)` | conditional anchor → `.filter()` predicate or an implication |
-| `+(key)` | add-if-absent, **per key** |
+| `X(key)` | with no value: `!has(key)`. With a value: `!has(key) \|\| !(value matches)` — i.e. absent *or* non-matching passes |
+| `(key)` | conditional anchor → collected as the antecedent of an implication `!(cond) \|\| (body)` |
 | `^(key)` | at least one list element must satisfy |
-| `<(key)` | global anchor → hoisted into `matchConditions` |
 | wildcard map key | existence (`.exists()`), not `.all()` — `.all()` is vacuously true on no match |
-| list under a pattern | `.all()` over the list |
+| list under a pattern | `.all()` over the list (exactly one element allowed in the pattern) |
 | `deny.conditions` | negated into a `validations` expression (deny is existential, validations is universal) |
-| `patchStrategicMerge`, keyed list | `ApplyConfiguration` |
-| `patchStrategicMerge`, atomic list | `JSONPatch` — ApplyConfiguration cannot touch atomic lists |
+| `patchStrategicMerge`, scalars and map fields | `ApplyConfiguration` |
+
+Mutation uses a different anchor set from validation: `psm_to_apply` accepts only a plain key and
+`+(key)`, and refuses every other anchor.
+
+### Not implemented in this version
+
+| Kyverno | Status |
+|---|---|
+| `+(key)` | the "absent" test is lifted into a `matchCondition`, so it gates the **whole patch**, not the individual key. With more than one `+()` in a patch, the mutation applies only when *all* of those fields are absent. |
+| `<(key)` | refused — `ConvertError: anchor < unsupported`. There is no hoisting into `matchConditions`. |
+| `>(key)` | recognised by the anchor regex but has no branch; refused the same way. |
+| `patchStrategicMerge` with any list | refused — `ConvertError: PSM list merge`. The compiler emits `ApplyConfiguration` only; it never emits `JSONPatch`. (A `JSONPatch` in the output came from a `MutatingPolicy` source that already used one — it is copied through, not generated.) |
+| numeric range / quantity pattern values (`32000-33000`, `>1Gi`) | not recognised by the comparison regex `^(>=\|<=\|>\|<)\s*(-?\d+(?:\.\d+)?)$`, and **not refused either** — they fall through to a string equality test. Review mutate and range patterns in the output. |
 
 ## Install
 
@@ -168,32 +178,64 @@ More in [`examples/`](examples/).
 
 ## Results on the Kyverno policy library
 
-Run against [kyverno/policies](https://github.com/kyverno/policies) @ `ef9843f`, 523 policies
-classified as natively expressible:
+Run against [kyverno/policies](https://github.com/kyverno/policies) @ `ef9843f`.
+
+Two counts are reported, because the classification of what is "natively expressible" was revised
+after the first run. **The second is the current one.**
+
+**As originally measured — 523 policies**
 
 ```
 converted      400
 unsupported    123
 ```
 
-Converted output for the full corpus is in [`converted/`](converted/) (401 files — 400 from the
+Converted output for that run is in [`converted/`](converted/) (401 files — 400 from the
 converters plus one hand-written policy retained from an earlier experiment).
-
 Each converted policy was applied to a live cluster alongside its Kyverno original and given the
 same upstream test fixtures. **Where both could be compared directly: 167 agreed, 0 disagreed.**
 
+**Re-counted against the revised classification — 541 policies**
+
+```
+converted      407
+unsupported    134
+```
+
+The population changed by −4 +21 +1:
+
+| Change | Why |
+|---|---|
+| **−4** | reclassified *out* of "natively expressible": three became `N-PARTIAL-TIME` (CEL has no clock, so a time window is only reproducible on CREATE) and one became `K-ONLY` (`validate.manifests` verifies a cosign signature; CEL has no crypto). All four were already unsupported, so `converted` is unchanged by this. |
+| **+21** | in the final classification but never run through the converter in the first pass. 5 converted, 16 did not. |
+| **+1** | `inject-coco-initdata`, reclassified `W-DYNAMIC` → `N-PARAM` after a cluster measurement. Converted. |
+
+Counting convention: the 407 includes the one hand-written policy. Counting converter output only,
+it is 406 converted / 135 unsupported.
+
+Caveat on the 407: **6 of them convert but are rejected by the API server**, because the source
+policy uses a Kyverno-only CEL extension that is copied through verbatim (`resource.Get`,
+`resource.Post`). Those 6 are not in `converted/`, which holds the original 523-policy run.
+
 ### What it does not convert yet
+
+134 policies, by reason:
 
 | Reason | Count |
 |---|---:|
-| `foreach` (iteration) | 30 |
-| Complex JMESPath / `deny.conditions` beyond the supported subset | 50 |
-| `patchStrategicMerge` list merge | 9 |
+| `rule.context` → `paramRef` mapping | 25 |
+| Complex JMESPath / `deny.conditions` beyond the supported subset | 48 |
+| `foreach` (iteration) | 31 |
 | Match scope: resource names, `exclude` by kind/field, wildcard kind | 10 |
+| `patchStrategicMerge` list merge | 9 |
 | `patchesJson6902` | 5 |
-| `rule.context` → `paramRef` mapping | 11 |
+| `validate.podSecurity`, `validate.manifests` | 4 |
 | Anchors: PSM map anchor, global `<(key)` | 2 |
-| `validate.podSecurity`, `validate.manifests` | 5 |
+
+The `rule.context` row grew from 11 to 25 because 15 of the 21 newly included policies read a
+ConfigMap or make an API call at admission time (`context.apiCall`). That class needs VAP's
+`namespaceObject` / `authorizer` / `paramRef`, none of which this converter maps to — so it is
+still a front-end gap, not a limit of CEL.
 
 These are front-end gaps in the compiler, not limits of CEL. A follow-up study hand-converted a
 representative of each class and verified them on a cluster: of 14 representatives, 7 converted
@@ -202,7 +244,9 @@ with no semantic loss, 6 with a specific documented loss, and 1 is genuinely imp
 
 ## Known limitations
 
-- **No `foreach` yet** — the single largest gap.
+- **No `foreach` yet** (31 policies). The largest single reason is the JMESPath subset (48):
+  `jmes_to_cel` refuses any expression containing a parenthesis, which rules out every JMESPath
+  function call and every filter.
 - Kyverno engine extras have no CEL equivalent and are approximated or lost: the OCI image
   reference parser (`images` variable), JSON encode/decode, JSON6902 `/-` append (vs SSA keyed
   merge), and the built-in Pod Security Standards engine tracking `version: latest`.
